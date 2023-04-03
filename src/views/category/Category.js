@@ -1,47 +1,71 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
+
+import { useForm } from "react-hook-form";
+
+import { 
+    createCategory, 
+    deleteCategory, 
+    getAllCategories, 
+    updateCategory } from 'src/services/categoriesServices';
 
 const Category = () => {
 
-  const categories = [
-    {
-      id:1,
-      name:"Accesorios",
-      padre:""
-    },
-    {
-      id:2,
-      name:"Periféricos",
-      padre:""
-    },
-    {
-      id:3,
-      name:"Consumibles",
-      padre:""
-    },
-    {
-      id:4,
-      name:"Repuestos",
-      padre:""
-    },
-  ];
+  const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
+  const [categories, setCategories] = useState([]);
+  const [idCategory, setIdCategory] = useState(0);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    const res = await getAllCategories();
+    setCategories(res.categories);
+  }
+
+  const handleDeleteCategory = async (category) => {
+    const res = await deleteCategory(category.id);
+
+    if(res.category){
+      const filtered = categories.filter( item => item.id !== category.id );
+      setCategories(filtered);
+    }
+  }
+
+  const handleEditCategory = (category) => {
+    reset(category);
+    setIdCategory(category.id);
+  }
+
+  const onSubmit = async data => {
+
+    if(!idCategory){
+      const res = await createCategory(data);
+      setCategories([...categories, res.category]);
+    }else{
+      const res = await updateCategory(idCategory, data);
+      fetchCategories();
+    }
+  };
+  
   return (
     <Fragment>
       <div className='row'>
         <div className='col-6'>
             <div className="card">
                 <div className="card-body">
-                    <h5 className="card-title">Registro de catgegorías</h5>
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <h5 className="card-title">Registro de categorias</h5>
                     <div className="mb-3">
-                        <input type="text" name="name" className="form-control" placeholder="Nombre de la categoría"/>
+                        <input type="text" name="name" {...register("name", { required: true, maxLength: 45 }) } className="form-control" placeholder="Nombre de la categoría"/>
                     </div>
                     <div className="mb-3">
-                        <select className="form-control" name="responsible">
-                            <option value="">Seleccione una categporía padre</option>
-                        </select>
+                        <input type="text" name="description" {...register("description")}  className="form-control" placeholder="Nombre de la categoría"/>
                     </div>
-                    <button className="btn btn-primary">Guardar</button>
+                    <button type="submit" className="btn btn-primary">Guardar</button>
                     <button className="btn btn-desabled">Cancelar</button>
+                  </form>  
                 </div>
             </div>
         </div>
@@ -65,11 +89,11 @@ const Category = () => {
                                           <td>{ (index+1) }</td>
                                           <td>{ category.name }</td>
                                           <td>
-                                              <button className='btn btn-primary'>
-                                                  Editar
+                                              <button onClick={ (e) => handleEditCategory(category) } className='btn btn-sm btn-primary'>
+                                                  i
                                               </button>
-                                              <button className='btn btn-danger'>
-                                                  Eliminar
+                                              <button onClick={ (e) => handleDeleteCategory(category) } className='btn btn-sm btn-danger'>
+                                                  x
                                               </button>
                                           </td>
                                       </tr>
