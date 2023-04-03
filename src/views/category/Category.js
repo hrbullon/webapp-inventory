@@ -48,6 +48,8 @@ const Category = () => {
       fetchCategories();
     }
   };
+
+  console.log(errors)
   
   return (
     <Fragment>
@@ -59,6 +61,10 @@ const Category = () => {
                     <h5 className="card-title">Registro de categorias</h5>
                     <div className="mb-3">
                         <input type="text" name="name" {...register("name", { required: true, maxLength: 45 }) } className="form-control" placeholder="Nombre de la categoría"/>
+                        {
+                          errors &&  errors.name &&  errors.name.type == "required" &&
+                          <span className='text-danger'>Este campo es obligatorio</span>
+                        }
                     </div>
                     <div className="mb-3">
                         <input type="text" name="description" {...register("description")}  className="form-control" placeholder="Nombre de la categoría"/>
