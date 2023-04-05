@@ -59,7 +59,7 @@ export const Form = ({ title }) => {
                 <input type="text" className="form-control" name="code" {...register("code")}/>
               </div>
               <div className="form-group">
-                <label>Nombre:</label>
+                <label>Nombre: *</label>
                 <input type="text" className="form-control" name="name" {...register("name", { required: true, maxLength: 45 }) }/>
                 <ErrorValidate error={ errors.name }/>
               </div>
@@ -94,14 +94,14 @@ export const Form = ({ title }) => {
           <div className='row'>
             <div className='col-4'>
               <div className="form-group">
-                <label>Precio:</label>
+                <label>Precio: *</label>
                 <input type="text" className="form-control" name="price" {...register("price", { required: true }) }/>
                 <ErrorValidate error={ errors.price }/>
                </div>
             </div>
             <div className='col-4'>
               <div className="form-group">
-                <label>Cantidad:</label>
+                <label>Cantidad: *</label>
                 <input type="text" className="form-control" name="quantity" {...register("quantity", { required: true }) }/>
                 <ErrorValidate error={ errors.quantity }/>
               </div>
