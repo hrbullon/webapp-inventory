@@ -1,6 +1,10 @@
 import React, { Fragment, useState, useEffect } from 'react'
 
+import CIcon from '@coreui/icons-react';
+import * as icon from '@coreui/icons';
 import { useForm } from "react-hook-form";
+
+import { ErrorValidate } from 'src/components/forms/ErrorValidate';
 
 import { 
     createCategory, 
@@ -8,7 +12,7 @@ import {
     getAllCategories, 
     updateCategory } from 'src/services/categoriesServices';
 
-const Category = () => {
+const Categories = () => {
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
@@ -48,8 +52,6 @@ const Category = () => {
       fetchCategories();
     }
   };
-
-  console.log(errors)
   
   return (
     <Fragment>
@@ -58,16 +60,13 @@ const Category = () => {
             <div className="card">
                 <div className="card-body">
                   <form onSubmit={handleSubmit(onSubmit)}>
-                    <h5 className="card-title">Registro de categorias</h5>
+                    <h5 className="card-title">Datos de categoria</h5>
                     <div className="mb-3">
-                        <input type="text" name="name" {...register("name", { required: true, maxLength: 45 }) } className="form-control" placeholder="Nombre de la categoría"/>
-                        {
-                          errors &&  errors.name &&  errors.name.type == "required" &&
-                          <span className='text-danger'>Este campo es obligatorio</span>
-                        }
+                        <input type="text" name="name" {...register("name", { required: true, maxLength: 45 }) } autoComplete='off' className="form-control" placeholder="Nombre de la categoría"/>
+                        <ErrorValidate error={ errors.name } />
                     </div>
                     <div className="mb-3">
-                        <input type="text" name="description" {...register("description")}  className="form-control" placeholder="Nombre de la categoría"/>
+                        <input type="text" name="description" {...register("description")} autoComplete='off' className="form-control" placeholder="Descripción de la categoría"/>
                     </div>
                     <button type="submit" className="btn btn-primary">Guardar</button>
                     <button className="btn btn-desabled">Cancelar</button>
@@ -93,13 +92,13 @@ const Category = () => {
                                   return (
                                       <tr key={ category.id }>
                                           <td>{ (index+1) }</td>
-                                          <td>{ category.name }</td>
+                                          <td width={100}>{ category.name }</td>
                                           <td>
                                               <button onClick={ (e) => handleEditCategory(category) } className='btn btn-sm btn-primary'>
-                                                  i
+                                                <CIcon icon={ icon.cilPencil }/>
                                               </button>
                                               <button onClick={ (e) => handleDeleteCategory(category) } className='btn btn-sm btn-danger'>
-                                                  x
+                                                <CIcon icon={ icon.cilDelete }/>
                                               </button>
                                           </td>
                                       </tr>
@@ -116,4 +115,4 @@ const Category = () => {
   )
 }
 
-export default Category
+export default Categories

@@ -5,7 +5,8 @@ import {
   cilCash,
   cilDescription,
   cilSpeedometer,
-  cilStar
+  cilStar,
+  cilUser
 } from '@coreui/icons'
 
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
@@ -27,23 +28,35 @@ const _nav = [
   },
   {
     component: CNavGroup,
+    name: 'Control de Acceso',
+    icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Usuarios',
+        to: '/users',
+      }
+    ]
+  },  
+  {
+    component: CNavGroup,
     name: 'Gestión de Inventario',
     icon: <CIcon icon={cilStar} customClassName="nav-icon" />,
     items: [
       {
         component: CNavItem,
-        name: 'Almacenes',
-        to: '/warehouse',
-      },
-      {
-        component: CNavItem,
-        name: 'Categorías de productos',
-        to: '/category',
+        name: 'Categorías',
+        to: '/categories',
       },
       {
         component: CNavItem,
         name: 'Productos',
-        to: '/products/list',
+        to: '/products',
+      },
+      {
+        component: CNavItem,
+        name: 'Existencias',
+        to: '/inventory',
       }
     ],
   },
