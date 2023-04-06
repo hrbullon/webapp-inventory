@@ -2,6 +2,7 @@ import React from 'react'
 import CIcon from '@coreui/icons-react'
 
 import {
+  cilBriefcase,
   cilCash,
   cilDescription,
   cilSpeedometer,
@@ -26,6 +27,18 @@ const _nav = [
     component: CNavTitle,
     name: 'Extras',
   },
+  {
+    component: CNavGroup,
+    name: 'Administracion',
+    icon: <CIcon icon={cilBriefcase} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Clientes',
+        to: '/customers',
+      }
+    ]
+  },  
   {
     component: CNavGroup,
     name: 'Control de Acceso',
@@ -72,8 +85,8 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: 'Nueva venta',
-        to: '/sales/create',
+        name: 'Ventas del mes',
+        to: '/sales/month',
       },
       {
         component: CNavItem,
