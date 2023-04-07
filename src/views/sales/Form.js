@@ -15,6 +15,8 @@ import { getAllProducts } from 'src/services/productsServices';
 import { getCustomerByDni } from 'src/services/customersServices'
 import { prepareOptions } from 'src/helpers/helpers';
 import { createSale } from 'src/services/salesServices';
+import { getLastExchange } from 'src/services/exchangesServices';
+import { formatCurrency } from 'src/helpers/helpers';
 
 const Form = () => {
 
@@ -22,17 +24,19 @@ const Form = () => {
         code:'----',
         customer_id: null,
         date: new Date(Date.now()).toLocaleDateString(),
+        exchange_amount:0,
         total_amount:0,
+        total_local_amount:0,
         sale_details: []
     });
-    console.log(config)
+    
     const [customer, setCustomer] = useState({});
     const [quantity, setQuantity] = useState(1);
     const [products, setProducts] = useState([]);
     const [options, setOptions] = useState([]);
 
     useEffect(() => {
-        fetchProducts();
+        fetchAll();
     }, []);
     
     useEffect(() => {
@@ -43,11 +47,13 @@ const Form = () => {
         }
     }, [sale.sale_details]);
 
-    const fetchProducts = async () => {
+    const fetchAll = async () => {
         const res = await getAllProducts();
         setProducts(res.products);
         const items = await prepareOptions(res.products);
         setOptions(items);
+        const resExchange = await getLastExchange();
+        setSale({ ...sale, exchange_amount: resExchange.exchanges[0].amount});
     }
 
     const handleFindCustomer = async (evt) => {
@@ -83,13 +89,14 @@ const Form = () => {
 
     const handleChangingProduct = (input) => {
         const product = products.filter( item => item.id === input.value )[0];
-
+        const price = (Number(product.price)*sale.exchange_amount);
         const item = {
             product_id: product.id,
+            code: product.code,
             description: product.name,
             quantity:quantity,
-            price: product.price,
-            subtotal_amount: (Number(product.price)*quantity)
+            price: price,
+            subtotal_amount: (price*quantity)
         };
 
         setSale({ ...sale, 
@@ -118,6 +125,13 @@ const Form = () => {
                     <CardBasic customer={customer} />
                 </div>
                 <div className="col-4">
+                    <div className="card">
+                        <div className="card-body bg-info">
+                            { sale.exchange_amount && 
+                                <b style={{ fontSize: "29px"}}>Tasa: {  formatCurrency(sale.exchange_amount, true) }</b>
+                            }    
+                        </div>
+                    </div>
                     <CardSale sale={sale} />
                 </div>
                 <div className="col-12 mt-3">

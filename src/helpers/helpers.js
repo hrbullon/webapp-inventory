@@ -31,15 +31,37 @@ export const prepareOptions = (data) => {
     return items
 }
 
-export const deleteItem = (data, deleted) => {
+export const formatCurrency = (amount, local = false) => {
 
-    let updatedArray = []
+    if(!local){
+        return new Intl.NumberFormat('en-US', { 
+            style: 'currency', 
+            currency: 'USD' 
+        }).format(amount);    
+    }
 
-    Object.keys(data).map( (key) => {
-        if(data[key].product_id !== deleted.product_id){
-            updatedArray.push({ ...data[key] }) 
-        }
-    })
+    if(local){
+        return new Intl.NumberFormat('es-VE', { 
+            style: 'currency', 
+            currency: 'VES'
+        }).format(amount);    
+    }
+}
 
-    return updatedArray
+export const printHTML = (id) => {
+
+    var content = document.getElementById(id).innerHTML;
+    var printWindow = window.open('', '');
+    
+    printWindow.document.write('<html><head>');
+    printWindow.document.write('<link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">');
+    printWindow.document.write('</head><body >');
+    printWindow.document.write(content);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    
+    setTimeout(() => {
+        printWindow.print();
+        console.log(printWindow);
+    }, 1000);
 }

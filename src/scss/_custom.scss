@@ -1,1 +1,31 @@
 // Here you can add other styles
+.list {
+    list-style-type: none;
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+@media print {
+    /* hide the default header and footer */
+    @page {
+        margin: 0;
+    }
+    @page :header {
+        display: none;
+    }
+    
+    @page :footer {
+        display: none;
+    }
+    /* set the paper size to letter */
+    @page {
+        size: letter;
+    }
+
+    thead {display: none;}
+    tfoot {display: none;}
+    button {display: none; }
+  
+}

@@ -2,15 +2,14 @@ import React from 'react'
 
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
-import { deleteItem } from 'src/helpers/helpers';
+import { formatCurrency } from 'src/helpers/helpers';
 
 export const SaleDetails = ({ items, sale, setSale }) => {
 
-    const handleDeleteItem = (item) => {
-
-        const filtered = deleteItem(items, item);
+    const handleDeleteItem = (index) => {
+        items.splice(index, 1);
         setSale({ ...sale, 
-            sale_details: [ ...filtered]
+            sale_details: [ ...items]
         })
     }
 
@@ -21,25 +20,27 @@ export const SaleDetails = ({ items, sale, setSale }) => {
             <thead>
                 <tr>
                     <th>#</th>
+                    <th>Code</th>
                     <th>Artículo</th>
-                    <th>Cantidad</th>
-                    <th>Precio</th>
-                    <th>Subtotal</th>
-                    <th>Acciones</th>
+                    <th className='text-right'>Cantidad</th>
+                    <th className='text-right'>Precio</th>
+                    <th className='text-right'>Subtotal</th>
+                    <th className='text-right'>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 {
                     items.map( (item, index) => {
                         return (
-                            <tr key={ item.id }>
+                            <tr key={ index }>
                                 <td>{ index+1 }</td>
+                                <td>{ item.code }</td>
                                 <td>{ item.description }</td>
-                                <td>{ item.quantity }</td>
-                                <td>{ item.price }</td>
-                                <td>{ item.subtotal_amount }</td>
-                                <td>
-                                    <button onClick={ (e) => handleDeleteItem(item) } className='btn btn-sm btn-danger'>
+                                <td className='text-right'>{ item.quantity }</td>
+                                <td className='text-right'>{ formatCurrency(item.price, true) }</td>
+                                <td className='text-right'>{ formatCurrency(item.subtotal_amount, true) }</td>
+                                <td className='text-right'>
+                                    <button onClick={ (e) => handleDeleteItem(index) } className='btn btn-sm btn-danger'>
                                         <CIcon icon={ icon.cilDelete }/>
                                     </button>
                                 </td>
@@ -48,6 +49,20 @@ export const SaleDetails = ({ items, sale, setSale }) => {
                     })
                 }
             </tbody>
+            <tfoot>
+                <tr>
+                    <td className='text-right' colSpan={5}><b>Total:</b></td>
+                    <td className='text-right'>
+                        <b>{ formatCurrency(sale.total_amount,true) }</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td colSpan={5}></td>
+                    <td className='text-right'>
+                        <b>{ formatCurrency( (sale.total_amount/sale.exchange_amount)) }</b>
+                    </td>
+                </tr>
+            </tfoot>
         </table>
     </div>
   )
