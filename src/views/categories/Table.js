@@ -1,10 +1,40 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
-import { deleteCategory } from 'src/services/categoriesServices';
+import DataTable from 'react-data-table-component';
 
-export const Table = ({ categories, setCategory, setCategories }) => {
+import config from '../../config/config.json';
+
+import { deleteCategory } from 'src/services/categoriesServices';
+import EclipseComponent from 'src/components/loader/EclipseComponent';
+import { FormSearch } from './FormSearch';
+
+export const Table = ({ setCategory, categories, setCategories, data }) => {
+
+    const columns = [
+        {
+            name: 'Nombre',
+            sortable:true,
+            selector: row => row.name,
+        },
+        {
+            name: 'Acciones',
+            sortable:true,
+            selector: row => {
+                return (
+                    <Fragment>
+                        <button onClick={ (e) => setCategory(row) } className='btn btn-sm btn-primary'>
+                            <CIcon icon={ icon.cilPencil }/>
+                        </button>
+                        <button onClick={ (e) => handleDeleteCategory(row) } className='btn btn-sm btn-danger'>
+                            <CIcon icon={ icon.cilDelete }/>
+                        </button>
+                    </Fragment>
+                )
+            },
+        }
+    ]
 
     const handleDeleteCategory = async (category) => {
 
@@ -18,34 +48,20 @@ export const Table = ({ categories, setCategory, setCategories }) => {
     }
     
     return (
-    <table className="table">
-        <thead>
-            <tr>
-                <th>Nro</th>
-                <th>Nombre</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {
-                categories.map(  (category, index) => {
-                    return (
-                        <tr key={ category.id }>
-                            <td>{ (index+1) }</td>
-                            <td width={100}>{ category.name }</td>
-                            <td>
-                                <button onClick={ (e) => setCategory(category) } className='btn btn-sm btn-primary'>
-                                    <CIcon icon={ icon.cilPencil }/>
-                                </button>
-                                <button onClick={ (e) => handleDeleteCategory(category) } className='btn btn-sm btn-danger'>
-                                    <CIcon icon={ icon.cilDelete }/>
-                                </button>
-                            </td>
-                        </tr>
-                    )
-                })
-            }
-        </tbody>
-    </table>
-  )
+
+        <div className="card">
+            <div className="card-body">
+                <h5 className="card-title">Listado de categorías</h5>
+                
+                <FormSearch setCategories={ setCategories } rows={data}/>    
+
+                <DataTable 
+                    columns={columns}
+                    data={categories}
+                    progressComponent={ <EclipseComponent/> }
+                    paginationComponentOptions={ config.paginationComponentOptions }
+                    noDataComponent={"No hay datos para mostrar"}/>  
+            </div>
+        </div>
+    )
 }

@@ -2,11 +2,13 @@ import React, { Fragment, useState, useEffect } from 'react'
 
 import { Form } from './Form';
 import { Table } from './Table';
+
 import { getAllCategories } from 'src/services/categoriesServices';
 
 const Categories = () => {
 
   const [category, setCategory] = useState({});
+  const [copies, setCopies] = useState([]);
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
@@ -15,6 +17,7 @@ const Categories = () => {
 
   const fetchCategories = async () => {
     const res = await getAllCategories();
+    setCopies(res.categories);
     setCategories(res.categories);
   }
 
@@ -24,23 +27,12 @@ const Categories = () => {
         <div className='col-6'>
             <div className="card">
                 <div className="card-body">
-                  <Form 
-                    category={category} 
-                    setCategories={ setCategories } 
-                    fetchCategories={ fetchCategories }/> 
+                  <Form category={category} fetchCategories={fetchCategories}/> 
                 </div>
             </div>
         </div>
         <div className='col-6'>
-            <div className="card">
-                <div className="card-body">
-                    <h5 className="card-title">Listado de categorías</h5>
-                    <Table 
-                      categories={ categories } 
-                      setCategory={ setCategory }
-                      setCategories={ setCategories } />
-                </div>
-            </div>
+            <Table setCategory={setCategory} setCategories={ setCategories } categories={categories} data={copies}/>
         </div>
       </div>
     </Fragment>
