@@ -1,20 +1,18 @@
-import React from 'react';
-
+import React from 'react'
 import { Table } from './Table';
 
-const Sales = () => {
+const Today = () => {
   return (
     <div className='row'>
         <div className='col'>
             <div className="card  mt-4">
                 <div className="card-body">
-                    <Table />
+                    <Table type="today" title="Listado de ventas diarias" fileName="Reporte-ventas-diarias"/>
                 </div>
             </div>
         </div>
-    </div>
+    </div>   
   )
 }
 
-export default Sales
-
+export default Today;

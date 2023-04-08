@@ -166,16 +166,15 @@ export const Table = () => {
 
         <FormSearch setSales={ setSales } rows={copies}/>
 
-        <div id="table-sales">
-            <DataTable 
-                columns={columns}
-                data={sales}
-                pagination={ true }
-                progressPending={ loading }
-                progressComponent={ <EclipseComponent/> }
-                paginationComponentOptions={ config.paginationComponentOptions }
-            />
-        </div>
+        <DataTable 
+            columns={columns}
+            data={sales}
+            pagination={ true }
+            progressPending={ loading }
+            progressComponent={ <EclipseComponent/> }
+            paginationComponentOptions={ config.paginationComponentOptions }
+            noDataComponent={"No hay datos para mostrar"}
+        />
 
         <CModal size="lg" visible={visible} onClose={() => setVisible(false)}>
             <CModalHeader onClose={() => setVisible(false)}>

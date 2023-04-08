@@ -3,8 +3,12 @@ import React from 'react'
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Warehouse = React.lazy(() => import('./views/warehouse/Warehouse'))
 const Categories = React.lazy(() => import('./views/categories/Categories'))
+
 const Sales = React.lazy(() => import('./views/sales/Sales'))
 const SalesCreate = React.lazy(() => import('./views/sales/Form'))
+const SalesMonth = React.lazy(() => import('./views/sales/report/Month'))
+const SalesToday = React.lazy(() => import('./views/sales/report/Today'))
+
 
 const Products = React.lazy(() => import('./views/products/Products'))
 const ProductCreate = React.lazy(() => import('./views/products/Create'))
@@ -32,6 +36,8 @@ const routes = [
 
   { path: '/sales', name: 'Ventas', element: Sales },
   { path: '/sales/create', name: 'Nueva venta', element: SalesCreate },
+  { path: '/sales-month', name: 'Ventas del mes', element: SalesMonth },
+  { path: '/sales-today', name: 'Ventas diarias', element: SalesToday },
 
   { path: '/customers', name: 'Clientes', element: Customers },
   { path: '/customers/create', name: 'Clientes', element: CreateCustomer },

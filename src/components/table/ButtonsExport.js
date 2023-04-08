@@ -15,7 +15,7 @@ export const ButtonsExport = ({ data, headerOptions, title, fileName }) => {
     }
 
     const handleClickExcel = () => {
-        const rows = data.map(({Customer, SaleDetails, ...rest}) => rest);
+        const rows = data.map(({Customer, SaleDetails, Sale,...rest}) => rest);
         exportToExcel(rows, headerOptions, title, "A1:F1", fileName);
     }
     

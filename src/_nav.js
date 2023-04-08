@@ -86,12 +86,12 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Ventas del mes',
-        to: '/sales/month',
+        to: '/sales-month',
       },
       {
         component: CNavItem,
         name: 'Ventas diarias',
-        to: '/sales/report/today',
+        to: '/sales-today',
       }
     ],
   },
