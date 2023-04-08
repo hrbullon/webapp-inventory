@@ -1,4 +1,4 @@
-export const fetchData = async ( url, method , body = {}) => {
+export const fetchData = async ( url, method , body = {}, multipart = false) => {
     
     let options = {}
 
@@ -10,8 +10,8 @@ export const fetchData = async ( url, method , body = {}) => {
     }else{
         options = { 
             method: method, 
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body)
+            headers: multipart?  {} : { 'Content-Type': 'application/json' },
+            body: (multipart)? body : JSON.stringify(body)
         }
     }
     

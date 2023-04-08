@@ -11,9 +11,9 @@ export const getProductById = (id) => {
 }
 
 export const createProduct = (data) => {
-    return fetchData(`${API_URL}/product`, 'POST', data);
+    return fetchData(`${API_URL}/product`, 'POST', data, true);
 }
 
 export const updateProduct = (id, data) => {
-    return fetchData(`${API_URL}/product/${id}`, 'PUT', data);
+    return fetchData(`${API_URL}/product/${id}`, 'PUT', data, true);
 }

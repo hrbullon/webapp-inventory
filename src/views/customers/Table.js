@@ -63,6 +63,7 @@ export const Table = () => {
         {
             name: 'Acciones',
             sortable:false,
+            right: true,
             selector: row => {
                 return (
                     <Fragment>

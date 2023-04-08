@@ -1,50 +1,103 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import swal from 'sweetalert';
-import { CAlert } from '@coreui/react';
+import Select from 'react-select';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 
+import { CAlert } from '@coreui/react';
+
+import { prepareOptions } from 'src/helpers/helpers';
 import { ActionButtons } from 'src/components/forms/ActionButtons';
 import { ErrorValidate } from 'src/components/forms/ErrorValidate';
+
+import { getAllCategories } from 'src/services/categoriesServices';
 import { createProduct, getProductById, updateProduct } from 'src/services/productsServices';
 
 export const Form = ({ title }) => {
 
     let { id } = useParams();
-    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+
+    const defaultCategory = {
+      value:'',
+      label:'Seleccione una categoría'
+    }
+
+    const [idCategory, setIdCategory] = useState(defaultCategory);
+    const {register, handleSubmit, reset, formState: { errors } } = useForm();
     
+    const [options, setOptions] = useState([]);
+   
+
     useEffect(() => {
-        if(id && id !== undefined){
-            getProductDetail(id);
-        }
+      fetchCategories();
+    }, [])
+    
+
+    useEffect(() => {
+      if(id && id !== undefined){
+          getProductDetail(id);
+      }
     }, [id])
     
     const getProductDetail = async (id) => {
-        const res = await getProductById(id);
-        reset(res.product);
+
+      const res = await getProductById(id);
+
+      if(res.product.category_id){
+        const { Category } = res.product;
+        setIdCategory({ value: Category.id, label: Category.name });
+      }
+
+      reset(res.product);
+    }
+
+    const fetchCategories = async () => {
+      const res = await getAllCategories();
+      const items = prepareOptions(res.categories);
+      setOptions(items);
+    }
+
+    const handleChangingCategory = (input) => {
+      if(input){
+        setIdCategory(input)
+      } else {
+        setIdCategory({value:"", label: "Seleccione una categoría"})
+      }
     }
 
     const onSubmit = async data => { 
-        
-        let res;
+      
+      let formData = new FormData();
 
-        if(!id){
-            res = await createProduct(data);
-        }else{
-            res = await updateProduct(id, data);
-        }
+      formData.append("code", data.code);
+      formData.append("name", data.name);
+      formData.append("description", data.description);
+      formData.append("category_id", idCategory.value);
+      formData.append("brand", data.brand);
+      formData.append("model", data.model);
+      formData.append("price", data.price);
+      formData.append("quantity", data.quantity);
+      formData.append("image", data.image[0]);
 
-        if(res.product){
-            (id)? reset(data) : reset();
-            swal("Completado!", "Datos guardados!", "success");
-        }else{
-            swal("Oops","Algo salio mal al guardar los datos","warning");
-        }
-    }
+      let res;
+  
+      if(!id){
+          res = await createProduct(formData);
+      }else{
+          res = await updateProduct(id, formData);
+      }
+
+      if(res.product){
+          (id)? reset(data) : reset();
+          swal("Completado!", "Datos guardados!", "success");
+      }else{
+          swal("Oops","Algo salio mal al guardar los datos","warning");
+      }
+    } 
 
     return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form id="form" onSubmit={handleSubmit(onSubmit)}>
       <div className="card">
         <div className="card-body">
           <h5 className="card-title">{ title }</h5>
@@ -60,19 +113,19 @@ export const Form = ({ title }) => {
               </div>
               <div className="form-group">
                 <label>Nombre: *</label>
-                <input type="text" className="form-control" name="name" {...register("name", { required: true, maxLength: 45 }) }/>
+                <input type="text" className="form-control" name="name" {...register("name", { required: true, maxLength: 150 }) }/>
                 <ErrorValidate error={ errors.name }/>
               </div>
               <div className="form-group">
                 <label>Description:</label>
-                <textarea className='form-control' name="description" {...register("description")}>
+                <textarea className='form-control' name="description" {...register("description", { maxLength: 300 })}>
                 </textarea>
               </div>
             </div>
             <div className="col-4">
               <div className="form-group">
                 <label>Categoria:</label>
-                <input type="text" className="form-control" name="category_id" {...register("category_id")}/>
+                <Select name="category_id" value={ idCategory }  options={options} onChange={handleChangingCategory}/>
               </div>
               <div className="form-group">
                 <label>Marca:</label>
@@ -87,7 +140,7 @@ export const Form = ({ title }) => {
               <div id='imagePreview'></div>
               <div className="form-group">
                 <label>Imagen:</label>
-                <input type="file" className="form-control" name="image"/>
+                <input type="file" className="form-control" name="image" {...register("image")}/>
               </div>
             </div>
           </div>

@@ -34,10 +34,10 @@ export const FormSearch = ({ setProducts, rows }) => {
     return (
         <form onSubmit={handleSubmit(handleFilter)}>
             <div className='row mt-4'>
-                <div className='col-3'>
+                <div className='col-4'>
                     <input type="text" className='form-control' autoComplete='off' {...register("code") }  placeholder='Buscar por codigo producto'/>  
                 </div>
-                <div className='col-3'>
+                <div className='col-4'>
                     <input type="text" className='form-control' autoComplete='off' {...register("product") }  placeholder='Buscar por nombre producto'/>  
                 </div>
                 <div className='col'>

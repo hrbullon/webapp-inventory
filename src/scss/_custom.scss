@@ -7,6 +7,10 @@
     text-align: right !important;
 }
 
+.card-img-top {
+    object-fit: contain;
+}
+
 @media print {
     /* hide the default header and footer */
     @page {

@@ -7,8 +7,8 @@ export const FormSearch = ({ setProducts, rows }) => {
         let filtered = rows
         .filter( item => {
             return item.code && item.code.toLowerCase().includes(product.toLowerCase()) ||
-            item.name && item.name.toLowerCase().includes(product.toLowerCase()) 
-             
+            item.name && item.name.toLowerCase().includes(product.toLowerCase()) ||
+            item.description && item.description.toLowerCase().includes(product.toLowerCase()) 
         })
 
         setProducts(filtered);
