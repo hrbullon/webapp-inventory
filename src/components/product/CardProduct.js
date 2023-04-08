@@ -9,6 +9,7 @@ export const CardProduct = ({ product }) => {
             <img src={ product.image }  className="card-img-top" alt="..."/>
             <div className="card-body">
                 <Link to={`/products/update/${product.id}`}><b>{ product.name }</b></Link><br/>
+                <b>{ product.code }</b><br/>
                 <small>{ product.description }</small>
             </div>
         </div>
