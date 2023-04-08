@@ -20,6 +20,7 @@ import config from '../../config/config.json';
 import { getAllSales } from 'src/services/salesServices';
 
 import { View } from './View';
+import { FormSearch } from './FormSearch';
 import { ButtonsExport } from 'src/components/table/ButtonsExport';
 import EclipseComponent from '../../components/loader/EclipseComponent';
 
@@ -31,6 +32,7 @@ export const Table = () => {
     const [visible, setVisible] = useState(false);
     const [sale, setSale] = useState({});
     const [sales, setSales] = useState([]);
+    const [copies, setCopies] = useState([]);
 
     const headerOptions = [
         {
@@ -121,6 +123,7 @@ export const Table = () => {
         const res = await getAllSales();
         const rows = prepareList(res.sales);
         setSales(rows);
+        setCopies(rows);
         setLoading(false);
     }
 
@@ -160,6 +163,8 @@ export const Table = () => {
             headerOptions={ headerOptions } 
             title="Listado de Ventas" 
             fileName="Reporte-ventas"/>
+
+        <FormSearch setSales={ setSales } rows={copies}/>
 
         <div id="table-sales">
             <DataTable 
