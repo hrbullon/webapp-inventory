@@ -1,32 +1,71 @@
 import React, { useState, useEffect } from 'react';
 
-import { CTable } from '@coreui/react';
+import DataTable from 'react-data-table-component';
+import config from '../../config/config.json';
+
+import EclipseComponent from 'src/components/loader/EclipseComponent';
+import { ButtonsExport } from 'src/components/table/ButtonsExport';
+
 import { getAllProducts } from 'src/services/productsServices';
+import { FormSearch } from './FormSearch';
 
 const Inventory = () => {
 
-    const [ products, setProducts ] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [products, setProducts ] = useState([]);
+    const [copies, setCopies] = useState([]);
+
+    const headerOptions = [
+        {
+          name:"code",
+          prompt:"Código"
+        },
+        {
+          name:"name",
+          prompt:"Nombre"
+        },
+        {
+          name:"quantity",
+          prompt:"Stock"
+        },
+        {
+          name:"price",
+          prompt:"Precio"
+        },
+        {
+          name:"subtotal",
+          prompt:"Subtotal"
+        },
+    ];
 
     const columns = [
         {
-          key: 'id',
-          label: '#',
+          name: 'Código',
+          sortable:true,
+          selector: row => row.code,
         },
         {
-          key: 'name',
-          label: 'Nombre',
+          name: 'Nombre',
+          sortable:true,
+          selector: row => row.name,
         },
         {
-          key: 'code',
-          label: 'Codigo',
+          name: 'Stock',
+          sortable:true,
+          right: true,
+          selector: row => row.quantity,
         },
         {
-          key: 'quantity',
-          label: 'Stock',
+          name: 'Precio',
+          sortable:true,
+          right: true,
+          selector: row => row.price,
         },
         {
-          key: 'price',
-          label: 'Price',
+          name: 'Subtotal',
+          sortable:true,
+          right: true,
+          selector: row => row.subtotal
         }
     ]
 
@@ -35,15 +74,57 @@ const Inventory = () => {
     }, []);
 
     const fetchProducts = async () => {
+        setLoading(true);
         const res = await getAllProducts();
-        setProducts(res.products);
+        const rows = prepareList(res.products);
+        setCopies(rows);
+        setProducts(rows);
+        setLoading(false);
     }
+
+    const prepareList = data => {
+
+      let rows = [];
+
+      data.map( item => {
+
+          let subtotal = (Number(item.price)*Number(item.quantity));
+
+          const row = {
+              code: item.code,
+              name: item.name,
+              quantity: item.quantity,
+              price: item.price,
+              subtotal: subtotal.toString()
+          };
+
+          rows.push(row);
+      });
+
+      return rows;
+  }
     
     return (
     <div className="card">
         <div className="card-body">
+            
             <h5 className="card-title">Listado de existencia</h5>
-            <CTable columns={columns} items={products} />
+            
+            <ButtonsExport 
+              data={ products } 
+              headerOptions={ headerOptions } 
+              title="Listado de existencia de productos "
+              fileName="Reporte-existencia"/>
+
+            <FormSearch setProducts={setProducts} rows={ copies } />
+
+            <DataTable
+              columns={columns}
+              data={products}
+              progressPending={ loading }
+              progressComponent={ <EclipseComponent/> }
+              paginationComponentOptions={ config.paginationComponentOptions }
+              noDataComponent={"No hay datos para mostrar"}/>
         </div>
     </div>
   )

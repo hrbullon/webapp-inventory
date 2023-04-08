@@ -21,10 +21,11 @@ export const Table = ({ setCategory, categories, setCategories, data }) => {
         {
             name: 'Acciones',
             sortable:true,
+            right: true,
             selector: row => {
                 return (
                     <Fragment>
-                        <button onClick={ (e) => setCategory(row) } className='btn btn-sm btn-primary'>
+                        <button onClick={ (e) => setCategory(row) } className='btn btn-sm btn-primary m-2'>
                             <CIcon icon={ icon.cilPencil }/>
                         </button>
                         <button onClick={ (e) => handleDeleteCategory(row) } className='btn btn-sm btn-danger'>

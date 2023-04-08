@@ -70,21 +70,25 @@ export const Table = ({ type, title, fileName }) => {
         {
             name: 'Cantidad',
             sortable:true,
+            right: true,
             selector: row => row.quantity,
         },
         {
             name: 'Tasa Cambio',
             sortable:true,
+            right: true,
             selector: row => row.exchange_amount,
         },
         {
             name: 'Precio',
             sortable:true,
+            right: true,
             selector: row => row.price,
         },
         {
             name: 'Subtotal',
             sortable:true,
+            right: true,
             selector: row => row.subtotal_amount,
         },
     ];
