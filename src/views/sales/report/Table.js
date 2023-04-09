@@ -21,6 +21,10 @@ export const Table = ({ type, title, fileName }) => {
     const [totalQuantity, setTotalQuantity] = useState(0);
     const [totalSales, setTotalSales] = useState(0);
     const [aveExchange, setAveExchange] = useState(0);
+    const [bestSeller, setBestSeller] = useState({
+        description: "",
+        quantity:0
+    });
 
     const headerOptions = [
         {
@@ -125,7 +129,37 @@ export const Table = ({ type, title, fileName }) => {
         setTotalQuantity(totalQuantity);
     }
 
+    const getBestSeller = (sales) => {
+
+        const totals = sales.reduce((acc, cur) => {
+            acc[cur.description] = (acc[cur.description] || 0) + Number(cur.quantity);
+            return acc;
+        }, {});
+
+        const items = []; 
+        
+        Object.keys(totals).map( item => {
+            items.push({
+                description: item,
+                quantity: totals[item]
+            })
+        })
+
+        if(items.length > 0 ){
+            const maxQuantityItem = items.reduce((prev, curr) => {
+                return (curr.quantity > prev.quantity) ? curr : prev;
+            });
+    
+            setBestSeller({
+                description: maxQuantityItem.description,
+                quantity: maxQuantityItem.quantity
+            });
+        }
+        
+    }
+
     const fetchSaleDetails = async () => {
+
         setLoading(true);
 
         let res;
@@ -137,7 +171,10 @@ export const Table = ({ type, title, fileName }) => {
         if(type == "month"){
             res = await getAllSalesMonth();
         }
+        
         totalize(res.sales);
+        getBestSeller(res.sales);
+
         const rows = prepareList(res.sales);
 
         setSales(rows);
@@ -173,23 +210,16 @@ export const Table = ({ type, title, fileName }) => {
     <Fragment>
         <h5 className="card-title">{ title }</h5>
         
-        <ButtonsExport 
-            data={ sales } 
-            headerOptions={ headerOptions } 
-            title={ title } 
-            fileName={ fileName }/>
-
-        <FormSearch setSales={ setSales } rows={copies}/>
-
-        <DataTable 
-            columns={columns}
-            data={sales}
-            progressPending={ loading }
-            progressComponent={ <EclipseComponent/> }
-            paginationComponentOptions={ config.paginationComponentOptions }
-            noDataComponent={"No hay datos para mostrar"} />
-
         <div className='row mt-5 justify-content-end'>
+            <div className='col-3'>
+                <CWidgetStatsB
+                    className="mb-3"
+                    progress={{ color: 'success', value: 100 }}
+                    text="Mas vendido"
+                    title={ bestSeller.description }
+                    value={ bestSeller.quantity }
+                />
+            </div>
             <div className='col-3'>
                 <CWidgetStatsB
                     className="mb-3"
@@ -218,6 +248,24 @@ export const Table = ({ type, title, fileName }) => {
                 />
             </div>
         </div>
+
+        <ButtonsExport 
+            data={ sales } 
+            headerOptions={ headerOptions } 
+            title={ title } 
+            fileName={ fileName }/>
+
+        <FormSearch setSales={ setSales } rows={copies}/>
+
+        <DataTable 
+            columns={columns}
+            data={sales}
+            progressPending={ loading }
+            progressComponent={ <EclipseComponent/> }
+            paginationComponentOptions={ config.paginationComponentOptions }
+            noDataComponent={"No hay datos para mostrar"} />
+
+        
     </Fragment>
   )
 }
