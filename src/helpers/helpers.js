@@ -1,21 +1,29 @@
+import config from "../config/config.json";
+const { API_URL } = config;
+
 export const fetchData = async ( url, method , body = {}, multipart = false) => {
     
     let options = {}
 
+    const token = localStorage.getItem("token");
+
     if(method == "GET" || method == "HEAD"){
         options = { 
             method: method, 
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'token':token
+            },
         }
     }else{
         options = { 
             method: method, 
-            headers: multipart?  {} : { 'Content-Type': 'application/json' },
+            headers: multipart?  { 'token' : token } : { 'Content-Type': 'application/json', 'token': token },
             body: (multipart)? body : JSON.stringify(body)
         }
     }
     
-    return await fetch(url, options)
+    return await fetch(`${API_URL}/${url}`, options)
     .then(response => response.json())
     .then(data => data)
     .catch(error => console.log(error));
