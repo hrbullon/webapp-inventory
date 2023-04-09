@@ -9,12 +9,18 @@ import { ButtonsExport } from 'src/components/table/ButtonsExport';
 import EclipseComponent from 'src/components/loader/EclipseComponent';
 
 import { getAllSalesMonth, getAllSalesToday } from 'src/services/salesServices';
+import { formatCurrency } from 'src/helpers/helpers';
+import { CWidgetStatsB } from '@coreui/react';
 
 export const Table = ({ type, title, fileName }) => {
 
     const [loading, setLoading] = useState(false);
     const [sales, setSales] = useState([]);
     const [copies, setCopies] = useState([]);
+
+    const [totalQuantity, setTotalQuantity] = useState(0);
+    const [totalSales, setTotalSales] = useState(0);
+    const [aveExchange, setAveExchange] = useState(0);
 
     const headerOptions = [
         {
@@ -97,6 +103,28 @@ export const Table = ({ type, title, fileName }) => {
         fetchSaleDetails();
     }, []);
 
+    
+    const totalize = (sales) => {
+
+        let totalQuantity = 0;
+        let totalSales = 0;
+        let totalExchanges = 0;
+        
+        sales.map( item => {
+
+            totalQuantity += Number(item.quantity);
+            totalExchanges += Number(item.Sale.exchange_amount);
+
+            let amount = (Number(item.subtotal_amount)/Number(item.Sale.exchange_amount));
+            totalSales += amount;
+            let average = (totalExchanges/sales.length);
+            setAveExchange(average);
+        });
+
+        setTotalSales(totalSales);
+        setTotalQuantity(totalQuantity);
+    }
+
     const fetchSaleDetails = async () => {
         setLoading(true);
 
@@ -109,7 +137,7 @@ export const Table = ({ type, title, fileName }) => {
         if(type == "month"){
             res = await getAllSalesMonth();
         }
-
+        totalize(res.sales);
         const rows = prepareList(res.sales);
 
         setSales(rows);
@@ -123,14 +151,16 @@ export const Table = ({ type, title, fileName }) => {
 
         data.map( item => {
 
+            const price_ = (item.price/item.Sale.exchange_amount);
+
             const row = {
                 code: item.Sale.code,
                 code_product: item.code,
                 description: item.description,
                 quantity: item.quantity,
-                exchange_amount: item.Sale.exchange_amount,
-                price: item.price,
-                subtotal_amount: item.subtotal_amount
+                exchange_amount: formatCurrency(item.Sale.exchange_amount, true),
+                price: formatCurrency(price_),
+                subtotal_amount: formatCurrency(price_*item.quantity)
             };
 
             rows.push(row);
@@ -157,8 +187,37 @@ export const Table = ({ type, title, fileName }) => {
             progressPending={ loading }
             progressComponent={ <EclipseComponent/> }
             paginationComponentOptions={ config.paginationComponentOptions }
-            noDataComponent={"No hay datos para mostrar"}
-        />
+            noDataComponent={"No hay datos para mostrar"} />
+
+        <div className='row mt-5 justify-content-end'>
+            <div className='col-3'>
+                <CWidgetStatsB
+                    className="mb-3"
+                    progress={{ color: 'success', value: 100 }}
+                    text="Productos vendidos"
+                    title="Total productos"
+                    value={ totalQuantity }
+                />
+            </div>
+            <div className='col-3'>
+                <CWidgetStatsB
+                    className="mb-3"
+                    progress={{ color: 'success', value: 100 }}
+                    text="Monto acumulado"
+                    title="Total de ventas"
+                    value={ formatCurrency(totalSales) }
+                />
+            </div>
+            <div className='col-3'>
+                <CWidgetStatsB
+                    className="mb-3"
+                    progress={{ color: 'info', value: 100 }}
+                    text="Tasa de cambio promedio"
+                    title="Tasa de cambio"
+                    value={ formatCurrency(aveExchange, true) }
+                />
+            </div>
+        </div>
     </Fragment>
   )
 }

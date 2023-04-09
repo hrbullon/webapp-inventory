@@ -8,6 +8,7 @@ import { ButtonsExport } from 'src/components/table/ButtonsExport';
 
 import { getAllProducts } from 'src/services/productsServices';
 import { FormSearch } from './FormSearch';
+import { formatCurrency } from 'src/helpers/helpers';
 
 const Inventory = () => {
 
@@ -59,13 +60,13 @@ const Inventory = () => {
           name: 'Precio',
           sortable:true,
           right: true,
-          selector: row => row.price,
+          selector: row => formatCurrency(row.price),
         },
         {
           name: 'Subtotal',
           sortable:true,
           right: true,
-          selector: row => row.subtotal
+          selector: row => formatCurrency(row.subtotal) 
         }
     ]
 
