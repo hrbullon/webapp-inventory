@@ -6,11 +6,6 @@ const Customers = () => {
   return (
     <Fragment>
         <div className='row'>
-            <div className='col-12'>
-               
-            </div>
-        </div>
-        <div className='row'>
             <div className='col'>
                 <div className="card  mt-4">
                     <div className="card-body">
