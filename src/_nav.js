@@ -4,7 +4,6 @@ import CIcon from '@coreui/icons-react'
 import {
   cilBriefcase,
   cilCash,
-  cilDescription,
   cilSpeedometer,
   cilStar,
   cilUser
@@ -15,13 +14,9 @@ import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 const _nav = [
   {
     component: CNavItem,
-    name: 'Dashboard',
+    name: 'Inicio',
     to: '/dashboard',
-    icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
-    badge: {
-      color: 'info',
-      text: 'NEW',
-    },
+    icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />
   },
   {
     component: CNavTitle,
@@ -94,13 +89,7 @@ const _nav = [
         to: '/sales-today',
       }
     ],
-  },
-  {
-    component: CNavItem,
-    name: 'Docs',
-    href: 'https://coreui.io/react/docs/templates/installation/',
-    icon: <CIcon icon={cilDescription} customClassName="nav-icon" />,
-  },
+  }
 ]
 
 export default _nav
