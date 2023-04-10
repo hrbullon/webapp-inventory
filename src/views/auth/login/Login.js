@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect, useContext } from 'react';
+
+import swal from 'sweetalert';
 import { useForm } from 'react-hook-form';
 
 import {
@@ -18,11 +20,22 @@ import CIcon from '@coreui/icons-react';
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import { CardMessage } from './CardMessage';
 import { login } from 'src/services/authServices';
-import swal from 'sweetalert';
+
+import { AuthContext } from 'src/context/AuthContext';
 
 const Login = () => {
 
   const {register, handleSubmit, reset, formState: { errors } } = useForm();
+
+  const { token } = useContext(AuthContext);
+  
+  useEffect(() => {
+ 
+    if(token){
+      window.location.href = "/";
+    }
+    
+  }, [token]);
 
   const onSubmit = async data => {
 
@@ -39,6 +52,7 @@ const Login = () => {
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
+      { !token &&
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={8}>
@@ -92,7 +106,7 @@ const Login = () => {
             </CCardGroup>
           </CCol>
         </CRow>
-      </CContainer>
+      </CContainer>}
     </div>
   )
 }
