@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
 
+import swal from 'sweetalert';
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
 import DataTable from 'react-data-table-component';
@@ -44,7 +45,7 @@ export const Table = () => {
         {
           name: 'Estado',
           sortable:true,
-          selector: row => <CBadge color={ row.state? "success" : "danger" }>{ row.state? "Activo" : "Inactivo" }</CBadge>
+          selector: row => <CBadge color={ row.state == "1" ? "success" : "danger" }>{ row.state == "1" ? "Activo" : "Inactivo" }</CBadge>
         },
         {
           name: 'Acciones',
@@ -55,12 +56,12 @@ export const Table = () => {
                     <Link to={ `/users/update/${row.id}` } className='btn btn-sm btn-primary m-1' title="Editar usuario">
                         <CIcon icon={ icon.cilPencil }/>
                     </Link>
-                    { row.state === 1 &&
+                    { row.state == "1" &&
                         <button onClick={ (e) => handleChangeStateUser(row) } className='btn btn-sm btn-danger' title="Desactivar usuario">
                             <CIcon icon={ icon.cilLockLocked }/>
                         </button>
                     }
-                    { row.state === 0 &&
+                    { row.state == "0" &&
                         <button onClick={ (e) => handleChangeStateUser(row) } className='btn btn-sm btn-success' title="Activar usuario">
                             <CIcon icon={ icon.cilLockUnlocked }/>
                         </button>

@@ -45,7 +45,7 @@ const Login = () => {
       localStorage.setItem("token", res.token);
       window.location.href = "/";
     }else{
-      swal("Error!", "Usuario / Contraseña incorrectos!", "warning");
+      swal("Error!", res.message, "warning");
     }
 
   }
