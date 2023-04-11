@@ -23,6 +23,9 @@ const Customers = React.lazy(() => import('./views/customers/Customers'))
 const CreateCustomer = React.lazy(() => import('./views/customers/Create'))
 const UpdateCustomer = React.lazy(() => import('./views/customers/Update'))
 
+const Purchases = React.lazy(() => import('./views/purchases/Purchases'))
+const PurchasesCreate = React.lazy(() => import('./views/purchases/Form'))
+
 const routes = [
   { path: '/', exact: true, name: 'Inicio' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
@@ -47,6 +50,9 @@ const routes = [
   { path: '/users', name: 'Usuaios', element: Users },
   { path: '/users/create', name: 'Crear usuario', element: CreateUser },
   { path: '/users/update/:id', name: 'Editar usuario', element: UpdateUser },
+
+  { path: '/purchases', name: 'Compras', element: Purchases },
+  { path: '/purchases/create', name: 'Nueva compra', element: PurchasesCreate },
 
 ]
 

@@ -35,6 +35,12 @@ const _nav = [
     ]
   },  
   {
+    component: CNavItem,
+    name: 'Compras',
+    to: "purchases",
+    icon: <CIcon icon={cilCash} customClassName="nav-icon" />,
+  },  
+  {
     component: CNavGroup,
     name: 'Control de Acceso',
     icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
