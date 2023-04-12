@@ -26,6 +26,8 @@ const UpdateCustomer = React.lazy(() => import('./views/customers/Update'))
 const Purchases = React.lazy(() => import('./views/purchases/Purchases'))
 const PurchasesCreate = React.lazy(() => import('./views/purchases/Form'))
 
+const Exchanges = React.lazy(() => import('./views/exchanges/Exchanges'))
+
 const routes = [
   { path: '/', exact: true, name: 'Inicio' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
@@ -53,6 +55,9 @@ const routes = [
 
   { path: '/purchases', name: 'Compras', element: Purchases },
   { path: '/purchases/create', name: 'Nueva compra', element: PurchasesCreate },
+
+  { path: '/exchanges', name: 'Tasas de cambio', element: Exchanges },
+
 
 ]
 
