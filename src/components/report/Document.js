@@ -5,9 +5,10 @@ import * as icon from '@coreui/icons';
 
 import { formatCurrency, printHTML } from 'src/helpers/helpers';
 import { Fragment } from 'react';
+import { TableDetails } from 'src/components/product/TableDetails';
 
-export const View = ({ data }) => {
-
+export const Document = ({ data, details }) => {
+    
     return (
     <Fragment>
         <div id='printDocument'> 
@@ -20,6 +21,7 @@ export const View = ({ data }) => {
                 </div>
             </div> 
             <div className="row mt-4">
+                {  data.Customer &&  
                 <div className="col-6">	
                     <ul className='list'>
                         <li><b>CLIENTE</b></li>
@@ -28,49 +30,19 @@ export const View = ({ data }) => {
                         <li><b>Telefono:</b>  { data.Customer.phone}</li>
                         <li><b>Direccion</b> { data.Customer.address}</li>
                     </ul>
-                </div>	
+                </div>}	
                 <div className="col-6">	
                     <ul className='list'>
                         <li><b>COMPROBANTE</b></li>
                         <li><b>Nro de Comprobante:</b> { data.code}</li>
                         <li><b>Fecha:</b> { data.date }</li>
+                        <li><b>Tasa Cambio:</b> { formatCurrency(data.exchange_amount,true) }</li>
                     </ul>
                 </div>	
             </div>
             <div className="row">
                 <div className="col-12 mt-4">
-                    <table className="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Codigo</th>
-                                <th>Nombre</th>
-                                <th>Precio</th>
-                                <th>Cantidad</th>
-                                <th>Importe</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                data.SaleDetails.map( (detail,index) => {
-                                    return (
-                                        <tr key={ index }>
-                                            <td>{ detail.code }</td>
-                                            <td>{ detail.description }</td>
-                                            <td>{ detail.price }</td>
-                                            <td>{ detail.quantity }</td>
-                                            <td>{ detail.subtotal_amount }</td>
-                                        </tr>
-                                    )
-                                })
-                            }
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colSpan="4" className="text-right"><strong>Total:</strong></td>
-                                <td>{ formatCurrency(data.total_amount) }</td>
-                            </tr>
-                        </tfoot>
-                    </table>
+                    <TableDetails items={ details } model={data} setModel={null}/>
                 </div>
             </div>
         </div>

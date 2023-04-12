@@ -5,33 +5,29 @@ import Select from 'react-select';
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
 
-import config from"../../config/config.json";
+import { prepareOptions } from 'src/helpers/helpers';
+import { TableDetails } from 'src/components/product/TableDetails';
+import { CardTotal } from 'src/components/cards/CardTotal';
 
-import { CardBasic } from './CardBasic';
-import { CardSale } from './CardSale';
-import { PurchaseDetails } from './PurchaseDetails';
+import { formatCurrency } from 'src/helpers/helpers';
 
 import { getAllProducts } from 'src/services/productsServices';
-import { getCustomerByDni } from 'src/services/customersServices'
-import { prepareOptions } from 'src/helpers/helpers';
-
 import { createPurchase } from 'src/services/purchasesServices';
 import { getLastExchange } from 'src/services/exchangesServices';
-import { formatCurrency } from 'src/helpers/helpers';
 
 const Form = () => {
 
     const [purchase, setPurchase] = useState({
         code:'----',
-        customer_id: null,
-        date: new Date(Date.now()).toLocaleDateString(),
+        document:'',
+        date: '',
+        description: '',
         exchange_amount:0,
         total_amount:0,
-        total_local_amount:0,
+        total_amount_converted:0,
         purchase_details: []
     });
     
-    const [customer, setCustomer] = useState({});
     const [quantity, setQuantity] = useState(1);
     const [products, setProducts] = useState([]);
     const [options, setOptions] = useState([]);
@@ -41,10 +37,16 @@ const Form = () => {
     }, []);
     
     useEffect(() => {
+
         if(purchase.purchase_details.length > 0){
+            
             let total = 0;
+            let totalConverted = 0;
+
             purchase.purchase_details.map( item => {  total += item.subtotal_amount });
-            setPurchase({ ...purchase, total_amount: total});
+            purchase.purchase_details.map( item => {  totalConverted += item.subtotal_amount_converted });
+
+            setPurchase({ ...purchase, total_amount: total, total_amount_converted: totalConverted});
         }
     }, [purchase.purchase_details]);
 
@@ -57,47 +59,20 @@ const Form = () => {
         setPurchase({ ...purchase, exchange_amount: resExchange.exchanges[0].amount});
     }
 
-    const handleFindCustomer = async (evt) => {
-        if(evt.key == "Enter"){
-            const res = await getCustomerByDni(evt.target.value);
-            if(res.customer){
-                setPurchase({ ...purchase, 
-                    customer_id: res.customer.id,
-                })
-                setCustomer(res.customer);
-            }else{
-                setCustomer({});
-
-                swal({
-                    title:'Oops',
-                    text:'Cliente no registrado en el Sistema',
-                    icon: "warning",
-                    buttons: {
-                        cancel: true,
-                        roll: {
-                            text: "Registrar cliente",
-                            value: "customer_register",
-                        },
-                    }
-                }).then((result) => {
-                    if(result == "customer_register"){
-                        window.open(`${config.BASE_URL}/#/customers/create`, '_blank');
-                    }
-                })
-            }
-        }
-    }
-
     const handleChangingProduct = (input) => {
+        
         const product = products.filter( item => item.id === input.value )[0];
-        const price = (Number(product.price)*purchase.exchange_amount);
+        const price_converted = (Number(product.price)*purchase.exchange_amount);
+        
         const item = {
             product_id: product.id,
             code: product.code,
             description: product.name,
             quantity:quantity,
-            price: price,
-            subtotal_amount: (price*quantity)
+            price: product.price,//$US by default
+            subtotal_amount: (Number(product.price)*quantity),//$US by default
+            price_converted: price_converted,//For example Bs
+            subtotal_amount_converted: (price_converted*quantity)//For example Bs
         };
 
         setPurchase({ ...purchase, 
@@ -110,7 +85,7 @@ const Form = () => {
         let res = await createPurchase(purchase);
         if(res.purchase){
             swal("Completado!", "Datos guardados!", "success");
-            window.location.href = "/#/purchases";
+            //window.location.href = "/#/purchases";
         }else{
             swal("Oops","Algo salio mal al guardar los datos","warning");
         }
@@ -120,10 +95,44 @@ const Form = () => {
         <Fragment>
             <div className="row">
                 <div className="col-8">
-                    <div className="mb-3">
-                        <input type="text" name="name" autoFocus className="form-control" onKeyUp={ (e) => handleFindCustomer(e) } placeholder="Seleccione un cliente"/>
+                    <div className="card">
+                        <div className="card-body">
+                            <div className="mb-3">
+                                <label>Fecha de factura/documento</label>
+                                
+                                <input 
+                                    type="date" 
+                                    name="date" 
+                                    className='form-control' 
+                                    value={ purchase.date } 
+                                    onChange={ (e) => setPurchase({...purchase, date: e.target.value}) }    
+                                    placeholder='Seleccione una fecha de factura o documento' />
+
+                            </div>
+                            <div className="mb-3">
+                                <label>Nro Factura/Documento</label>
+                                
+                                <input 
+                                    type="text" 
+                                    name="document" 
+                                    className='form-control' 
+                                    value={ purchase.document } 
+                                    onChange={ (e) => setPurchase({...purchase, document: e.target.value}) }    
+                                    placeholder='Seleccione una fecha de factura o documento' />
+
+                            </div>
+                            <div className="mb-3">
+                                <label>Observaciones</label>
+
+                                <textarea 
+                                    name="description" 
+                                    className='form-control' 
+                                    value={ purchase.description } 
+                                    onChange={ (e) => setPurchase({...purchase, description: e.target.value}) }    
+                                    placeholder='Escriba un comentario u observación si lo considera necesario' />
+                            </div>
+                        </div>
                     </div>
-                    <CardBasic customer={customer} />
                 </div>
                 <div className="col-4">
                     <div className="card">
@@ -133,7 +142,7 @@ const Form = () => {
                             }    
                         </div>
                     </div>
-                    <CardSale purchase={purchase} />
+                    <CardTotal model={purchase} />
                 </div>
                 <div className="col-12 mt-3">
                     <div className="card">
@@ -152,7 +161,7 @@ const Form = () => {
                 <div className="col-12 mt-3">
                     <div className="card">
                         <div className="card-body">
-                            <PurchaseDetails items={ purchase.purchase_details } purchase={purchase} setPurchase={setPurchase}/>
+                            <TableDetails items={ purchase.purchase_details } model={purchase} setModel={setPurchase}/>
                         </div>
                     </div>
                 </div>

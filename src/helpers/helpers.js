@@ -56,6 +56,10 @@ export const formatCurrency = (amount, local = false) => {
     }
 }
 
+export const formatNumber = (number) => {
+    return number.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
 export const printHTML = (id) => {
 
     var content = document.getElementById(id).innerHTML;

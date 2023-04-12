@@ -2,14 +2,14 @@ import React from 'react'
 
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
-import { formatCurrency } from 'src/helpers/helpers';
+import { formatNumber } from 'src/helpers/helpers';
 
-export const PurchaseDetails = ({ items, purchase, setPurchase }) => {
+export const TableDetails = ({ items, model, setModel }) => {
 
     const handleDeleteItem = (index) => {
         items.splice(index, 1);
-        setPurchase({ ...purchase, 
-            purchase_details: [ ...items]
+        setModel({ ...model, 
+            details: [ ...items]
         })
     }
 
@@ -23,9 +23,15 @@ export const PurchaseDetails = ({ items, purchase, setPurchase }) => {
                     <th>Code</th>
                     <th>Artículo</th>
                     <th className='text-right'>Cantidad</th>
-                    <th className='text-right'>Precio</th>
-                    <th className='text-right'>Subtotal</th>
-                    <th className='text-right'>Acciones</th>
+                    
+                    <th className='text-right'>Precio $US</th>
+                    <th className='text-right'>Subtotal $US</th>
+                    
+                    <th className='text-right'>Precio Bs</th>
+                    <th className='text-right'>Subtotal Bs</th>
+                    { setModel &&
+                        <th className='text-right'>Acciones</th>
+                    }
                 </tr>
             </thead>
             <tbody>
@@ -36,14 +42,21 @@ export const PurchaseDetails = ({ items, purchase, setPurchase }) => {
                                 <td>{ index+1 }</td>
                                 <td>{ item.code }</td>
                                 <td>{ item.description }</td>
+                                
                                 <td className='text-right'>{ item.quantity }</td>
-                                <td className='text-right'>{ formatCurrency(item.price, true) }</td>
-                                <td className='text-right'>{ formatCurrency(item.subtotal_amount, true) }</td>
+                                
+                                <td className='text-right'>{ formatNumber(item.price) }</td>
+                                <td className='text-right'>{ formatNumber(item.subtotal_amount) }</td>
+                                
+                                <td className='text-right'>{ formatNumber(item.price_converted) }</td>
+                                <td className='text-right'>{ formatNumber(item.subtotal_amount_converted) }</td>
+                                
+                                { setModel &&
                                 <td className='text-right'>
                                     <button onClick={ (e) => handleDeleteItem(index) } className='btn btn-sm btn-danger'>
                                         <CIcon icon={ icon.cilDelete }/>
                                     </button>
-                                </td>
+                                </td>}
                             </tr>
                         )
                     })
@@ -51,15 +64,15 @@ export const PurchaseDetails = ({ items, purchase, setPurchase }) => {
             </tbody>
             <tfoot>
                 <tr>
-                    <td className='text-right' colSpan={5}><b>Total:</b></td>
+                    <td className='text-right' colSpan={7}><b>Total Bs.:</b></td>
                     <td className='text-right'>
-                        <b>{ formatCurrency(purchase.total_amount,true) }</b>
+                        <b>{ formatNumber(model.total_amount_converted) }</b>
                     </td>
                 </tr>
                 <tr>
-                    <td colSpan={5}></td>
+                    <td className='text-right' colSpan={7}><b>Total $US:</b></td>
                     <td className='text-right'>
-                        <b>{ formatCurrency( (purchase.total_amount/purchase.exchange_amount)) }</b>
+                        <b>{ formatNumber(model.total_amount) }</b>
                     </td>
                 </tr>
             </tfoot>

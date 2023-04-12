@@ -8,8 +8,8 @@ import * as icon from '@coreui/icons';
 import config from"../../config/config.json";
 
 import { CardBasic } from './CardBasic';
-import { CardSale } from './CardSale';
-import { SaleDetails } from './SaleDetails';
+import { CardTotal } from 'src/components/cards/CardTotal';
+import { TableDetails } from 'src/components/product/TableDetails';
 
 import { getAllProducts } from 'src/services/productsServices';
 import { getCustomerByDni } from 'src/services/customersServices'
@@ -26,7 +26,7 @@ const Form = () => {
         date: new Date(Date.now()).toLocaleDateString(),
         exchange_amount:0,
         total_amount:0,
-        total_local_amount:0,
+        total_amount_converted:0,
         sale_details: []
     });
     
@@ -40,10 +40,16 @@ const Form = () => {
     }, []);
     
     useEffect(() => {
+
         if(sale.sale_details.length > 0){
+            
             let total = 0;
+            let totalConverted = 0;
+
             sale.sale_details.map( item => {  total += item.subtotal_amount });
-            setSale({ ...sale, total_amount: total});
+            sale.sale_details.map( item => {  totalConverted += item.subtotal_amount_converted });
+            
+            setSale({ ...sale, total_amount: total, total_amount_converted: totalConverted});
         }
     }, [sale.sale_details]);
 
@@ -88,15 +94,19 @@ const Form = () => {
     }
 
     const handleChangingProduct = (input) => {
+        
         const product = products.filter( item => item.id === input.value )[0];
-        const price = (Number(product.price)*sale.exchange_amount);
+        const price_converted = (Number(product.price)*sale.exchange_amount);
+        
         const item = {
             product_id: product.id,
             code: product.code,
             description: product.name,
             quantity:quantity,
-            price: price,
-            subtotal_amount: (price*quantity)
+            price: product.price,//$US by default
+            subtotal_amount: (Number(product.price)*quantity),//$US by default
+            price_converted: price_converted,//For example Bs
+            subtotal_amount_converted: (price_converted*quantity)//For example Bs
         };
 
         setSale({ ...sale, 
@@ -132,7 +142,7 @@ const Form = () => {
                             }    
                         </div>
                     </div>
-                    <CardSale sale={sale} />
+                    <CardTotal model={sale} />
                 </div>
                 <div className="col-12 mt-3">
                     <div className="card">
@@ -151,7 +161,7 @@ const Form = () => {
                 <div className="col-12 mt-3">
                     <div className="card">
                         <div className="card-body">
-                            <SaleDetails items={ sale.sale_details } sale={sale} setSale={setSale}/>
+                            <TableDetails items={ sale.sale_details } model={sale} setModel={setSale}/>
                         </div>
                     </div>
                 </div>

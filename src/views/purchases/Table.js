@@ -19,7 +19,7 @@ import config from '../../config/config.json';
 
 import { getAllPurchases } from 'src/services/purchasesServices';
 
-import { View } from './View';
+import { Document } from 'src/components/report/Document';
 import { FormSearch } from './FormSearch';
 import { ButtonsExport } from 'src/components/table/ButtonsExport';
 import EclipseComponent from '../../components/loader/EclipseComponent';
@@ -36,12 +36,12 @@ export const Table = () => {
 
     const headerOptions = [
         {
-            name:"name",
-            prompt:"Cliente"
-        },
-        {
             name:"code",
             prompt:"Nro Control"
+        },
+        {
+            name:"document",
+            prompt:"Nro Fact/Doc"
         },
         {
             name:"date",
@@ -66,14 +66,14 @@ export const Table = () => {
 
     const columns = [
         {
-            name: 'Cliente',
-            sortable:true,
-            selector: row => row.name,
-        },
-        {
             name: 'Nro Control',
             sortable:true,
             selector: row => row.code,
+        },
+        {
+            name: 'Nro Fact/Doc',
+            sortable:true,
+            selector: row => row.document,
         },
         {
             name: 'Fecha',
@@ -87,13 +87,13 @@ export const Table = () => {
             selector: row => formatCurrency(row.exchange_amount,true),
         },
         {
-            name: 'Monto',
+            name: 'Monto $US',
             sortable:true,
             right: true,
             selector: row => formatCurrency(row.total_amount, true),
         },
         {
-            name: 'Monto',
+            name: 'Monto Bs.',
             sortable:true,
             right: true,
             selector: row => formatCurrency(row.total_amount_converted)
@@ -102,7 +102,7 @@ export const Table = () => {
             name: 'Accion',
             right: true,
             selector: row => {
-                return (<button onClick={ (e) => handleShowSale(row)  } className='btn btn-sm btn-info'>
+                return (<button onClick={ (e) => handleShowPurchase(row)  } className='btn btn-sm btn-info'>
                             <CIcon icon={ icon.cilShortText }/>
                         </button>)
             },
@@ -113,8 +113,8 @@ export const Table = () => {
         fetchSales();
     }, []);
 
-    const handleShowSale = (sale) => {
-        setSale(sale);
+    const handleShowPurchase = (purchase) => {
+        setPurchase(purchase);
         setVisible(true);
     }
 
@@ -131,17 +131,16 @@ export const Table = () => {
 
         let rows = [];
 
-        data.map( sale => {
+        data.map( purchase => {
 
             const row = {
-                name: sale.Customer.name,
-                code: sale.code,
-                date: sale.date,
-                Customer: sale.Customer,
-                SaleDetails: sale.SaleDetails,
-                exchange_amount: sale.exchange_amount,
-                total_amount: sale.total_amount,
-                total_amount_converted: sale.total_amount_converted,
+                code: purchase.code,
+                document: purchase.document,
+                date: purchase.date,
+                PurchaseDetails: purchase.PurchaseDetails,
+                exchange_amount: purchase.exchange_amount,
+                total_amount: purchase.total_amount,
+                total_amount_converted: purchase.total_amount_converted,
             };
 
             rows.push(row);
@@ -176,12 +175,12 @@ export const Table = () => {
             noDataComponent={"No hay datos para mostrar"}
         />
 
-        <CModal size="lg" visible={visible} onClose={() => setVisible(false)}>
+        <CModal size="xl" visible={visible} onClose={() => setVisible(false)}>
             <CModalHeader onClose={() => setVisible(false)}>
             <CModalTitle>Detalles de Compra</CModalTitle>
             </CModalHeader>
             <CModalBody>
-                <View data={ purchase }/>
+                <Document data={ purchase } details={ purchase.PurchaseDetails }/>
             </CModalBody>
             <CModalFooter>
             </CModalFooter>

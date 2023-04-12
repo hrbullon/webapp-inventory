@@ -19,7 +19,7 @@ import config from '../../config/config.json';
 
 import { getAllSales } from 'src/services/salesServices';
 
-import { View } from './View';
+import { Document } from 'src/components/report/Document';
 import { FormSearch } from './FormSearch';
 import { ButtonsExport } from 'src/components/table/ButtonsExport';
 import EclipseComponent from '../../components/loader/EclipseComponent';
@@ -54,12 +54,12 @@ export const Table = () => {
         },
         {
             name:"total_amount",
-            prompt:"Monto Bs.",
+            prompt:"Monto $US.",
             align:"right"
         },
         {
             name:"total_amount_converted",
-            prompt:"Monto $US.",
+            prompt:"Monto Bs.",
             align:"right"
         },
     ];
@@ -87,16 +87,16 @@ export const Table = () => {
             selector: row => formatCurrency(row.exchange_amount,true),
         },
         {
-            name: 'Monto',
+            name: 'Monto $US',
             sortable:true,
             right: true,
-            selector: row => formatCurrency(row.total_amount, true),
+            selector: row => formatCurrency(row.total_amount),
         },
         {
-            name: 'Monto',
+            name: 'Monto Bs.',
             sortable:true,
             right: true,
-            selector: row => formatCurrency(row.total_amount_converted)
+            selector: row => formatCurrency(row.total_amount_converted, true)
         },
         {
             name: 'Accion',
@@ -176,12 +176,12 @@ export const Table = () => {
             noDataComponent={"No hay datos para mostrar"}
         />
 
-        <CModal size="lg" visible={visible} onClose={() => setVisible(false)}>
+        <CModal size="xl" visible={visible} onClose={() => setVisible(false)}>
             <CModalHeader onClose={() => setVisible(false)}>
             <CModalTitle>Detalles de Venta</CModalTitle>
             </CModalHeader>
             <CModalBody>
-                <View data={ sale }/>
+                <Document data={ sale } details={ sale.SaleDetails }/>
             </CModalBody>
             <CModalFooter>
             </CModalFooter>
