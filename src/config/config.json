@@ -1,6 +1,7 @@
 {
     "BASE_URL":"http://localhost:3000",
     "API_URL":"http://localhost:8000",
+    "JWT_SEED":"e7f551dd76112f31199ad3324f3538b33f8f7124",
     "paginationComponentOptions": {
         "rowsPerPageText": "Filas por página",
         "rangeSeparatorText": "de",

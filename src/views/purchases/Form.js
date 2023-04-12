@@ -85,7 +85,7 @@ const Form = () => {
         let res = await createPurchase(purchase);
         if(res.purchase){
             swal("Completado!", "Datos guardados!", "success");
-            //window.location.href = "/#/purchases";
+            window.location.href = "/#/purchases";
         }else{
             swal("Oops","Algo salio mal al guardar los datos","warning");
         }

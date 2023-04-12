@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
@@ -8,16 +8,18 @@ import { Fragment } from 'react';
 import { TableDetails } from 'src/components/product/TableDetails';
 
 export const Document = ({ data, details }) => {
-    
+
     return (
     <Fragment>
         <div id='printDocument'> 
             <div className="row">
                 <div className="col-xs-12 text-center">
-                    <b>Empresa de Ventas</b><br/>
-                    Calle Moquegua 430 <br/>
-                    Tel. 481890 <br/>
-                    Email:yonybrondy17@gmail.com
+                    <b>TU ELECTRONIC IMPORT G.R, C.A</b><br/>
+                    AV AVENIDA 15 DELICIAS CON CALLE 100 AV LIBERTADOR LOCAL <br/>
+                    Centro Comercial - Gran Bazar<br/> Local ML-1144
+                    Tel. +58 424-6170748 <br/>
+                    tuelectronicimport@gmail.com<br/>
+                    @tuelectronicimport
                 </div>
             </div> 
             <div className="row mt-4">
