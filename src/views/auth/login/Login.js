@@ -42,6 +42,7 @@ const Login = () => {
     const res = await login(data);
 
     if(res.token){
+      localStorage.setItem("user", JSON.stringify(res.user));
       localStorage.setItem("token", res.token);
       window.location.href = "/";
     }else{

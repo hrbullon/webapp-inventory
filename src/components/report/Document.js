@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
 
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
@@ -6,20 +6,22 @@ import * as icon from '@coreui/icons';
 import { formatCurrency, printHTML } from 'src/helpers/helpers';
 import { Fragment } from 'react';
 import { TableDetails } from 'src/components/product/TableDetails';
+import { AuthContext } from 'src/context/AuthContext';
 
 export const Document = ({ data, details }) => {
+
+    const { company } = useContext(AuthContext);
 
     return (
     <Fragment>
         <div id='printDocument'> 
             <div className="row">
                 <div className="col-xs-12 text-center">
-                    <b>TU ELECTRONIC IMPORT G.R, C.A</b><br/>
-                    AV AVENIDA 15 DELICIAS CON CALLE 100 AV LIBERTADOR LOCAL <br/>
-                    Centro Comercial - Gran Bazar<br/> Local ML-1144
-                    Tel. +58 424-6170748 <br/>
-                    tuelectronicimport@gmail.com<br/>
-                    @tuelectronicimport
+                    <b>{ company.name }</b><br/>
+                    { company.address } <br/>
+                    { company.phone } <br/>
+                    { company.email }<br/>
+                    { company.web }
                 </div>
             </div> 
             <div className="row mt-4">

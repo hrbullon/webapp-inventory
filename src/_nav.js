@@ -34,6 +34,11 @@ const _nav = [
       },
       {
         component: CNavItem,
+        name: 'Datos Empresa',
+        to: '/company',
+      },
+      {
+        component: CNavItem,
         name: 'Tasas de cambio',
         to: '/exchanges',
       }

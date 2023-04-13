@@ -22,9 +22,11 @@ class App extends Component {
   render() {
 
     const token = localStorage.getItem("token");
+    let user = localStorage.getItem("user");
+    user = JSON.parse(user);
 
     return (
-      <AuthContext.Provider value={ { token: token }  }>
+      <AuthContext.Provider value={ { token: token, company: user.Company }  }>
       <HashRouter>
         <Suspense fallback={loading}>
           <Routes>
