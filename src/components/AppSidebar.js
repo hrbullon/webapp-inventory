@@ -1,24 +1,34 @@
-import React from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { CSidebar, CSidebarBrand, CSidebarNav, CSidebarToggler } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-
 import { AppSidebarNav } from './AppSidebarNav'
-
-import { logoNegative } from 'src/assets/brand/logo-negative'
-import { sygnet } from 'src/assets/brand/sygnet'
 
 import SimpleBar from 'simplebar-react'
 import 'simplebar/dist/simplebar.min.css'
 
 // sidebar nav config
-import navigation from '../_nav'
+import adminNavigation from '../navigation/adm_nav';
+import userNavigation from '../navigation/std_nav';
+
+import { AuthContext } from 'src/context/AuthContext'
 
 const AppSidebar = () => {
+  
   const dispatch = useDispatch()
+  const [navigation, setNavigation] = useState([]);
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)
   const sidebarShow = useSelector((state) => state.sidebarShow)
+
+  const { user } = useContext(AuthContext);
+
+  useEffect(() => {
+      if(user.role == "ADM_ROLE"){
+        setNavigation(adminNavigation);
+      }else{
+        setNavigation(userNavigation);
+      }
+  }, [])
 
   return (
     <CSidebar

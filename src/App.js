@@ -28,7 +28,7 @@ class App extends Component {
     const company = user? user.Company : {};
 
     return (
-      <AuthContext.Provider value={ { token: token, company: company }  }>
+      <AuthContext.Provider value={ { token: token, user: user, company: company }  }>
       <HashRouter>
         <Suspense fallback={loading}>
           <Routes>
