@@ -25,8 +25,10 @@ class App extends Component {
     let user = localStorage.getItem("user");
     user = JSON.parse(user);
 
+    const company = user? user.Company : {};
+
     return (
-      <AuthContext.Provider value={ { token: token, company: user.Company }  }>
+      <AuthContext.Provider value={ { token: token, company: company }  }>
       <HashRouter>
         <Suspense fallback={loading}>
           <Routes>
