@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 import { ActionButtons } from 'src/components/forms/ActionButtons';
 import { createCustomer, getCustomerById, updateCustomer } from 'src/services/customersServices';
 import { ErrorValidate } from 'src/components/forms/ErrorValidate';
+import { formatDocument } from 'src/helpers/helpers';
 
 export const Form = ({ title }) => {
 
@@ -61,7 +62,7 @@ export const Form = ({ title }) => {
                         </div>
                         <div className="form-group">
                             <label>DNI/Cedula: *</label>
-                            <input type="text" className="form-control" name="dni" autoComplete='off' {...register("dni", { required: true, maxLength: 20 })}/>
+                            <input type="text" className="form-control" name="dni" autoComplete='off' onKeyUp={ (e) => formatDocument(e) } {...register("dni", { required: true, maxLength: 20 })}/>
                             <ErrorValidate error={ errors.dni }/>
                         </div>
                         <div className="form-group">
@@ -73,7 +74,7 @@ export const Form = ({ title }) => {
                     <div className="col-6">
                         <div className="form-group">
                             <label>Telefono: *</label>
-                            <input type="text" className="form-control" name="phone" autoComplete='off' {...register("phone", { required: true, maxLength: 12 })}/>
+                            <input type="text" className="form-control" name="phone" autoComplete='off' {...register("phone", { required: true, maxLength: 12, pattern:'/[0-1]*/' })}/>
                             <ErrorValidate error={ errors.phone }/>                        
                         </div>
                         <div className="form-group">

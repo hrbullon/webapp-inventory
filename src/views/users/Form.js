@@ -7,8 +7,8 @@ import { useParams } from 'react-router-dom';
 
 import { ActionButtons } from 'src/components/forms/ActionButtons';
 import { ErrorValidate } from 'src/components/forms/ErrorValidate';
-
 import { createUser, getUserById, updateUser} from 'src/services/usersServices';
+import { formatDocument } from 'src/helpers/helpers';
 
 export const Form = ({ title }) => {
 
@@ -80,7 +80,7 @@ export const Form = ({ title }) => {
                     <div className="col-4">
                         <div className="form-group">
                             <label>DNI/Cedula: *</label>
-                            <input type="text" className="form-control" name="dni" autoComplete='off' {...register("dni", { required: true, maxLength: 20 })}/>
+                            <input type="text" className="form-control" name="dni" autoComplete='off'   onKeyUp={ (e) => formatDocument(e) } {...register("dni", { required: true, maxLength: 20 })}/>
                             <ErrorValidate error={ errors.dni }/>
                         </div>
                     </div>
@@ -121,7 +121,7 @@ export const Form = ({ title }) => {
                         <div className="form-group">
                             <label>Usuario: *</label>
                             <input type="text" className="form-control" name="account" autoComplete='off' {...register("account", { required: true, maxLength: 45 })}/>
-                            <ErrorValidate error={ errors.email }/>     
+                            <ErrorValidate error={ errors.account }/>     
                         </div>
                     </div>
                     <div className="col-4">
@@ -138,8 +138,8 @@ export const Form = ({ title }) => {
                     <div className="col-4">
                         <div className="form-group">
                             <label>Contraseña: *</label>
-                            <input type="text" className="form-control" name="password" autoComplete='off' {...register("password", { required: (id)? false : true })}/>
-                            <ErrorValidate error={ errors.email }/>     
+                            <input type="password" className="form-control" name="password" autoComplete='off' {...register("password", { required: (id)? false : true })}/>
+                            <ErrorValidate error={ errors.password }/>     
                         </div>
                     </div>
                     <div className='col-6'>

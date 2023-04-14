@@ -12,7 +12,8 @@ export const FormSearch = ({ setPurchases, rows }) => {
         
         let filtered = rows
         .filter( item => {
-            return item.code && item.code.toLowerCase().includes(data.code.toLowerCase())
+            return item.code && item.code.toLowerCase().includes(data.code.toLowerCase()) &&
+            item.document && item.document.toLowerCase().includes(data.document.toLowerCase())
         })
 
         if(data.start_date !== "" && data.end_date !== ""){
@@ -31,12 +32,14 @@ export const FormSearch = ({ setPurchases, rows }) => {
     const handleReset = () => {
         reset({
             code:'',
+            document:'',
             start_date:'',
             end_date:''
         });
 
         handleFilter({
             code:'',
+            document:'',
             start_date:'',
             end_date:''
         })
@@ -47,6 +50,9 @@ export const FormSearch = ({ setPurchases, rows }) => {
         <div className='row mt-4'>
             <div className='col-3'>
                 <input type="text" className='form-control' autoComplete='off' {...register("code") } placeholder='Buscar por nro de control'/>  
+            </div>
+            <div className='col-3'>
+                <input type="text" className='form-control' autoComplete='off' {...register("document") } placeholder='Buscar por nro de Fact/Doc'/>  
             </div>
             <div className='col-3'>
                 <input type="date" className='form-control' autoComplete='off' {...register("start_date") } placeholder='Buscar por fecha desde'/>  

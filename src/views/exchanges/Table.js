@@ -9,6 +9,7 @@ import config from '../../config/config.json';
 import EclipseComponent from 'src/components/loader/EclipseComponent';
 import { FormSearch } from './FormSearch';
 import { deleteExchange } from 'src/services/exchangesServices';
+import { formatCurrency, formatNumber } from 'src/helpers/helpers';
 
 export const Table = ({ setExchange, exchanges, setExchanges, data }) => {
 
@@ -26,7 +27,7 @@ export const Table = ({ setExchange, exchanges, setExchanges, data }) => {
         {
             name: 'Monto',
             sortable:true,
-            selector: row => row.amount,
+            selector: row => formatCurrency(row.amount, true),
         },
         {
             name: 'Acciones',

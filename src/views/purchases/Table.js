@@ -163,7 +163,7 @@ export const Table = () => {
             title="Listado de Ventas" 
             fileName="Reporte-ventas"/>
 
-        <FormSearch setPurchase={ setPurchases } rows={copies}/>
+        <FormSearch setPurchases={ setPurchases } rows={copies}/>
 
         <DataTable 
             columns={columns}

@@ -26,7 +26,7 @@ export const FormSearch = ({ setCategories, rows }) => {
         <form onSubmit={handleSubmit(handleFilter)}>
             <div className='row mt-4'>
                 <div className='col-8'>
-                    <input type="text" className='form-control' autocomplete='off' {...register("name") }  placeholder='Buscar por nombre'/>  
+                    <input type="text" className='form-control' autoComplete='off' {...register("name") }  placeholder='Buscar por nombre'/>  
                 </div>
                 <div className='col'>
                     <button type='button' onClick={ handleReset } className='btn btn-secondary float-end mt-2 mb-2' title='Limpiar formulario'>

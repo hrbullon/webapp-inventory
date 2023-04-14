@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { ActionButtons } from 'src/components/forms/ActionButtons';
 import { ErrorValidate } from 'src/components/forms/ErrorValidate';
 import { getCompanyById, updateCompany } from 'src/services/companiesServices';
+import { formatDocument, onlyNumber } from 'src/helpers/helpers';
 
 const Form = () => {
     
@@ -50,7 +51,7 @@ const Form = () => {
                 </CAlert>
                 <div className='row mt-4'>
                     <div className='col-12'>
-                        <h5>Datos personales</h5>
+                        <h5>Datos básicos</h5>
                         <hr/>
                     </div>
                     <div className="col-md-4">
@@ -80,6 +81,7 @@ const Form = () => {
                             name='dni'
                             className="form-control" 
                             placeholder="RIF"
+                            onKeyUp={ (e) => formatDocument(e) }  
                             {...register("dni", { required: true, maxLength: 20 })}/>
                         <ErrorValidate error={ errors.dni }/>     
                     </div>
@@ -110,7 +112,7 @@ const Form = () => {
                     <div className="col-4">
                         <label>Teléfono *</label>
                         <input 
-                            type="text" 
+                            type="number" 
                             name='phone'
                             className="form-control" 
                             placeholder="Teléfono"

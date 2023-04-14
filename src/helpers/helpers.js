@@ -56,6 +56,17 @@ export const formatCurrency = (amount, local = false) => {
     }
 }
 
+export const formatDocument = (event) => {
+
+    const string = event.target.value.slice(0,1);
+
+    if(string !== ""){
+      const value = event.target.value.replace(/\D/g,'').slice(0, 9);
+      event.target.value = `${string.toUpperCase()}-${value}`;
+      return event.target.value;
+    }
+}
+
 export const formatNumber = (number) => {
     return number.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }

@@ -13,6 +13,7 @@ import { formatCurrency } from 'src/helpers/helpers';
 const Inventory = () => {
 
     const [loading, setLoading] = useState(false);
+    const [totalInventory, setTotalInventory] = useState(0);
     const [products, setProducts ] = useState([]);
     const [copies, setCopies] = useState([]);
 
@@ -71,6 +72,19 @@ const Inventory = () => {
     ]
 
     useEffect(() => {
+      
+      let total = 0;
+      
+      products.map( item => {
+        total += Number(item.subtotal); 
+      });
+
+      setTotalInventory(total);
+
+    }, [products])
+    
+
+    useEffect(() => {
       fetchProducts();
     }, []);
 
@@ -126,6 +140,8 @@ const Inventory = () => {
               progressComponent={ <EclipseComponent/> }
               paginationComponentOptions={ config.paginationComponentOptions }
               noDataComponent={"No hay datos para mostrar"}/>
+
+              <p className='float-end'><b>Total:</b> { formatCurrency(totalInventory) }</p>
         </div>
     </div>
   )
