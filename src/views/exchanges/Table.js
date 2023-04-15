@@ -39,9 +39,9 @@ export const Table = ({ setExchange, exchanges, setExchanges, data }) => {
                         <button onClick={ (e) => setExchange(row) } className='btn btn-sm btn-primary m-2'>
                             <CIcon icon={ icon.cilPencil }/>
                         </button>
-                        <button onClick={ (e) => handleDeleteExchange(row) } className='btn btn-sm btn-danger'>
+                        {/* <button onClick={ (e) => handleDeleteExchange(row) } className='btn btn-sm btn-danger'>
                             <CIcon icon={ icon.cilDelete }/>
-                        </button>
+                        </button> */}
                     </Fragment>
                 )
             },

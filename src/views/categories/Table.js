@@ -28,9 +28,9 @@ export const Table = ({ setCategory, categories, setCategories, data }) => {
                         <button onClick={ (e) => setCategory(row) } className='btn btn-sm btn-primary m-2'>
                             <CIcon icon={ icon.cilPencil }/>
                         </button>
-                        <button onClick={ (e) => handleDeleteCategory(row) } className='btn btn-sm btn-danger'>
+                        {/* <button onClick={ (e) => handleDeleteCategory(row) } className='btn btn-sm btn-danger'>
                             <CIcon icon={ icon.cilDelete }/>
-                        </button>
+                        </button> */}
                     </Fragment>
                 )
             },

@@ -70,9 +70,9 @@ export const Table = () => {
                         <Link to={ `/customers/update/${row.id}` } className='btn btn-sm btn-primary m-1'>
                             <CIcon icon={ icon.cilPencil }/>
                         </Link>
-                        <button onClick={ (e) => handleDeleteCustomer(row) } className='btn btn-sm btn-danger'>
+                        {/* <button onClick={ (e) => handleDeleteCustomer(row) } className='btn btn-sm btn-danger'>
                             <CIcon icon={ icon.cilDelete }/>
-                        </button>
+                        </button> */}
                     </Fragment>
                 )
             },
