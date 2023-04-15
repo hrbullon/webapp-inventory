@@ -9,7 +9,7 @@ import { ButtonsExport } from 'src/components/table/ButtonsExport';
 import EclipseComponent from 'src/components/loader/EclipseComponent';
 
 import { getAllSalesMonth, getAllSalesToday } from 'src/services/salesServices';
-import { formatCurrency } from 'src/helpers/helpers';
+import { formatCurrency, formatNumber } from 'src/helpers/helpers';
 import { CWidgetStatsB } from '@coreui/react';
 
 export const Table = ({ type, title, fileName }) => {
@@ -51,12 +51,22 @@ export const Table = ({ type, title, fileName }) => {
         },
         {
             name:"price",
-            prompt:"Precio",
+            prompt:"Precio $US",
             align:"right"
         },
         {
             name:"subtotal_amount",
-            prompt:"Monto Bs.",
+            prompt:"Subtotal $US",
+            align:"right"
+        },
+        {
+            name:"price_converted",
+            prompt:"Precio Bs.",
+            align:"right"
+        },
+        {
+            name:"subtotal_amount_converted",
+            prompt:"Subtotal Bs.",
             align:"right"
         }
     ];
@@ -90,16 +100,28 @@ export const Table = ({ type, title, fileName }) => {
             selector: row => row.exchange_amount,
         },
         {
-            name: 'Precio',
+            name: 'Precio $US',
             sortable:true,
             right: true,
             selector: row => row.price,
         },
         {
-            name: 'Subtotal',
+            name: 'Subtotal $US',
             sortable:true,
             right: true,
             selector: row => row.subtotal_amount,
+        },
+        {
+            name: 'Precio Bs.',
+            sortable:true,
+            right: true,
+            selector: row => row.price_converted,
+        },
+        {
+            name: 'Subtotal Bs.',
+            sortable:true,
+            right: true,
+            selector: row => row.subtotal_amount_converted,
         },
     ];
 
@@ -118,9 +140,8 @@ export const Table = ({ type, title, fileName }) => {
 
             totalQuantity += Number(item.quantity);
             totalExchanges += Number(item.Sale.exchange_amount);
+            totalSales += Number(item.subtotal_amount);
 
-            let amount = (Number(item.subtotal_amount)/Number(item.Sale.exchange_amount));
-            totalSales += amount;
             let average = (totalExchanges/sales.length);
             setAveExchange(average);
         });
@@ -187,17 +208,16 @@ export const Table = ({ type, title, fileName }) => {
         let rows = [];
 
         data.map( item => {
-
-            const price_ = (item.price/item.Sale.exchange_amount);
-
             const row = {
                 code: item.Sale.code,
-                code_product: item.code,
+                code_product: item.code? item.code.toString() : "S/I",
                 description: item.description,
                 quantity: item.quantity,
-                exchange_amount: formatCurrency(item.Sale.exchange_amount, true),
-                price: formatCurrency(price_),
-                subtotal_amount: formatCurrency(price_*item.quantity)
+                exchange_amount: formatNumber(item.Sale.exchange_amount),
+                price: formatNumber(item.price),
+                subtotal_amount: formatNumber(item.subtotal_amount),
+                price_converted: formatNumber(item.price_converted),
+                subtotal_amount_converted: formatNumber(item.subtotal_amount_converted)
             };
 
             rows.push(row);

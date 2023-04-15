@@ -15,3 +15,8 @@ export const getAllSalesMonth = () => {
 export const createSale = (data) => {
     return fetchData(`sales`, 'POST', data);
 }
+
+export const deleteSale = (id) => {
+    return fetchData(`sales/${id}`, 'DELETE');
+}
+

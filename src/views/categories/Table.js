@@ -59,6 +59,7 @@ export const Table = ({ setCategory, categories, setCategories, data }) => {
                 <DataTable 
                     columns={columns}
                     data={categories}
+                    pagination={ true }
                     progressComponent={ <EclipseComponent/> }
                     paginationComponentOptions={ config.paginationComponentOptions }
                     noDataComponent={"No hay datos para mostrar"}/>  

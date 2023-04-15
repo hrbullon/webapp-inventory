@@ -10,7 +10,7 @@ import * as icon from '@coreui/icons';
 export const ButtonsExport = ({ data, headerOptions, title, fileName }) => {
     
     const handleClickPDF = () => {
-        const rows = data.map(({Customer, SaleDetails, ...rest}) => rest);
+        const rows = data.map(({Customer, SaleDetails, PurchaseDetails, ...rest}) => rest);
         exportToPDF(rows, headerOptions, title, fileName);
     }
 
@@ -65,6 +65,10 @@ const exportToPDF = (rows, headerOptions, title, fileName) => {
         format: 'letter',
     });
 
+    console.log(rows);
+    console.log("===========")
+    console.log(headerOptions);
+
     doc.setFontSize(12);
     doc.text(`Mi propia empresa, C.A`, 100, 20, { align: "center" });
     doc.text(`RIF: J987987892`, 100, 25, { align: "center" });
@@ -77,7 +81,7 @@ const exportToPDF = (rows, headerOptions, title, fileName) => {
     // Crea la tabla usando la función table
     doc.table(10, 60, rows, headerOptions , {
         autoSize: true,
-        fontSize: 10,
+        fontSize: 7,
         headerBackgroundColor: "#185f9d",
         headerTextColor: "white"
     });

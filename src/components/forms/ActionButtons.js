@@ -6,10 +6,10 @@ import * as icon from '@coreui/icons';
 export const ActionButtons = () => {
   return (
     <div className='col-12 mt-2'>
-        <button type='submit' className='btn btn-primary'>
+        <button type='submit' className='btn btn-sm btn-primary'>
             <CIcon icon={icon.cilSave} title='Guardar datos'/> Guardar
         </button>
-        <button type='reset' className='btn btn-secondary m-2'>
+        <button type='reset' className='btn btn-sm btn-secondary m-2'>
             <CIcon icon={icon.cilReload} title='Cancelar'/> Cancelar
         </button>
     </div>

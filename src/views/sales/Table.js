@@ -1,11 +1,13 @@
 import React, { useState, useEffect, Fragment } from 'react';
 
+import swal from 'sweetalert';
 import Moment from 'moment';
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
 import DataTable from 'react-data-table-component';
 
 import { 
+    CBadge,
     CModal, 
     CModalBody, 
     CModalFooter, 
@@ -17,14 +19,14 @@ import { Link } from 'react-router-dom';
 
 import config from '../../config/config.json';
 
-import { getAllSales } from 'src/services/salesServices';
+import { deleteSale, getAllSales } from 'src/services/salesServices';
 
 import { Document } from 'src/components/report/Document';
 import { FormSearch } from './FormSearch';
 import { ButtonsExport } from 'src/components/table/ButtonsExport';
 import EclipseComponent from '../../components/loader/EclipseComponent';
 
-import { formatCurrency } from 'src/helpers/helpers';
+import { formatCurrency, formatNumber } from 'src/helpers/helpers';
 
 export const Table = () => {
 
@@ -35,6 +37,10 @@ export const Table = () => {
     const [copies, setCopies] = useState([]);
 
     const headerOptions = [
+        {
+            name:"id",
+            prompt:"Nro"
+        },
         {
             name:"name",
             prompt:"Cliente"
@@ -62,6 +68,11 @@ export const Table = () => {
             prompt:"Monto Bs.",
             align:"right"
         },
+        {
+            name:"state",
+            prompt:"Estado",
+            align:"center"
+        },
     ];
 
     const columns = [
@@ -84,27 +95,39 @@ export const Table = () => {
             name: 'Tasa cambio.',
             sortable:true,
             right: true,
-            selector: row => formatCurrency(row.exchange_amount,true),
+            selector: row => formatNumber(row.exchange_amount),
         },
         {
             name: 'Monto $US',
             sortable:true,
             right: true,
-            selector: row => formatCurrency(row.total_amount),
+            selector: row => formatNumber(row.total_amount),
         },
         {
             name: 'Monto Bs.',
             sortable:true,
             right: true,
-            selector: row => formatCurrency(row.total_amount_converted, true)
+            selector: row => formatNumber(row.total_amount_converted)
+        },
+        {
+            name: 'Estado',
+            sortable:true,
+            right: true,
+            selector: row => <CBadge color={ row.state == "Completada" ? "success" : "danger" }>{ row.state }</CBadge>
         },
         {
             name: 'Accion',
             right: true,
             selector: row => {
-                return (<button onClick={ (e) => handleShowSale(row)  } className='btn btn-sm btn-info'>
-                            <CIcon icon={ icon.cilShortText }/>
-                        </button>)
+                return (<Fragment>
+                    <button onClick={ (e) => handleShowSale(row)  } className='btn btn-sm btn-info m-1'>
+                        <CIcon icon={ icon.cilShortText }/>
+                    </button>
+                    { row.state === "Completada" &&
+                    <button onClick={ (e) => handleDeleteSale(row)  } className='btn btn-sm btn-danger'>
+                        <CIcon icon={ icon.cilBackspace }/>
+                    </button>}
+                </Fragment>)
             },
         },
     ];
@@ -112,6 +135,45 @@ export const Table = () => {
     useEffect(() => {
         fetchSales();
     }, []);
+
+    const handleDeleteSale = async (sale) => {
+
+        swal({
+            title: 'Estás seguro?',
+            text: `Quiere anular la venta: ${sale.code}`,
+            icon: 'warning',
+            dangerMode: true,
+            buttons: {
+                cancel: {
+                  text: "Cancelar",
+                  value: null,
+                  visible: true,
+                  closeModal: true,
+                },
+                confirm: {
+                  text: "Anular",
+                  value: true,
+                  visible: true,
+                  closeModal: true
+                }
+            }
+          }).then( async (result) => {
+            if (result) {
+                const deleted = await deleteSale(sale.id);
+                
+                if(deleted.sale){
+                    swal(
+                      'Venta anulada completada!',
+                      'Se anuló la venta correctamente!',
+                      'success'
+                    );
+                    fetchSales();
+                }else{
+                    swal("Error","No se encontró la venta solicitada");
+                }
+            }
+          })
+    }
 
     const handleShowSale = (sale) => {
         setSale(sale);
@@ -134,6 +196,7 @@ export const Table = () => {
         data.map( sale => {
 
             const row = {
+                id: sale.id.toString(),
                 name: sale.Customer.name,
                 code: sale.code,
                 date: sale.date,
@@ -142,6 +205,7 @@ export const Table = () => {
                 exchange_amount: sale.exchange_amount,
                 total_amount: sale.total_amount,
                 total_amount_converted: sale.total_amount_converted,
+                state: sale.state == "1"? "Completada" : "Anulada"
             };
 
             rows.push(row);

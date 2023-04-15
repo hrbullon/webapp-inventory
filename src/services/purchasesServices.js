@@ -7,3 +7,7 @@ export const getAllPurchases = () => {
 export const createPurchase = (data) => {
     return fetchData(`purchases`, 'POST', data);
 }
+
+export const deletePurchase = (id) => {
+    return fetchData(`purchases/${id}`, 'DELETE');
+}

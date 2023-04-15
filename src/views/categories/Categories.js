@@ -24,14 +24,14 @@ const Categories = () => {
   return (
     <Fragment>
       <div className='row'>
-        <div className='col-6'>
+        <div className='col-4'>
             <div className="card">
                 <div className="card-body">
                   <Form category={category} fetchCategories={fetchCategories}/> 
                 </div>
             </div>
         </div>
-        <div className='col-6'>
+        <div className='col-8'>
             <Table setCategory={setCategory} setCategories={ setCategories } categories={categories} data={copies}/>
         </div>
       </div>
