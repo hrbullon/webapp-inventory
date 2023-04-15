@@ -13,7 +13,7 @@ import { TableDetails } from 'src/components/product/TableDetails';
 
 import { getAllProducts } from 'src/services/productsServices';
 import { getCustomerByDni } from 'src/services/customersServices'
-import { prepareOptions } from 'src/helpers/helpers';
+import { formatDocument, prepareOptions } from 'src/helpers/helpers';
 import { createSale } from 'src/services/salesServices';
 import { getLastExchange } from 'src/services/exchangesServices';
 import { formatCurrency } from 'src/helpers/helpers';
@@ -90,6 +90,8 @@ const Form = () => {
                     }
                 })
             }
+        }else{
+            return formatDocument(evt);
         }
     }
 

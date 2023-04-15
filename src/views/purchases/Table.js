@@ -26,7 +26,7 @@ import { FormSearch } from './FormSearch';
 import { ButtonsExport } from 'src/components/table/ButtonsExport';
 import EclipseComponent from '../../components/loader/EclipseComponent';
 
-import { formatCurrency } from 'src/helpers/helpers';
+import { formatCurrency, formatNumber } from 'src/helpers/helpers';
 
 export const Table = () => {
 
@@ -101,13 +101,13 @@ export const Table = () => {
             name: 'Monto $US',
             sortable:true,
             right: true,
-            selector: row => formatCurrency(row.total_amount, true),
+            selector: row => formatNumber(row.total_amount),
         },
         {
             name: 'Monto Bs.',
             sortable:true,
             right: true,
-            selector: row => formatCurrency(row.total_amount_converted)
+            selector: row => row.total_amount_converted
         },
         {
             name: 'Estado',

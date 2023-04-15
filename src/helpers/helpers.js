@@ -68,7 +68,7 @@ export const formatDocument = (event) => {
 }
 
 export const formatNumber = (number) => {
-    return number.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return number.toLocaleString('es', {minimumFractionDigits: 2});
 }
 
 export const printHTML = (id) => {

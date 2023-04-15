@@ -14,6 +14,7 @@ import { formatCurrency } from 'src/helpers/helpers';
 import { getAllProducts } from 'src/services/productsServices';
 import { createPurchase } from 'src/services/purchasesServices';
 import { getLastExchange } from 'src/services/exchangesServices';
+import { useForm } from 'react-hook-form';
 
 const Form = () => {
 
@@ -28,13 +29,40 @@ const Form = () => {
         purchase_details: []
     });
     
-    const [quantity, setQuantity] = useState(1);
+    const [product, setProduct] = useState("");
     const [products, setProducts] = useState([]);
     const [options, setOptions] = useState([]);
+
+    const { register, getValues, watch, setValue} = useForm({
+        defaultValues: {
+            product: {},
+            quantity: 1,
+            price:"",
+            priceConverted:""
+        }
+    });
 
     useEffect(() => {
         fetchAll();
     }, []);
+    
+    useEffect(() => {
+        if(watch("price") !== ""){
+            const priceConverted = Number(watch("price"))*purchase.exchange_amount;
+            setValue("priceConverted",priceConverted);
+        }else{
+            setValue("priceConverted","");
+        }
+    }, [watch("price")]);
+
+    useEffect(() => {
+        if(watch("priceConverted") !== ""){
+            const price = Number(watch("priceConverted"))/purchase.exchange_amount;
+            setValue("price",price);
+        }else{
+            setValue("price","");
+        }
+    }, [watch("priceConverted")]);
     
     useEffect(() => {
 
@@ -60,24 +88,36 @@ const Form = () => {
     }
 
     const handleChangingProduct = (input) => {
-        
-        const product = products.filter( item => item.id === input.value )[0];
-        const price_converted = (Number(product.price)*purchase.exchange_amount);
-        
-        const item = {
-            product_id: product.id,
-            code: product.code,
-            description: product.name,
-            quantity:quantity,
-            price: product.price,//$US by default
-            subtotal_amount: (Number(product.price)*quantity),//$US by default
-            price_converted: price_converted,//For example Bs
-            subtotal_amount_converted: (price_converted*quantity)//For example Bs
-        };
+        setProduct(input.value);
+    }
 
-        setPurchase({ ...purchase, 
-            purchase_details: [ ...purchase.purchase_details, item]
-        })
+    const addRow = () => {
+        const { quantity, price, priceConverted } = getValues();
+
+        if(quantity > 0 && product !== "" && (price !== "" || priceConverted !== "")) {
+        
+            let productFiltered = products.filter( item => item.id === product )[0];
+            let price = Number(getValues("price")).toFixed(2);
+            let priceConverted = Number(getValues("priceConverted")).toFixed(2);
+
+            const item = {
+                product_id: productFiltered.id,
+                code: productFiltered.code,
+                description: productFiltered.name,
+                quantity:quantity,
+                price: price,
+                subtotal_amount: (price*quantity),
+                price_converted: priceConverted,
+                subtotal_amount_converted: (priceConverted*quantity)
+            };
+    
+            setPurchase({ ...purchase, 
+                purchase_details: [ ...purchase.purchase_details, item]
+            }) 
+            
+        }else{
+            swal("Alerta","Debe seleccionar producto y precio","warning");
+        }
     }
 
     const handleSubmit = async () => {
@@ -148,11 +188,24 @@ const Form = () => {
                     <div className="card">
                         <div className="card-body">
                             <div className='row'>
-                                <div className="col-6">
+                                <div className="col-12">
                                     <Select options={options} onChange={handleChangingProduct}/>
                                 </div>
-                                <div className="col-6">
-                                    <input type="number" name="quantity" value={ quantity } onChange={ (e) => setQuantity(e.target.value) } autoComplete='off' className="form-control"/>
+                                <br/>
+                                <br/>
+                                <div className="col-4">
+                                    <input type="number" name="quantity" {...register("quantity") } autoComplete='off' className="form-control"/>
+                                </div>
+                                <div className="col-4">
+                                    <input type="number" name="price" {...register("price") } autoComplete='off' className="form-control" placeholder='Precio $US'/>
+                                </div>
+                                <div className="col-4">
+                                    <input type="number" name="priceConverted" {...register("priceConverted") } autoComplete='off' className="form-control" placeholder='Precio Bs.'/>
+                                </div>
+                                <div className="col-12">
+                                    <button type="button" onClick={ addRow } className='btn btn-sm btn-primary float-end mt-2' title='Agregar producto'>
+                                        <CIcon icon={icon.cilPlus} />
+                                    </button>
                                 </div>
                             </div>
                         </div>
