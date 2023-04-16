@@ -10,6 +10,8 @@ import {
 export const Logout = () => {
   
   useEffect(() => {
+    //Data from localstorage
+    localStorage.removeItem("user");
     localStorage.removeItem("token");
     
     setTimeout(() => {
