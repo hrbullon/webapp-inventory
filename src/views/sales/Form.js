@@ -11,7 +11,7 @@ import { CardBasic } from './CardBasic';
 import { CardTotal } from 'src/components/cards/CardTotal';
 import { TableDetails } from 'src/components/product/TableDetails';
 
-import { getAllProducts } from 'src/services/productsServices';
+import { getAllProducts, getProductById } from 'src/services/productsServices';
 import { getCustomerByDni } from 'src/services/customersServices'
 import { formatDocument, prepareOptions } from 'src/helpers/helpers';
 import { createSale } from 'src/services/salesServices';
@@ -24,6 +24,7 @@ const Form = () => {
         code:'----',
         customer_id: null,
         date: new Date(Date.now()).toLocaleDateString(),
+        description:'',
         exchange_amount:0,
         total_amount:0,
         total_amount_converted:0,
@@ -95,25 +96,35 @@ const Form = () => {
         }
     }
 
-    const handleChangingProduct = (input) => {
+    const handleChangingProduct = async (input) => {
         
-        const product = products.filter( item => item.id === input.value )[0];
-        const price_converted = (Number(product.price)*sale.exchange_amount);
-        
-        const item = {
-            product_id: product.id,
-            code: product.code,
-            description: product.name,
-            quantity:quantity,
-            price: product.price,//$US by default
-            subtotal_amount: (Number(product.price)*quantity),//$US by default
-            price_converted: price_converted,//For example Bs
-            subtotal_amount_converted: (price_converted*quantity)//For example Bs
-        };
+        const res = await getProductById(input.value);
+        const { product } = res;
 
-        setSale({ ...sale, 
-            sale_details: [ ...sale.sale_details, item]
-        })
+        const productFiltered = sale.sale_details.filter( item => item.product_id == product.id );
+        let total = productFiltered.reduce((acum, product) => acum + Number(product.quantity), 0);
+
+        if(Number(product.quantity) >= (total+Number(quantity))) {
+
+            const price_converted = (Number(product.price)*sale.exchange_amount);
+            const item = {
+                product_id: product.id,
+                code: product.code,
+                description: product.name,
+                quantity:quantity,
+                price: product.price,
+                subtotal_amount: (Number(product.price)*quantity),
+                price_converted: price_converted,
+                subtotal_amount_converted: (price_converted*quantity)
+            };
+    
+            setSale({ ...sale, 
+                sale_details: [ ...sale.sale_details, item]
+            })
+        }else{
+            swal("Alerta", `Cantidad: ${ quantity } no disponible, quedan ${ (product.quantity-total) }`,'warning');
+        }
+        
     }
 
     const handleSubmit = async () => {
@@ -136,6 +147,7 @@ const Form = () => {
                     </div>
                     <CardBasic customer={customer} />
                 </div>
+
                 <div className="col-4">
                     <div className="card">
                         <div className="card-body bg-info">
@@ -146,6 +158,17 @@ const Form = () => {
                     </div>
                     <CardTotal model={sale} />
                 </div>
+
+                <div className='col-12'>
+                    <div className="card mt-3">
+                        <div className="card-body">
+                            <div className="mb-3">
+                                <textarea name="description" value={ sale.description } onChange={ (e) => setSale({...sale, description: e.target.value })} className="form-control" placeholder="Aqui puede colocar una descripción o comentario"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>            
+
                 <div className="col-12 mt-3">
                     <div className="card">
                         <div className="card-body">
