@@ -4,7 +4,7 @@ import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
 import { useForm } from 'react-hook-form';
 
-export const FormSearch = ({ setProducts, rows }) => {
+export const FormSearch = ({ setProducts, fetchProducts, rows }) => {
 
     const { register, handleSubmit, reset } = useForm();
 
@@ -25,10 +25,7 @@ export const FormSearch = ({ setProducts, rows }) => {
             product:''
         });
 
-        handleFilter({
-            code:'',
-            product:''
-        })
+        fetchProducts();
     }
 
     return (

@@ -131,7 +131,7 @@ const Inventory = () => {
               title="Listado de existencia de productos "
               fileName="Reporte-existencia"/>
 
-            <FormSearch setProducts={setProducts} rows={ copies } />
+            <FormSearch setProducts={setProducts} fetchProducts={ fetchProducts } rows={ copies } />
 
             <DataTable
               columns={columns}
