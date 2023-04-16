@@ -200,6 +200,7 @@ export const Table = () => {
                 name: sale.Customer.name,
                 code: sale.code,
                 date: sale.date,
+                description: sale.description,
                 Customer: sale.Customer,
                 SaleDetails: sale.SaleDetails,
                 exchange_amount: sale.exchange_amount,
