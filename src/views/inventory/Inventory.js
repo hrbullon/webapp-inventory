@@ -106,7 +106,7 @@ const Inventory = () => {
           let subtotal = (Number(item.price)*Number(item.quantity));
 
           const row = {
-              code: item.code,
+              code: item.code == null? "S/I" : "",
               name: item.name,
               quantity: item.quantity,
               price: item.price,

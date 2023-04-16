@@ -12,7 +12,7 @@ export const FormSearch = ({ setProducts, rows }) => {
        
         let filtered = rows
         .filter( item => {
-            return item.code && item.code.toLowerCase().includes(data.code.toLowerCase()) && 
+            return item.code && item.code.toLowerCase().includes(data.code.toLowerCase()) &&
             item.name && item.name.toLowerCase().includes(data.product.toLowerCase())
         })
 
