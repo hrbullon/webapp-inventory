@@ -8,7 +8,7 @@ import { Fragment } from 'react';
 import { TableDetails } from 'src/components/product/TableDetails';
 import { AuthContext } from 'src/context/AuthContext';
 
-export const Document = ({ data, details }) => {
+export const Document = ({ data, details, doc }) => {
 
     const { company } = useContext(AuthContext);
 
@@ -42,11 +42,18 @@ export const Document = ({ data, details }) => {
                         <li><b>Fecha:</b> { data.date }</li>
                         <li><b>Tasa Cambio:</b> { formatCurrency(data.exchange_amount,true) }</li>
                     </ul>
-                </div>	
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-12">	
+                    <ul className='list'>
+                        <li><b>Observaciones:</b> { data.description}</li>
+                    </ul>
+                </div>
             </div>
             <div className="row">
                 <div className="col-12 mt-4">
-                    <TableDetails items={ details } model={data} setModel={null}/>
+                    <TableDetails items={ details } model={data} setModel={null} doc={doc}/>
                 </div>
             </div>
         </div>

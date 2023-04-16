@@ -19,13 +19,13 @@ export const ButtonsExport = ({ data, headerOptions, title, fileName }) => {
     }
 
     const handleClickExcel = () => {
-        const rows = data.map(({Customer, SaleDetails, Sale,...rest}) => rest);
+        const rows = data.map(({Customer, SaleDetails, description, Sale,...rest}) => rest);
         exportToExcel(rows, headerOptions, title, "A1:F1", fileName);
     }
 
     const exportToExcel = (data, headers, titleTable, rangeTitle, fileName) => {
-
-        const worksheet = XLSX.utils.json_to_sheet(data, { origin: "A2"});
+        const rows = data.map(({Customer, SaleDetails, description, Sale,...rest}) => rest);
+        const worksheet = XLSX.utils.json_to_sheet(rows, { origin: "A2"});
         
         /** Merge a group of cells */
         if(!worksheet["!merges"]) worksheet["!merges"] = [];

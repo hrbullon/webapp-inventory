@@ -199,6 +199,7 @@ export const Table = () => {
                 id: purchase.id.toString(),
                 code: purchase.code,
                 document: purchase.document,
+                description: purchase.description,
                 date: purchase.date,
                 PurchaseDetails: purchase.PurchaseDetails,
                 exchange_amount: purchase.exchange_amount,
@@ -244,7 +245,7 @@ export const Table = () => {
             <CModalTitle>Detalles de Compra</CModalTitle>
             </CModalHeader>
             <CModalBody>
-                <Document data={ purchase } details={ purchase.PurchaseDetails }/>
+                <Document data={ purchase } details={ purchase.PurchaseDetails } doc={ "purchase" }/>
             </CModalBody>
             <CModalFooter>
             </CModalFooter>

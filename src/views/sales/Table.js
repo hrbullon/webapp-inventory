@@ -245,7 +245,7 @@ export const Table = () => {
             <CModalTitle>Detalles de Venta</CModalTitle>
             </CModalHeader>
             <CModalBody>
-                <Document data={ sale } details={ sale.SaleDetails }/>
+                <Document data={ sale } details={ sale.SaleDetails } doc={ "sale" }/>
             </CModalBody>
             <CModalFooter>
             </CModalFooter>
