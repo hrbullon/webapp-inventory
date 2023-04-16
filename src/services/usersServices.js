@@ -17,6 +17,7 @@ export const updateUser = (id, data) => {
 }
 
 export const deleteUser = (user) => {
-    let action = (user.state)? "0" : "1";
+    let action = (user.state == 0)? "1" : "0";
+    console.log(action);
     return fetchData(`user/${action}/${user.id}`, 'DELETE');
 }

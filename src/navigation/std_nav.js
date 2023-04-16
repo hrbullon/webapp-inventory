@@ -4,9 +4,7 @@ import CIcon from '@coreui/icons-react'
 import {
   cilBriefcase,
   cilCash,
-  cilSpeedometer,
-  cilStar,
-  cilUser
+  cilSpeedometer
 } from '@coreui/icons'
 
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
@@ -38,28 +36,6 @@ const _nav = [
         to: '/exchanges',
       }
     ]
-  },
-  {
-    component: CNavGroup,
-    name: 'Gestión de Inventario',
-    icon: <CIcon icon={cilStar} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Categorías',
-        to: '/categories',
-      },
-      {
-        component: CNavItem,
-        name: 'Productos',
-        to: '/products',
-      },
-      {
-        component: CNavItem,
-        name: 'Existencias',
-        to: '/inventory',
-      }
-    ],
   },
   {
     component: CNavGroup,
