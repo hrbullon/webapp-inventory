@@ -38,7 +38,8 @@ const Form = () => {
             product: {},
             quantity: 1,
             price:"",
-            priceConverted:""
+            priceConverted:"",
+            salePrice: ""
         }
     });
 
@@ -92,7 +93,7 @@ const Form = () => {
     }
 
     const addRow = () => {
-        const { quantity, price, priceConverted } = getValues();
+        const { quantity, price, priceConverted, salePrice } = getValues();
 
         if(quantity > 0 && product !== "" && (price !== "" || priceConverted !== "")) {
         
@@ -108,6 +109,7 @@ const Form = () => {
                 price: price,
                 subtotal_amount: (price*quantity),
                 price_converted: priceConverted,
+                salePrice: salePrice,
                 subtotal_amount_converted: (priceConverted*quantity)
             };
     
@@ -188,19 +190,22 @@ const Form = () => {
                     <div className="card">
                         <div className="card-body">
                             <div className='row'>
-                                <div className="col-12">
+                                <div className="col-6">
                                     <Select options={options} onChange={handleChangingProduct}/>
                                 </div>
                                 <br/>
                                 <br/>
-                                <div className="col-4">
+                                <div className="col-6">
                                     <input type="number" name="quantity" {...register("quantity") } autoComplete='off' className="form-control"/>
                                 </div>
                                 <div className="col-4">
-                                    <input type="number" name="price" {...register("price") } autoComplete='off' className="form-control" placeholder='Precio $US'/>
+                                    <input type="number" name="price" {...register("price") } autoComplete='off' className="form-control" placeholder='Precio $US (Compra)'/>
                                 </div>
                                 <div className="col-4">
-                                    <input type="number" name="priceConverted" {...register("priceConverted") } autoComplete='off' className="form-control" placeholder='Precio Bs.'/>
+                                    <input type="number" name="priceConverted" {...register("priceConverted") } autoComplete='off' className="form-control" placeholder='Precio Bs. (Compra)'/>
+                                </div>
+                                <div className="col-4">
+                                    <input type="number" name="salePrice" {...register("salePrice") } autoComplete='off' className="form-control" placeholder='Precio $US (Venta)'/>
                                 </div>
                                 <div className="col-12">
                                     <button type="button" onClick={ addRow } className='btn btn-sm btn-primary float-end mt-2' title='Agregar producto'>

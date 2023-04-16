@@ -29,6 +29,7 @@ export const TableDetails = ({ items, model, setModel }) => {
                     
                     <th className='text-right'>Precio Bs</th>
                     <th className='text-right'>Subtotal Bs</th>
+                    <th className='text-right'>Precio $US (Venta)</th>
                     { setModel &&
                         <th className='text-right'>Acciones</th>
                     }
@@ -50,7 +51,7 @@ export const TableDetails = ({ items, model, setModel }) => {
                                 
                                 <td className='text-right'>{ formatNumber(item.price_converted) }</td>
                                 <td className='text-right'>{ formatNumber(item.subtotal_amount_converted) }</td>
-                                
+                                <td className='text-right'>{ formatNumber(item.salePrice) }</td>
                                 { setModel &&
                                 <td className='text-right'>
                                     <button onClick={ (e) => handleDeleteItem(index) } className='btn btn-sm btn-danger'>
