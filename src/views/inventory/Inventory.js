@@ -104,9 +104,9 @@ const Inventory = () => {
       data.map( item => {
 
           let subtotal = (Number(item.price)*Number(item.quantity));
-
+          console.log(item.code)
           const row = {
-              code: item.code == null? "S/I" : "",
+              code: !item.code || item.code !== "null"? "S/I" : "",
               name: item.name,
               quantity: item.quantity,
               price: item.price,
