@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect  } from 'react';
+import React, { Fragment, useState, useEffect, useContext } from 'react';
 
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
@@ -7,8 +7,11 @@ import { CardProduct } from 'src/components/product/CardProduct';
 import { getAllProducts } from 'src/services/productsServices';
 import { Link } from 'react-router-dom';
 import { FormSearch } from './FormSearch';
+import { AuthContext } from 'src/context/AuthContext';
 
 const Products = () => {
+
+    let { user } = useContext(AuthContext);
   
     const [copies, setCopies] = useState([])
     const [products, setProducts] = useState([])
@@ -25,13 +28,14 @@ const Products = () => {
 
     return (
         <Fragment>
+            { user.role == "ADM_ROLE" &&
             <div className='row'>
                 <div className='col-12'>
                     <Link to="/products/create" className='btn btn-sm btn-primary float-end'>
                         <CIcon icon={icon.cilPlus} title='Crear nuevo producto'/> 
                     </Link>
                 </div>
-            </div>
+            </div>}
 
             <FormSearch setProducts={ setProducts } rows={ copies }/>
 

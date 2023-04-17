@@ -1,15 +1,20 @@
-import React, { Fragment, useState, useEffect } from 'react'
+import React, { Fragment, useState, useEffect, useContext } from 'react'
 
 import { Form } from './Form';
 import { Table } from './Table';
 
 import { getAllCategories } from 'src/services/categoriesServices';
+import { AuthContext } from 'src/context/AuthContext';
+import Page403 from '../error/page403/Page403';
 
 const Categories = () => {
+
+  let { user } = useContext(AuthContext);
 
   const [category, setCategory] = useState({});
   const [copies, setCopies] = useState([]);
   const [categories, setCategories] = useState([]);
+
 
   useEffect(() => {
     fetchCategories();
@@ -19,6 +24,10 @@ const Categories = () => {
     const res = await getAllCategories();
     setCopies(res.categories);
     setCategories(res.categories);
+  }
+
+  if(user.role !== "ADM_ROLE"){
+    return <Page403/>
   }
 
   return (

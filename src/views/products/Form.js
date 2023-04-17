@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import swal from 'sweetalert';
 import Select from 'react-select';
@@ -13,10 +13,13 @@ import { ErrorValidate } from 'src/components/forms/ErrorValidate';
 
 import { getAllCategories } from 'src/services/categoriesServices';
 import { createProduct, getProductById, updateProduct } from 'src/services/productsServices';
+import { AuthContext } from 'src/context/AuthContext';
+import Page403 from '../error/page403/Page403';
 
 export const Form = ({ title }) => {
 
     let { id } = useParams();
+    let { user } = useContext(AuthContext);
 
     const defaultCategory = {
       value:'',
@@ -28,7 +31,6 @@ export const Form = ({ title }) => {
     
     const [options, setOptions] = useState([]);
    
-
     useEffect(() => {
       fetchCategories();
     }, [])
@@ -95,6 +97,10 @@ export const Form = ({ title }) => {
           swal("Oops","Algo salio mal al guardar los datos","warning");
       }
     } 
+
+    if(user.role !== "ADM_ROLE"){
+      return <Page403/>
+    }
 
     return (
     <form id="form" onSubmit={handleSubmit(onSubmit)}>

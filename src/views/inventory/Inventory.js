@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import DataTable from 'react-data-table-component';
 import config from '../../config/config.json';
@@ -9,6 +9,8 @@ import { ButtonsExport } from 'src/components/table/ButtonsExport';
 import { getAllProducts } from 'src/services/productsServices';
 import { FormSearch } from './FormSearch';
 import { formatCurrency } from 'src/helpers/helpers';
+import Page403 from '../error/page403/Page403';
+import { AuthContext } from 'src/context/AuthContext';
 
 const Inventory = () => {
 
@@ -16,6 +18,8 @@ const Inventory = () => {
     const [totalInventory, setTotalInventory] = useState(0);
     const [products, setProducts ] = useState([]);
     const [copies, setCopies] = useState([]);
+
+    let { user } = useContext(AuthContext);
 
     const headerOptions = [
         {
@@ -118,6 +122,10 @@ const Inventory = () => {
 
       return rows;
   }
+
+    if(user.role !== "ADM_ROLE"){
+      return <Page403/>
+    }
     
     return (
     <div className="card">
