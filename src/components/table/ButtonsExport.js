@@ -8,6 +8,7 @@ import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
 
 import { AuthContext } from 'src/context/AuthContext';
+import { formatCurrency } from 'src/helpers/helpers';
 
 export const ButtonsExport = ({ data, headerOptions, title, fileName }) => {
 
@@ -55,34 +56,77 @@ export const ButtonsExport = ({ data, headerOptions, title, fileName }) => {
             unit: 'mm',
             format: 'letter',
         });
-    
+
+        let pages = Math.ceil((rows.length)/15);
+
+
+        for (let i = 0; i < pages; i++) {
+            
+            const start = i * 20;
+            const end = (i + 1) * 20;
+            const pageData = rows.slice(start, end);
+            
+            if(i > 0){
+                doc.addPage();
+            }
+
+            printHeader(doc, title);
+
+            // Crea la tabla usando la función table
+            doc.table(10, 60, pageData, headerOptions , {
+                autoSize: true,
+                fontSize: 7,
+                headerBackgroundColor: "#185f9d",
+                headerTextColor: "white"
+            });
+
+            if(i == 1 && /ventas/.test(title)){
+
+                let total = 0;
+                let totalConverted = 0;
+
+                rows.map( item => {  total += Number(item.subtotal_amount) });
+                rows.map( item => {  totalConverted += Number(item.subtotal_amount_converted) });
+
+                doc.setFontSize(14);
+
+                doc.text(`Total de Ventas`, doc.internal.pageSize.getWidth() - 40, doc.internal.pageSize.getHeight() - 60, { align: "right" });
+                doc.text(`${ formatCurrency(totalConverted, true) }`, doc.internal.pageSize.getWidth() - 40, doc.internal.pageSize.getHeight() - 55, { align: "right" });
+                doc.text(`${ formatCurrency(total) }`, doc.internal.pageSize.getWidth() - 40, doc.internal.pageSize.getHeight() - 50, { align: "right" });
+            }
+
+            printFooter(doc, i, pages);       
+            
+        }
+
+        const date = moment().format("DD-MM-YYYY");
+        // Guarda el archivo PDF
+        doc.save(`${fileName}-${date}.pdf`);
+    }
+
+    const printHeader = (doc, title) => {
+
         doc.setFontSize(10);
         doc.text(`${ company.legal_name }`, 100, 20, { align: "center" });
         doc.text(`RIF: ${ company.dni.toUpperCase() }`, 100, 25, { align: "center" });
         doc.text(`Telefono: ${ company.phone }`, 100, 30, { align: "center" });
         doc.text(`Correo Electronico: ${ company.email }`, 100, 35, { align: "center" });
         doc.text(`${ company.address }`, 100, 40, { align: "center" });
+
+        const dateTime = moment().format("DD-MM-YYYY - hh:mm");
         
+        doc.text(dateTime, 190, 50, { align: "right" }); 
         doc.text(title, 100, 50, { align: "center" }); 
-    
-        // Crea la tabla usando la función table
-        doc.table(10, 60, rows, headerOptions , {
-            autoSize: true,
-            fontSize: 7,
-            headerBackgroundColor: "#185f9d",
-            headerTextColor: "white"
-        });
-    
+    }
+
+    const printFooter = (doc, page, totalPage) => {
+
         doc.setFont("helvetica", "italic");
         doc.setFontSize(10);
         doc.text(`Reporte generado por: Luna Sofware - App `, doc.internal.pageSize.getWidth() - 200, doc.internal.pageSize.getHeight() - 10);
-        
-        const date = moment().format("DD-MM-YYYY");
-        const dateTime = moment().format("DD-MM-YYYY - hh:mm");
-        doc.text(`${dateTime}`, doc.internal.pageSize.getWidth() - 50, doc.internal.pageSize.getHeight() - 10);
-    
-        // Guarda el archivo PDF
-        doc.save(`${fileName}-${date}.pdf`);
+
+        doc.text(`${ (page+1)}/${totalPage}`, doc.internal.pageSize.getWidth() - 20, doc.internal.pageSize.getHeight() - 10);
+
     }
     
     return (
