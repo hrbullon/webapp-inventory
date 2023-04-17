@@ -7,8 +7,18 @@ import { formatNumber } from 'src/helpers/helpers';
 export const TableDetails = ({ items, model, setModel, doc}) => {
 
     const handleDeleteItem = (index) => {
+        
         items.splice(index, 1);
+
+        let total = 0;
+        let totalConverted = 0;
+
+        items.map( item => {  total += item.subtotal_amount });
+        items.map( item => {  totalConverted += item.subtotal_amount_converted });
+        
         setModel({ ...model, 
+            total_amount: total,
+            total_amount_converted: totalConverted,
             details: [ ...items]
         })
     }
