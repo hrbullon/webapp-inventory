@@ -56,8 +56,7 @@ export const ButtonsExport = ({ data, headerOptions, title, fileName }) => {
             format: 'letter',
         });
     
-    
-        doc.setFontSize(12);
+        doc.setFontSize(10);
         doc.text(`${ company.legal_name }`, 100, 20, { align: "center" });
         doc.text(`RIF: ${ company.dni.toUpperCase() }`, 100, 25, { align: "center" });
         doc.text(`Telefono: ${ company.phone }`, 100, 30, { align: "center" });
