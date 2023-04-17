@@ -16,7 +16,7 @@ export const CardProduct = ({ product }) => {
                 <Link to={`/products/update/${product.id}`}>
                   <b>{ product.name }</b>
                 </Link>}
-                { user.role !== "ADM_RO" && 
+                { user.role !== "ADM_ROLE" && 
                   <b>{ product.name }</b>
                 }<br/>
                 <b>{ formatCurrency(product.price) }</b><br/>
