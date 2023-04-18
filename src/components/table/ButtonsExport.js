@@ -59,7 +59,6 @@ export const ButtonsExport = ({ data, headerOptions, title, fileName }) => {
 
         let pages = Math.ceil((rows.length)/15);
 
-
         for (let i = 0; i < pages; i++) {
             
             const start = i * 20;
@@ -74,26 +73,10 @@ export const ButtonsExport = ({ data, headerOptions, title, fileName }) => {
 
             // Crea la tabla usando la función table
             doc.table(10, 60, pageData, headerOptions , {
-                autoSize: true,
                 fontSize: 7,
                 headerBackgroundColor: "#185f9d",
                 headerTextColor: "white"
             });
-
-            if(i == 1 && /ventas/.test(title)){
-
-                let total = 0;
-                let totalConverted = 0;
-
-                rows.map( item => {  total += Number(item.subtotal_amount) });
-                rows.map( item => {  totalConverted += Number(item.subtotal_amount_converted) });
-
-                doc.setFontSize(14);
-
-                doc.text(`Total de Ventas`, doc.internal.pageSize.getWidth() - 40, doc.internal.pageSize.getHeight() - 60, { align: "right" });
-                doc.text(`${ formatCurrency(totalConverted, true) }`, doc.internal.pageSize.getWidth() - 40, doc.internal.pageSize.getHeight() - 55, { align: "right" });
-                doc.text(`${ formatCurrency(total) }`, doc.internal.pageSize.getWidth() - 40, doc.internal.pageSize.getHeight() - 50, { align: "right" });
-            }
 
             printFooter(doc, i, pages);       
             
@@ -107,16 +90,16 @@ export const ButtonsExport = ({ data, headerOptions, title, fileName }) => {
     const printHeader = (doc, title) => {
 
         doc.setFontSize(10);
-        doc.text(`${ company.legal_name }`, 100, 20, { align: "center" });
-        doc.text(`RIF: ${ company.dni.toUpperCase() }`, 100, 25, { align: "center" });
-        doc.text(`Telefono: ${ company.phone }`, 100, 30, { align: "center" });
-        doc.text(`Correo Electronico: ${ company.email }`, 100, 35, { align: "center" });
-        doc.text(`${ company.address }`, 100, 40, { align: "center" });
+        doc.text(`${ company.legal_name }`, 110, 20, { align: "center" });
+        doc.text(`RIF: ${ company.dni.toUpperCase() }`, 110, 25, { align: "center" });
+        doc.text(`Telefono: ${ company.phone }`, 110, 30, { align: "center" });
+        doc.text(`Correo Electronico: ${ company.email }`, 110, 35, { align: "center" });
+        doc.text(`${ company.address }`, 110, 40, { align: "center" });
 
         const dateTime = moment().format("DD-MM-YYYY - hh:mm");
         
-        doc.text(dateTime, 190, 50, { align: "right" }); 
-        doc.text(title, 100, 50, { align: "center" }); 
+        doc.text(dateTime, 200, 50, { align: "right" }); 
+        doc.text(title, 110, 50, { align: "center" }); 
     }
 
     const printFooter = (doc, page, totalPage) => {

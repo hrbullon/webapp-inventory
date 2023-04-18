@@ -23,19 +23,23 @@ export const Table = () => {
     const headerOptions = [
         {
             name:"dni",
-            prompt:"DNI"
+            prompt:"DNI",
+            width: 40
         },
         {
             name:"name",
-            prompt:"Nombre"
+            prompt:"Nombre",
+            width: 100
         },
         {
             name:"phone",
-            prompt:"Teléfono"
+            prompt:"Teléfono",
+            width: 60
         },
         {
             name:"email",
-            prompt:"Correo"
+            prompt:"Correo",
+            width: 60
         }
     ];
 

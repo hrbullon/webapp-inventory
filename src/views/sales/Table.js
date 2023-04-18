@@ -39,39 +39,47 @@ export const Table = () => {
     const headerOptions = [
         {
             name:"id",
-            prompt:"Nro"
+            prompt:"Nro",
+            width: 30
         },
         {
             name:"name",
-            prompt:"Cliente"
+            prompt:"Cliente",
+            width: 70
         },
         {
             name:"code",
-            prompt:"Nro Control"
+            prompt:"Nro Control",
+            width: 30
         },
         {
             name:"date",
             prompt:"Fecha",
+            width: 30
         },
         {
             name:"exchange_amount",
             prompt:"Tasa cambio",
-            align:"right"
+            align:"center",
+            width: 20
         },
         {
             name:"total_amount",
             prompt:"Monto $US.",
-            align:"right"
+            align:"center",
+            width: 30
         },
         {
             name:"total_amount_converted",
             prompt:"Monto Bs.",
-            align:"right"
+            align:"center",
+            width: 30
         },
         {
             name:"state",
             prompt:"Estado",
-            align:"center"
+            align:"center",
+            width: 20
         },
     ];
 

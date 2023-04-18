@@ -29,45 +29,54 @@ export const Table = ({ type, title, fileName }) => {
     const headerOptions = [
         {
             name:"code",
-            prompt:"Nro. Venta"
+            prompt:"Nro. Venta",
+            width: 25,
         },
         {
             name:"code_product",
-            prompt:"Código Producto"
+            prompt:"Cod. Producto",
+            width: 25,
         },
         {
             name:"description",
             prompt:"Descripción",
+            width: 60,
         },
         {
             name:"quantity",
             prompt:"Cantidad",
-            align:"right"
+            align:"center",
+            width: 25,
         },
         {
             name:"exchange_amount",
             prompt:"Tasa cambio",
-            align:"right"
+            align:"center",
+            width: 25,
         },
         {
             name:"price",
             prompt:"Precio $US",
-            align:"right"
+            align:"center",
+            width: 20,
         },
         {
             name:"subtotal_amount",
-            prompt:"Subtotal $US",
-            align:"right"
+            prompt:"Sub. $US",
+            align:"center",
+            width: 25,
         },
         {
             name:"price_converted",
             prompt:"Precio Bs.",
-            align:"right"
+            align:"center",
+            width: 25,
         },
         {
             name:"subtotal_amount_converted",
-            prompt:"Subtotal Bs.",
-            align:"right"
+            prompt:"Sub. Bs.",
+            align:"center",
+            width: 30,
         }
     ];
 
@@ -206,8 +215,14 @@ export const Table = ({ type, title, fileName }) => {
     const prepareList = data => {
 
         let rows = [];
+        let total = 0;
+        let totalConverted = 0;
 
         data.map( item => {
+
+            total += Number(item.subtotal_amount);
+            totalConverted += Number(item.subtotal_amount_converted);
+
             const row = {
                 code: item.Sale.code,
                 code_product: item.code? item.code.toString() : "S/I",
@@ -222,6 +237,30 @@ export const Table = ({ type, title, fileName }) => {
 
             rows.push(row);
         });
+
+        rows.push({
+            code: "",
+            code_product: "",
+            description: "",
+            quantity: "",
+            exchange_amount: "",
+            price:"",
+            subtotal_amount: "",
+            price_converted: "Total Ventas",
+            subtotal_amount_converted: formatCurrency(totalConverted, true).toString()
+        })
+        
+        rows.push({
+            code: "",
+            code_product: "",
+            description: "",
+            quantity: "",
+            exchange_amount: "",
+            price:"",
+            subtotal_amount: "",
+            price_converted: "",
+            subtotal_amount_converted: formatCurrency(total).toString()
+        })
 
         return rows;
     }
