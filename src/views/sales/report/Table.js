@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect }from 'react';
 
-import DataTable from 'react-data-table-component';
+import DataTable from 'react-data-table-component-footer';
 
 import config from '../../../config/config.json';
 
@@ -238,30 +238,6 @@ export const Table = ({ type, title, fileName }) => {
             rows.push(row);
         });
 
-        rows.push({
-            code: "",
-            code_product: "",
-            description: "",
-            quantity: "",
-            exchange_amount: "",
-            price:"",
-            subtotal_amount: "",
-            price_converted: "Total Ventas",
-            subtotal_amount_converted: formatCurrency(totalConverted, true).toString()
-        })
-        
-        rows.push({
-            code: "",
-            code_product: "",
-            description: "",
-            quantity: "",
-            exchange_amount: "",
-            price:"",
-            subtotal_amount: "",
-            price_converted: "",
-            subtotal_amount_converted: formatCurrency(total).toString()
-        })
-
         return rows;
     }
 
@@ -322,9 +298,13 @@ export const Table = ({ type, title, fileName }) => {
             progressPending={ loading }
             progressComponent={ <EclipseComponent/> }
             paginationComponentOptions={ config.paginationComponentOptions }
-            noDataComponent={"No hay datos para mostrar"} />
-
-        
+            footer={{
+                price: "Total $US",
+                subtotal_amount: formatNumber( sales.reduce((acc, val) => parseInt(acc) + parseFloat(val.subtotal_amount), 0) ),
+                price_converted: "Total Bs.",
+                subtotal_amount_converted: formatNumber( sales.reduce((acc, val) => parseInt(acc) + parseFloat(val.subtotal_amount_converted), 0))
+            }}
+            noDataComponent={"No hay datos para mostrar"}/>
     </Fragment>
   )
 }
