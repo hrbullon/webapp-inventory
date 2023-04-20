@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { ActionButtons } from 'src/components/forms/ActionButtons';
 import { ErrorValidate } from 'src/components/forms/ErrorValidate';
 import { getCompanyById, updateCompany } from 'src/services/companiesServices';
-import { formatDocument, onlyNumber } from 'src/helpers/helpers';
+import { formatDocument } from 'src/helpers/helpers';
 
 const Form = () => {
     

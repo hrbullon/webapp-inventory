@@ -9,7 +9,7 @@ import config from '../../config/config.json';
 import EclipseComponent from 'src/components/loader/EclipseComponent';
 import { FormSearch } from './FormSearch';
 import { deleteExchange } from 'src/services/exchangesServices';
-import { formatCurrency, formatNumber } from 'src/helpers/helpers';
+import { formatCurrency } from 'src/helpers/helpers';
 
 export const Table = ({ setExchange, exchanges, setExchanges, data }) => {
 

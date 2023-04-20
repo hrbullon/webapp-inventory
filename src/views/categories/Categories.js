@@ -15,7 +15,6 @@ const Categories = () => {
   const [copies, setCopies] = useState([]);
   const [categories, setCategories] = useState([]);
 
-
   useEffect(() => {
     fetchCategories();
   }, []);

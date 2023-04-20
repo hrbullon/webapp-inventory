@@ -1,15 +1,17 @@
 import React, { useState, useEffect, useContext } from 'react';
 
-import DataTable from 'react-data-table-component';
+import DataTable from 'react-data-table-component-footer';
 import config from '../../config/config.json';
+import { headerOptions, columns } from './config-table';
 
-import EclipseComponent from 'src/components/loader/EclipseComponent';
-import { ButtonsExport } from 'src/components/table/ButtonsExport';
-
-import { getAllProducts } from 'src/services/productsServices';
-import { FormSearch } from './FormSearch';
-import { formatCurrency } from 'src/helpers/helpers';
 import Page403 from '../error/page403/Page403';
+import { FormSearch } from './FormSearch';
+import { ButtonsExport } from 'src/components/table/ButtonsExport';
+import EclipseComponent from 'src/components/loader/EclipseComponent';
+
+import { getTotal, prepareList } from './selector';
+import { formatNumber } from 'src/helpers/helpers';
+import { getAllProducts } from 'src/services/productsServices';
 import { AuthContext } from 'src/context/AuthContext';
 
 const Inventory = () => {
@@ -21,68 +23,9 @@ const Inventory = () => {
 
     let { user } = useContext(AuthContext);
 
-    const headerOptions = [
-        {
-          name:"code",
-          prompt:"Código"
-        },
-        {
-          name:"name",
-          prompt:"Nombre"
-        },
-        {
-          name:"quantity",
-          prompt:"Stock"
-        },
-        {
-          name:"price",
-          prompt:"Precio"
-        },
-        {
-          name:"subtotal",
-          prompt:"Subtotal"
-        },
-    ];
-
-    const columns = [
-        {
-          name: 'Código',
-          sortable:true,
-          selector: row => row.code,
-        },
-        {
-          name: 'Nombre',
-          sortable:true,
-          selector: row => row.name,
-        },
-        {
-          name: 'Stock',
-          sortable:true,
-          right: true,
-          selector: row => row.quantity,
-        },
-        {
-          name: 'Precio',
-          sortable:true,
-          right: true,
-          selector: row => formatCurrency(row.price),
-        },
-        {
-          name: 'Subtotal',
-          sortable:true,
-          right: true,
-          selector: row => formatCurrency(row.subtotal) 
-        }
-    ]
-
     useEffect(() => {
       
-      let total = 0;
-      
-      products.map( item => {
-        total += Number(item.subtotal); 
-      });
-
+      let total = getTotal(products);
       setTotalInventory(total);
 
     }, [products])
@@ -100,28 +43,6 @@ const Inventory = () => {
         setProducts(rows);
         setLoading(false);
     }
-
-    const prepareList = data => {
-
-      let rows = [];
-
-      data.map( item => {
-
-          let subtotal = (Number(item.price)*Number(item.quantity));
-          console.log(item.code)
-          const row = {
-              code: !item.code || item.code !== "null"? "S/I" : "",
-              name: item.name,
-              quantity: item.quantity,
-              price: item.price,
-              subtotal: subtotal.toString()
-          };
-
-          rows.push(row);
-      });
-
-      return rows;
-  }
 
     if(user.role !== "ADM_ROLE"){
       return <Page403/>
@@ -147,9 +68,14 @@ const Inventory = () => {
               progressPending={ loading }
               progressComponent={ <EclipseComponent/> }
               paginationComponentOptions={ config.paginationComponentOptions }
+              footer={{
+                code:"",
+                name:"",
+                quantity:"",
+                price: "Total $US",
+                subtotal: formatNumber(totalInventory),
+              }}
               noDataComponent={"No hay datos para mostrar"}/>
-
-              <p className='float-end'><b>Total:</b> { formatCurrency(totalInventory) }</p>
         </div>
     </div>
   )

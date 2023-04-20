@@ -11,7 +11,7 @@ import { AuthContext } from 'src/context/AuthContext';
 
 export const ButtonsExport = ({ data, headerOptions, title, fileName }) => {
     const { company } = useContext(AuthContext);
-    
+
     const handleClickPDF = () => {
         exportToPDF(data, headerOptions, title, fileName);
     }
