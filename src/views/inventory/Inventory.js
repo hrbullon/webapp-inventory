@@ -9,7 +9,7 @@ import { FormSearch } from './FormSearch';
 import { ButtonsExport } from 'src/components/table/ButtonsExport';
 import EclipseComponent from 'src/components/loader/EclipseComponent';
 
-import { getTotal, prepareList } from './selector';
+import { getDataExport, getTotal, prepareList } from './selector';
 import { formatNumber } from 'src/helpers/helpers';
 import { getAllProducts } from 'src/services/productsServices';
 import { AuthContext } from 'src/context/AuthContext';
@@ -55,7 +55,7 @@ const Inventory = () => {
             <h5 className="card-title">Listado de existencia</h5>
             
             <ButtonsExport 
-              data={ products } 
+              data={ getDataExport(products, totalInventory) } 
               headerOptions={ headerOptions } 
               title="Listado de existencia de productos "
               fileName="Reporte-existencia"/>

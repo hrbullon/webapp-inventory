@@ -1,25 +1,32 @@
-import { formatCurrency } from "src/helpers/helpers";
 
 export const headerOptions = [
     {
       name:"code",
-      prompt:"Código"
+      prompt:"Código",
+      width: 50
     },
     {
       name:"name",
-      prompt:"Nombre"
+      prompt:"Nombre",
+      width: 120
     },
     {
       name:"quantity",
-      prompt:"Stock"
+      prompt:"Stock",
+      width: 30,
+      align:"right"
     },
     {
       name:"price",
-      prompt:"Precio"
+      prompt:"Precio $US",
+      width: 30,
+      align:"right"
     },
     {
       name:"subtotal",
-      prompt:"Subtotal"
+      prompt:"Subtotal $US",
+      width: 30,
+      align:"right"
     },
 ];
 
