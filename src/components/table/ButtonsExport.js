@@ -8,26 +8,22 @@ import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
 
 import { AuthContext } from 'src/context/AuthContext';
-import { formatCurrency } from 'src/helpers/helpers';
 
 export const ButtonsExport = ({ data, headerOptions, title, fileName }) => {
 
     const { company } = useContext(AuthContext);
     
     const handleClickPDF = () => {
-        const rows = data.map(({Customer, SaleDetails, PurchaseDetails, ...rest}) => rest);
-        exportToPDF(rows, headerOptions, title, fileName);
+        exportToPDF(data, headerOptions, title, fileName);
     }
 
     const handleClickExcel = () => {
-        const rows = data.map(({Customer, SaleDetails, description, Sale,...rest}) => rest);
-        exportToExcel(rows, headerOptions, title, "A1:F1", fileName);
+        exportToExcel(data, headerOptions, title, "A1:F1", fileName);
     }
 
     const exportToExcel = (data, headers, titleTable, rangeTitle, fileName) => {
-        const rows = data.map(({Customer, SaleDetails, description, Sale,...rest}) => rest);
-        const worksheet = XLSX.utils.json_to_sheet(rows, { origin: "A2"});
-        
+
+        const worksheet = XLSX.utils.json_to_sheet(data, { origin: "A2"});
         /** Merge a group of cells */
         if(!worksheet["!merges"]) worksheet["!merges"] = [];
         worksheet["!merges"].push(XLSX.utils.decode_range(rangeTitle));
