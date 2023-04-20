@@ -84,6 +84,21 @@ export const prepareList = data => {
     return rows;
 }
 
-export const getDataExport = (data) => {
-    return data.map(({Customer, SaleDetails, Sale,...rest}) => rest);
+export const getDataExport = (data, totalAmount, totalAmountConverted) => {
+
+    let rows = data.map(({Customer, SaleDetails, Sale,...rest}) => rest);
+
+    rows.push({
+        code: "",
+        code_product: "",
+        description:"",
+        quantity: "",
+        exchange_amount: "",
+        price: "Total $US",
+        subtotal_amount: formatNumber(totalAmount),
+        price_converted: "Total Bs.",
+        subtotal_amount_converted: formatNumber(totalAmountConverted)
+    });
+
+    return rows
 }

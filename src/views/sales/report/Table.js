@@ -84,7 +84,7 @@ export const Table = ({ type, title, fileName }) => {
             totalQuantity={ totalQuantity } />
         
         <ButtonsExport 
-            data={ getDataExport(sales) } 
+            data={ getDataExport(sales, totalSales, totalSalesConverted) } 
             headerOptions={ headerOptions } 
             title={ title } 
             fileName={ fileName }/>
