@@ -88,3 +88,31 @@ export const printHTML = (id) => {
         console.log(printWindow);
     }, 1000);
 }
+
+export const confirmDelete = (message, callback) => {
+    
+    swal({
+        title: 'Estás seguro?',
+        text: message,
+        icon: 'warning',
+        dangerMode: true,
+        buttons: {
+            cancel: {
+              text: "Cancelar",
+              value: null,
+              visible: true,
+              closeModal: true,
+            },
+            confirm: {
+              text: "Anular",
+              value: true,
+              visible: true,
+              closeModal: true
+            }
+        }
+      }).then( (result) => { 
+        if (result) {
+            callback();
+        }
+      });
+}

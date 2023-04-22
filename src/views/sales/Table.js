@@ -1,10 +1,10 @@
 import React, { useState, useEffect, Fragment } from 'react';
 
-import swal from 'sweetalert';
 import Moment from 'moment';
+import swal from 'sweetalert';
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
-import DataTable from 'react-data-table-component';
+import DataTable from 'react-data-table-component-footer';
 
 import { 
     CBadge,
@@ -18,6 +18,7 @@ from '@coreui/react';
 import { Link } from 'react-router-dom';
 
 import config from '../../config/config.json';
+import { headerOptions } from './config-table';
 
 import { deleteSale, getAllSales } from 'src/services/salesServices';
 
@@ -26,7 +27,8 @@ import { FormSearch } from './FormSearch';
 import { ButtonsExport } from 'src/components/table/ButtonsExport';
 import EclipseComponent from '../../components/loader/EclipseComponent';
 
-import { formatCurrency, formatNumber } from 'src/helpers/helpers';
+import { confirmDelete, formatNumber } from 'src/helpers/helpers';
+import { getDataExport, getTotal, prepareList } from './selector';
 
 export const Table = () => {
 
@@ -36,86 +38,44 @@ export const Table = () => {
     const [sales, setSales] = useState([]);
     const [copies, setCopies] = useState([]);
 
-    const headerOptions = [
-        {
-            name:"id",
-            prompt:"Nro",
-            width: 30
-        },
-        {
-            name:"name",
-            prompt:"Cliente",
-            width: 70
-        },
-        {
-            name:"code",
-            prompt:"Nro Control",
-            width: 30
-        },
-        {
-            name:"date",
-            prompt:"Fecha",
-            width: 30
-        },
-        {
-            name:"exchange_amount",
-            prompt:"Tasa cambio",
-            align:"center",
-            width: 20
-        },
-        {
-            name:"total_amount",
-            prompt:"Monto $US.",
-            align:"center",
-            width: 30
-        },
-        {
-            name:"total_amount_converted",
-            prompt:"Monto Bs.",
-            align:"center",
-            width: 30
-        },
-        {
-            name:"state",
-            prompt:"Estado",
-            align:"center",
-            width: 20
-        },
-    ];
+    const [totalSales, setTotalSales] = useState({
+        total:0,
+        totalConverted:0,
+    });
 
     const columns = [
-        {
-            name: 'Cliente',
-            sortable:true,
-            selector: row => row.name,
-        },
         {
             name: 'Nro Control',
             sortable:true,
             selector: row => row.code,
         },
         {
+            name: 'Cliente',
+            sortable:true,
+            selector: row => row.name,
+        },
+        {
             name: 'Fecha',
             sortable:true,
-            selector: row => Moment(row.date).format('DD/MM/YYYY'),
+            selector: row => row.date ? Moment(row.date).format('DD/MM/YYYY') : "",
         },
         {
             name: 'Tasa cambio.',
             sortable:true,
             right: true,
-            selector: row => formatNumber(row.exchange_amount),
+            selector: row => (row.exchange_amount),
         },
         {
             name: 'Monto $US',
             sortable:true,
             right: true,
-            selector: row => formatNumber(row.total_amount),
+            selector: row => (row.total_amount),
         },
         {
             name: 'Monto Bs.',
             sortable:true,
             right: true,
-            selector: row => formatNumber(row.total_amount_converted)
+            selector: row => (row.total_amount_converted)
         },
         {
             name: 'Estado',
@@ -126,18 +86,19 @@ export const Table = () => {
         {
             name: 'Accion',
             right: true,
-            selector: row => {
+            selector: (row, key) => {
                 return (<Fragment>
+                    { key == 0  &&
                     <button onClick={ (e) => handleShowSale(row)  } className='btn btn-sm btn-info m-1'>
                         <CIcon icon={ icon.cilShortText }/>
-                    </button>
+                    </button>}
                     { row.state === "Completada" &&
                     <button onClick={ (e) => handleDeleteSale(row)  } className='btn btn-sm btn-danger'>
                         <CIcon icon={ icon.cilBackspace }/>
                     </button>}
                 </Fragment>)
             },
-        },
+        }
     ];
 
     useEffect(() => {
@@ -146,41 +107,21 @@ export const Table = () => {
 
     const handleDeleteSale = async (sale) => {
 
-        swal({
-            title: 'Estás seguro?',
-            text: `Quiere anular la venta: ${sale.code}`,
-            icon: 'warning',
-            dangerMode: true,
-            buttons: {
-                cancel: {
-                  text: "Cancelar",
-                  value: null,
-                  visible: true,
-                  closeModal: true,
-                },
-                confirm: {
-                  text: "Anular",
-                  value: true,
-                  visible: true,
-                  closeModal: true
-                }
-            }
-          }).then( async (result) => {
-            if (result) {
-                const deleted = await deleteSale(sale.id);
+        confirmDelete(`Quiere anular la venta: ${sale.code}`, async () => {
+            
+            const deleted = await deleteSale(sale.id);
                 
-                if(deleted.sale){
-                    swal(
-                      'Venta anulada completada!',
-                      'Se anuló la venta correctamente!',
-                      'success'
-                    );
-                    fetchSales();
-                }else{
-                    swal("Error","No se encontró la venta solicitada");
-                }
+            if(deleted.sale){
+                swal(
+                  'Venta anulada completada!',
+                  'Se anuló la venta correctamente!',
+                  'success'
+                );
+                fetchSales();
+            }else{
+                swal("Error","No se encontró la venta solicitada");
             }
-          })
+        });
     }
 
     const handleShowSale = (sale) => {
@@ -189,38 +130,17 @@ export const Table = () => {
     }
 
     const fetchSales = async () => {
+        
         setLoading(true);
         const res = await getAllSales();
         const rows = prepareList(res.sales);
+       
         setSales(rows);
         setCopies(rows);
         setLoading(false);
-    }
 
-    const prepareList = data => {
-
-        let rows = [];
-
-        data.map( sale => {
-
-            const row = {
-                id: sale.id.toString(),
-                name: sale.Customer.name,
-                code: sale.code,
-                date: sale.date,
-                description: sale.description,
-                Customer: sale.Customer,
-                SaleDetails: sale.SaleDetails,
-                exchange_amount: sale.exchange_amount,
-                total_amount: sale.total_amount,
-                total_amount_converted: sale.total_amount_converted,
-                state: sale.state == "1"? "Completada" : "Anulada"
-            };
-
-            rows.push(row);
-        });
-
-        return rows;
+        let newTotals = getTotal(res.sales);
+        setTotalSales({...totalSales, ...newTotals})
     }
 
     return (
@@ -232,7 +152,7 @@ export const Table = () => {
         <h5 className="card-title">Todas las ventas</h5>
 
         <ButtonsExport 
-            data={ sales } 
+            data={ getDataExport(sales, totalSales.total, totalSales.totalConverted) } 
             headerOptions={ headerOptions } 
             title="Listado de Ventas" 
             fileName="Reporte-ventas"/>
@@ -242,12 +162,15 @@ export const Table = () => {
         <DataTable 
             columns={columns}
             data={sales}
-            pagination={ true }
             progressPending={ loading }
             progressComponent={ <EclipseComponent/> }
             paginationComponentOptions={ config.paginationComponentOptions }
-            noDataComponent={"No hay datos para mostrar"}
-        />
+            footer={{
+                exchange_amount: "Total ventas",
+                total_amount: formatNumber(totalSales.total),
+                total_amount_converted: formatNumber(totalSales.totalConverted)
+            }}
+            noDataComponent={"No hay datos para mostrar"}/>
 
         <CModal size="xl" visible={visible} onClose={() => setVisible(false)}>
             <CModalHeader onClose={() => setVisible(false)}>
