@@ -56,8 +56,8 @@ export const ButtonsExport = ({ data, headerOptions, title, fileName }) => {
 
         for (let i = 0; i < pages; i++) {
             
-            const start = i * 18;
-            const end = (i + 1) * 18;
+            const start = i * 15;
+            const end = (i + 1) * 15;
             const pageData = rows.slice(start, end);
             
             if(i > 0){

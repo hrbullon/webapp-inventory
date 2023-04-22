@@ -11,7 +11,7 @@ export const prepareList = data => {
             code: sale.code,
             name: sale.Customer.name,
             date: sale.date,
-            description: sale.description,
+            description: sale.description? sale.description : "N/A",
             Customer: sale.Customer,
             SaleDetails: sale.SaleDetails,
             exchange_amount: sale.exchange_amount,

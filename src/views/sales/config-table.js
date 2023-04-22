@@ -2,12 +2,12 @@ export const headerOptions = [
     {
         name:"code",
         prompt:"Nro Control",
-        width: 30
+        width: 20
     },
     {
         name:"name",
         prompt:"Cliente",
-        width: 70
+        width: 50
     },
     {
         name:"date",
@@ -17,7 +17,7 @@ export const headerOptions = [
     {
         name:"description",
         prompt:"Descripcion",
-        width: 40
+        width: 60
     },
     {
         name:"exchange_amount",
