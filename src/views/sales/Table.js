@@ -88,7 +88,7 @@ export const Table = () => {
             right: true,
             selector: (row, key) => {
                 return (<Fragment>
-                    { key == 0  &&
+                    { row.id &&
                     <button onClick={ (e) => handleShowSale(row)  } className='btn btn-sm btn-info m-1'>
                         <CIcon icon={ icon.cilShortText }/>
                     </button>}

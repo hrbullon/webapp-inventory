@@ -5,9 +5,9 @@ export const headerOptions = [
         width: 30
     },
     {
-        name:"name",
-        prompt:"Cliente",
-        width: 70
+        name:"document",
+        prompt:"Nro Fact/Doc",
+        width: 30
     },
     {
         name:"date",
@@ -16,31 +16,31 @@ export const headerOptions = [
     },
     {
         name:"description",
-        prompt:"Descripcion",
-        width: 40
+        prompt:"Descripción",
+        width: 60
     },
     {
         name:"exchange_amount",
         prompt:"Tasa cambio",
-        align:"center",
-        width: 20
+        align:"right",
+        width: 30
     },
     {
         name:"total_amount",
-        prompt:"Monto $US.",
-        align:"center",
+        prompt:"Monto Bs.",
+        align:"right",
         width: 30
     },
     {
         name:"total_amount_converted",
-        prompt:"Monto Bs.",
-        align:"center",
+        prompt:"Monto $US.",
+        align:"right",
         width: 30
     },
     {
         name:"state",
         prompt:"Estado",
-        align:"center",
-        width: 20
+        align:"right",
+        width: 30
     },
 ];

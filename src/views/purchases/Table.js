@@ -4,7 +4,7 @@ import swal from 'sweetalert';
 import Moment from 'moment';
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
-import DataTable from 'react-data-table-component';
+import DataTable from 'react-data-table-component-footer';
 
 import { 
     CBadge,
@@ -18,6 +18,8 @@ from '@coreui/react';
 import { Link } from 'react-router-dom';
 
 import config from '../../config/config.json';
+import { headerOptions } from './config-table';
+import { getDataExport, getTotal, prepareList } from './selector';
 
 import { deletePurchase, getAllPurchases } from 'src/services/purchasesServices';
 
@@ -26,7 +28,7 @@ import { FormSearch } from './FormSearch';
 import { ButtonsExport } from 'src/components/table/ButtonsExport';
 import EclipseComponent from '../../components/loader/EclipseComponent';
 
-import { formatCurrency, formatNumber } from 'src/helpers/helpers';
+import { confirmDelete, formatNumber } from 'src/helpers/helpers';
 
 export const Table = () => {
 
@@ -36,44 +38,10 @@ export const Table = () => {
     const [purchases, setPurchases] = useState([]);
     const [copies, setCopies] = useState([]);
 
-    const headerOptions = [
-        {
-            name:"id",
-            prompt:"Nro"
-        },
-        {
-            name:"code",
-            prompt:"Nro Control"
-        },
-        {
-            name:"document",
-            prompt:"Nro Fact/Doc"
-        },
-        {
-            name:"date",
-            prompt:"Fecha",
-        },
-        {
-            name:"exchange_amount",
-            prompt:"Tasa cambio",
-            align:"right"
-        },
-        {
-            name:"total_amount",
-            prompt:"Monto Bs.",
-            align:"right"
-        },
-        {
-            name:"total_amount_converted",
-            prompt:"Monto $US.",
-            align:"right"
-        },
-        {
-            name:"state",
-            prompt:"Estado",
-            align:"right"
-        },
-    ];
+    const [totalPurchases, setTotalPurchases] = useState({
+        total:0,
+        totalConverted:0,
+    });
 
     const columns = [
         {
@@ -89,19 +57,19 @@ export const Table = () => {
         {
             name: 'Fecha',
             sortable:true,
-            selector: row => Moment(row.date).format('DD/MM/YYYY'),
+            selector: row => row.date? Moment(row.date).format('DD/MM/YYYY') : "",
         },
         {
             name: 'Tasa cambio.',
             sortable:true,
             right: true,
-            selector: row => formatCurrency(row.exchange_amount,true),
+            selector: row => row.exchange_amount,
         },
         {
             name: 'Monto $US',
             sortable:true,
             right: true,
-            selector: row => formatNumber(row.total_amount),
+            selector: row => row.total_amount,
         },
         {
             name: 'Monto Bs.',
@@ -118,11 +86,12 @@ export const Table = () => {
         {
             name: 'Accion',
             right: true,
-            selector: row => {
+            selector: (row, key) => {
                 return (<Fragment>
+                            { row.id &&
                             <button onClick={ (e) => handleShowPurchase(row)  } className='btn btn-sm btn-info m-1'>
                                 <CIcon icon={ icon.cilShortText }/>
-                            </button>
+                            </button>}
                             { row.state === "Completada" &&
                             <button onClick={ (e) => handleDeletePurchase(row)  } className='btn btn-sm btn-danger'>
                                 <CIcon icon={ icon.cilBackspace }/>
@@ -135,44 +104,25 @@ export const Table = () => {
     useEffect(() => {
         fetchPurchases();
     }, []);
-    
+
+
     const handleDeletePurchase = async (purchase) => {
 
-        swal({
-            title: 'Estás seguro?',
-            text: `Quiere anular la compra: ${purchase.document}`,
-            icon: 'warning',
-            dangerMode: true,
-            buttons: {
-                cancel: {
-                  text: "Cancelar",
-                  value: null,
-                  visible: true,
-                  closeModal: true,
-                },
-                confirm: {
-                  text: "Anular",
-                  value: true,
-                  visible: true,
-                  closeModal: true
-                }
-            }
-          }).then( async (result) => {
-            if (result) {
-                const deleted = await deletePurchase(purchase.id);
+        confirmDelete(`Quiere anular la compra: ${purchase.document}`, async () => {
+            
+            const deleted = await deletePurchase(purchase.id);
                 
-                if(deleted.purchase){
-                    swal(
-                      'Compra anulada completada!',
-                      'Se anuló la compra correctamente!',
-                      'success'
-                    );
-                    fetchPurchases();
-                }else{
-                    swal("Error","No se encontró la compra solicitada");
-                }
+            if(deleted.purchase){
+                swal(
+                  'Compra anulada completada!',
+                  'Se anuló la venta correctamente!',
+                  'success'
+                );
+                fetchPurchases();
+            }else{
+                swal("Error","No se encontró la compra solicitada");
             }
-          })
+        });
     }
 
     const handleShowPurchase = (purchase) => {
@@ -187,31 +137,9 @@ export const Table = () => {
         setPurchases(rows);
         setCopies(rows);
         setLoading(false);
-    }
 
-    const prepareList = data => {
-
-        let rows = [];
-
-        data.map( purchase => {
-
-            const row = {
-                id: purchase.id.toString(),
-                code: purchase.code,
-                document: purchase.document,
-                description: purchase.description,
-                date: purchase.date,
-                PurchaseDetails: purchase.PurchaseDetails,
-                exchange_amount: purchase.exchange_amount,
-                total_amount: purchase.total_amount,
-                total_amount_converted: purchase.total_amount_converted,
-                state: purchase.state == "1"? "Completada" : "Anulada"
-            };
-
-            rows.push(row);
-        });
-
-        return rows;
+        let newTotals = getTotal(res.purchases);
+        setTotalPurchases({...totalPurchases, ...newTotals})
     }
 
     return (
@@ -223,10 +151,10 @@ export const Table = () => {
         <h5 className="card-title">Todas las compras</h5>
 
         <ButtonsExport 
-            data={ purchases } 
+            data={ getDataExport(purchases, totalPurchases.total, totalPurchases.totalConverted) } 
             headerOptions={ headerOptions } 
-            title="Listado de Ventas" 
-            fileName="Reporte-ventas"/>
+            title="Listado de compras" 
+            fileName="Reporte-compras"/>
 
         <FormSearch setPurchases={ setPurchases } rows={copies}/>
 
@@ -238,6 +166,11 @@ export const Table = () => {
             progressComponent={ <EclipseComponent/> }
             paginationComponentOptions={ config.paginationComponentOptions }
             noDataComponent={"No hay datos para mostrar"}
+            footer={{
+                exchange_amount: "Total compras",
+                total_amount: formatNumber(totalPurchases.total),
+                total_amount_converted: formatNumber(totalPurchases.totalConverted)
+            }}
         />
 
         <CModal size="xl" visible={visible} onClose={() => setVisible(false)}>
