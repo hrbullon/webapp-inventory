@@ -1,40 +1,36 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import swal from 'sweetalert';
 import { useForm } from 'react-hook-form';
 
 import { ErrorValidate } from 'src/components/forms/ErrorValidate';
 import { ActionButtons } from 'src/components/forms/ActionButtons';
-import { createCategory, updateCategory } from 'src/services/categoriesServices';
 
-export const Form = ({ category, fetchCategories }) => {
+//Actions category
+import { startGettingCategory, startSendingCategory } from 'src/actions/category';
 
-    const [idCategory, setIdCategory] = useState(0);
+export const Form = () => {
+
+    const dispatch = useDispatch()
+
+    const model = useSelector(state => state.category )
+    const categorySaved = useSelector(state => state.categorySaved )
+
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
     useEffect(() => {
-        reset(category);
-        setIdCategory(category.id);
-    }, [category]);
-
-    const onSubmit = async data => {
-        
-        let res;
+        (model !== undefined)| reset(model);
+    }, [model])
     
-        if(!idCategory){
-            res = await createCategory(data);
-        }else{
-            res = await updateCategory(idCategory, data);
-        }
+    useEffect(() => {
+       if(categorySaved !== undefined){
+           dispatch( startGettingCategory() );
+           swal("Listo","Datos guardados correctamente!!","success");
+       } 
+    }, [categorySaved])
     
-        if(res.category){
-          (idCategory)? reset(data) : reset();
-          fetchCategories();
-          swal("Listo","Datos guardados correctamente!!","success");
-        }else{
-          swal("Oops","Algo salio mal al guardar los datos","warning");
-        }
-    };
+    const onSubmit = async data => dispatch( startSendingCategory(data) );
 
     return (
     <form onSubmit={handleSubmit(onSubmit)}>

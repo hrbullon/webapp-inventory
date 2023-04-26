@@ -1,4 +1,7 @@
-import { createStore } from 'redux'
+import { applyMiddleware, configureStore } from '@reduxjs/toolkit';
+import thunk from "redux-thunk";
+
+const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
 
 const initialState = {
   sidebarShow: true,
@@ -13,5 +16,9 @@ const changeState = (state = initialState, { type, ...rest }) => {
   }
 }
 
-const store = createStore(changeState)
+const store = configureStore({ 
+  reducer: changeState, 
+  applyMiddleware: composeEnhancers( applyMiddleware( thunk ))
+})
+
 export default store

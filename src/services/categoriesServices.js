@@ -1,7 +1,7 @@
 import { fetchData } from "src/helpers/helpers";
 
-export const getAllCategories = () => {
-    return  fetchData(`categories`, 'GET');
+export const getAllCategories = (data = "") => {
+    return  fetchData(`categories?search=${data}`, 'GET');
 }
 
 export const createCategory = (data) => {

@@ -1,20 +1,18 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
 
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
 import { useForm } from 'react-hook-form';
+import { startGettingCategory } from 'src/actions/category';
 
-export const FormSearch = ({ setCategories, rows }) => {
+export const FormSearch = () => {
 
+    const dispatch = useDispatch()
     const { register, handleSubmit, reset } = useForm();
-
+    
     const handleFilter = (data) => {
-       
-        let filtered = rows
-        .filter( item => {
-            return item.name && item.name.toLowerCase().includes(data.name.toLowerCase()) })
-
-        setCategories(filtered);
+        dispatch( startGettingCategory(data.name) );
     }
 
     const handleReset = () => {
