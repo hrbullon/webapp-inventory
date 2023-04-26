@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import swal from 'sweetalert';
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
 import { Link } from 'react-router-dom';
@@ -13,36 +13,25 @@ import { FormSearch } from './FormSearch';
 import { ButtonsExport } from 'src/components/table/ButtonsExport';
 import EclipseComponent from 'src/components/loader/EclipseComponent';
 
-import { deleteCustomer, getAllCustomers } from 'src/services/customersServices';
+//Actions customers
+import { startGettingCustomers } from '../../actions/customer';
 
 export const Table = () => {
 
+    const dispatch = useDispatch()
+    const customers = useSelector((state) => state.customers);
+
     const [loading, setLoading] = useState(false);
-    const [copies, setCopies] = useState([]);
-    const [customers, setCustomers] = useState([]);
 
     useEffect(() => {
-        fetchCustomers();
+        setLoading(true);
+        dispatch( startGettingCustomers() );
     }, []);
 
-    const fetchCustomers = async () => {
-        setLoading(true);
-        const res = await getAllCustomers();
-        setCopies(res.customers);
-        setCustomers(res.customers);
-        setLoading(false);
-    }
-
-    const handleDeleteCustomer = async (customer) => {
-        const res = await deleteCustomer(customer.id);
+    useEffect(() => {
+        (Array.isArray(customers))| setLoading(false);
+    }, [customers])
     
-        if(res.customer){
-          const filtered = customers.filter( item => item.id !== customer.id );
-          setCustomers(filtered);
-          swal("Listo","Datos eliminados!!","success");
-        }
-    }
-
     return (
     <Fragment>
         <Link to="/customers/create" title='Registrar nuevo cliente' className="btn btn-sm btn-primary float-end">
@@ -51,13 +40,15 @@ export const Table = () => {
 
         <h5 className="card-title">Listado de clientes</h5>
 
-        <ButtonsExport 
-            data={ customers.map(({id, address,...rest}) => rest) } 
-            headerOptions={ headerOptions } 
-            title="Listado de clientes" 
-            fileName="Reporte de clientes"/>
+        { customers && 
+            <ButtonsExport 
+                data={ customers.map(({id, address,...rest}) => rest) } 
+                headerOptions={ headerOptions } 
+                title="Listado de clientes" 
+                fileName="Reporte de clientes"/>
+        }
 
-        <FormSearch setCustomers={ setCustomers } rows={copies}/>    
+        <FormSearch/>    
         
         <DataTable 
             columns={columns}

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 
 import swal from 'sweetalert';
 import { CAlert } from '@coreui/react'
@@ -6,43 +7,28 @@ import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 
 import { ActionButtons } from 'src/components/forms/ActionButtons';
-import { createCustomer, getCustomerById, updateCustomer } from 'src/services/customersServices';
 import { ErrorValidate } from 'src/components/forms/ErrorValidate';
 import { formatDocument } from 'src/helpers/helpers';
+
+//Actions customers
+import { 
+    startSendingCustomer,
+    startGettingCustomerByID, 
+} from '../../actions/customer';
 
 export const Form = ({ title }) => {
 
     let { id } = useParams();
-    const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
-    useEffect(() => {
-        if(id && id !== undefined){
-            getCustomer(id);
-        }
-    }, [id])
-    
-    const getCustomer = async (id) => {
-        const res = await getCustomerById(id);
-        reset(res.customer);
-    }
+    const dispatch = useDispatch()
+    const model = useSelector((state) => state.customer);
 
-    const onSubmit = async data => { 
-        
-        let res;
+    const { register, handleSubmit, reset, formState: { errors } } = useForm({ defaultValues:{} });
 
-        if(!id){
-            res = await createCustomer(data);
-        }else{
-            res = await updateCustomer(id, data);
-        }
+    useEffect(() => { (model !== undefined)| reset(model) }, [model]);
+    useEffect(() => { (id)? dispatch( startGettingCustomerByID(id) ) : reset({}) }, [id])
 
-        if(res.customer){
-            (id)? reset(data) : reset();
-            swal("Completado!", "Datos guardados!", "success");
-        }else{
-            swal("Oops","Algo salio mal al guardar los datos","warning");
-        }
-    }
+    const onSubmit = async data => { dispatch( startSendingCustomer(data) ) }
 
     return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -50,10 +36,10 @@ export const Form = ({ title }) => {
             <div className="card-body">
                 <h5 className="card-title">{ title }</h5>
                 <hr/>
-                <CAlert color="primary" visible={true}>
+                <CAlert color="primary" visible={ (Object.entries(errors).length > 0 ) }>
                     Los campos con <b>*</b> son obligatorios
                 </CAlert>
-                <div className='row mt-5'>
+                <div className='row mt-4'>
                     <div className="col-6">
                         <div className="form-group">
                             <label>Nombre: *</label>

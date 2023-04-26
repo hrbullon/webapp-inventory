@@ -4,13 +4,13 @@ import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
 import { useForm } from 'react-hook-form';
 
-export const FormSearch = ({ setCustomers, rows }) => {
+export const FormSearch = () => {
 
     const { register, handleSubmit, reset } = useForm();
 
     const handleFilter = (data) => {
        
-        let filtered = rows
+       /*  let filtered = rows
         .filter( item => {
             return item.dni && item.dni.toLowerCase().includes(data.dni.toLowerCase()) && 
             item.name && item.name.toLowerCase().includes(data.name.toLowerCase()) &&
@@ -18,7 +18,7 @@ export const FormSearch = ({ setCustomers, rows }) => {
             item.email && item.email.toLowerCase().includes(data.email.toLowerCase())
         })
 
-        setCustomers(filtered);
+        setCustomers(filtered); */
     }
 
     const handleReset = () => {
