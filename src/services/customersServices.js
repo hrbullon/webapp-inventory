@@ -1,7 +1,8 @@
 import { fetchData } from "src/helpers/helpers";
 
-export const getAllCustomers = () => {
-    return fetchData(`customers`, 'GET');
+export const getAllCustomers = (data) => {
+    let params = new URLSearchParams(data).toString();
+    return fetchData(`customers?${params}`, 'GET');
 }
 
 export const getCustomerById = (id) => {

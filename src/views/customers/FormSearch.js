@@ -1,40 +1,22 @@
-import React from 'react'
+import React from 'react';
+import { useDispatch } from 'react-redux'
 
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
 import { useForm } from 'react-hook-form';
 
+import { startGettingCustomers } from '../../actions/customer';
+
 export const FormSearch = () => {
 
-    const { register, handleSubmit, reset } = useForm();
+    const dispatch = useDispatch();
+    const { register, handleSubmit, reset } = useForm({ defaultValues:{} });
 
-    const handleFilter = (data) => {
-       
-       /*  let filtered = rows
-        .filter( item => {
-            return item.dni && item.dni.toLowerCase().includes(data.dni.toLowerCase()) && 
-            item.name && item.name.toLowerCase().includes(data.name.toLowerCase()) &&
-            item.phone && item.phone.toLowerCase().includes(data.phone.toLowerCase()) && 
-            item.email && item.email.toLowerCase().includes(data.email.toLowerCase())
-        })
-
-        setCustomers(filtered); */
-    }
+    const handleFilter = (data) => { dispatch( startGettingCustomers(data) ) }
 
     const handleReset = () => {
-        reset({
-            dni:'',
-            name:'',
-            phone:'',
-            email:''
-        });
-
-        handleFilter({
-            dni:'',
-            name:'',
-            phone:'',
-            email:''
-        })
+        reset({});
+        handleFilter()
     }
 
     return (

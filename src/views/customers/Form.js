@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
-import swal from 'sweetalert';
 import { CAlert } from '@coreui/react'
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
