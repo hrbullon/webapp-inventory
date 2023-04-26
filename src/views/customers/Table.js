@@ -19,18 +19,12 @@ import { startGettingCustomers } from '../../actions/customer';
 export const Table = () => {
 
     const dispatch = useDispatch()
+    const loading = useSelector((state) => state.loading);
     const customers = useSelector((state) => state.customers);
 
-    const [loading, setLoading] = useState(false);
-
     useEffect(() => {
-        setLoading(true);
         dispatch( startGettingCustomers() );
     }, []);
-
-    useEffect(() => {
-        (Array.isArray(customers))| setLoading(false);
-    }, [customers])
     
     return (
     <Fragment>

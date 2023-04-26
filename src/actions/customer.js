@@ -13,8 +13,9 @@ export const startResetingCustomer = () => {
 export const startGettingCustomers = (data) => {
     return async (dispatch) => { 
         try {
+            dispatch({ type: "set", loading: true });
             const res = await getAllCustomers(data);
-            dispatch({ type: "set", customers: [...res.customers]});
+            dispatch({ type: "set", customers: [...res.customers], loading: false});
         } catch (error) {
             console.error(CLG_MESSAGE.ERROR_DATA_LOADING);            
         }
