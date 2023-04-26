@@ -36,11 +36,22 @@ export const Form = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
         <h5 className="card-title">Datos de categoria</h5>
         <div className="mb-3">
-            <input type="text" name="name" {...register("name", { required: true, maxLength: 45 }) } autoComplete='off' className="form-control" placeholder="Nombre de la categoría"/>
+            <input 
+                type="text" 
+                className="form-control" 
+                autoComplete='autocomplete' 
+                placeholder="Nombre de la categoría"
+                name="name" {...register("name", { required: true, maxLength: 45 }) }/>
             <ErrorValidate error={ errors.name } />
         </div>
         <div className="mb-3">
-            <input type="text" name="description" {...register("description")} autoComplete='off' className="form-control" placeholder="Descripción de la categoría"/>
+            <input 
+                type="text" 
+                name="description" 
+                className="form-control" 
+                autoComplete='autocomplete' 
+                {...register("description")} 
+                placeholder="Descripción de la categoría"/>
         </div>
         <ActionButtons />
     </form> 
