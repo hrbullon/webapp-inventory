@@ -1,44 +1,36 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import swal from 'sweetalert';
 import { CAlert } from '@coreui/react';
 import { useForm } from 'react-hook-form';
 
 import { ActionButtons } from 'src/components/forms/ActionButtons';
 import { ErrorValidate } from 'src/components/forms/ErrorValidate';
-import { getCompanyById, updateCompany } from 'src/services/companiesServices';
+
 import { formatDocument } from 'src/helpers/helpers';
+
+import { 
+    startGettingCompany, 
+    startSendingCompany } 
+from '../../actions/company';
 
 const Form = () => {
     
-    const [idCompany, setIdCompany] = useState(0);
+    const dispatch = useDispatch();
+    const model = useSelector((state) => state.company);
+
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
+    useEffect(() => { (model !== undefined)| reset(model) }, [model]);
+
     useEffect(() => {
-        fetchData();
+
+        let user = JSON.parse(localStorage.getItem("user"));
+        dispatch( startGettingCompany(user.company_id) );
+
     }, [])
     
-    const fetchData = async () => {
-
-        let user = localStorage.getItem("user");
-        user = JSON.parse(user);
-
-        setIdCompany(user.company_id);
-
-        const res = await getCompanyById(user.company_id);
-        reset(res.company);
-    }
-
-    const onSubmit = async data => { 
-        
-        const res = await updateCompany(idCompany, data);
-
-        if(res.company){
-            swal("Completado!", "Datos guardados!", "success");
-        }else{
-            swal("Oops","Algo salio mal al guardar los datos","warning");
-        }
-    }
+    const onSubmit = async data => { dispatch( startSendingCompany(data) ) }
 
     return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -46,7 +38,7 @@ const Form = () => {
             <div className="card-body">
                 <h5 className="card-title"></h5>
                 <hr/>
-                <CAlert color="primary" visible={true}>
+                <CAlert color="primary" visible={ (Object.entries(errors).length > 0 ) }>
                     Los campos con <b>*</b> son obligatorios
                 </CAlert>
                 <div className='row mt-4'>
