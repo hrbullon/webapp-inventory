@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import swal from 'sweetalert';
 import Select from 'react-select';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
@@ -11,62 +11,52 @@ import { prepareOptions } from 'src/helpers/helpers';
 import { ActionButtons } from 'src/components/forms/ActionButtons';
 import { ErrorValidate } from 'src/components/forms/ErrorValidate';
 
-import { getAllCategories } from 'src/services/categoriesServices';
-import { createProduct, getProductById, updateProduct } from 'src/services/productsServices';
 import { AuthContext } from 'src/context/AuthContext';
 import Page403 from '../error/page403/Page403';
+
+//Actions
+import { startGettingCategory } from '../../actions/category';
+import { startGettingProductById, startSendingProduct } from '../../actions/product';
 
 export const Form = ({ title }) => {
 
     let { id } = useParams();
     let { user } = useContext(AuthContext);
 
-    const defaultCategory = {
-      value:'',
-      label:'Seleccione una categoría'
-    }
-
-    const [idCategory, setIdCategory] = useState(defaultCategory);
-    const {register, handleSubmit, reset, formState: { errors } } = useForm();
+    const dispatch = useDispatch()
+    const model = useSelector((state) => state.product);
+    const categories = useSelector((state) => state.categories);
     
+    const defaultCategory = { value:'', label:'Seleccione una categoría' }
+
     const [options, setOptions] = useState([]);
+    const [idCategory, setIdCategory] = useState(defaultCategory);
+    const {register, handleSubmit, reset, formState: { errors } } = useForm({ defaultValues:{} });
    
-    useEffect(() => {
-      fetchCategories();
-    }, [])
+    useEffect(() => { dispatch( startGettingCategory() ) }, [])
     
+    useEffect(() => { 
+      if(model){
+
+        if(model.category_id){
+          const { Category } = model;
+          setIdCategory({ value: Category.id, label: Category.name });
+        }
+
+        reset(model);
+      }
+    }, [model])
 
     useEffect(() => {
-      if(id && id !== undefined){
-          getProductDetail(id);
+      if(categories && categories !== undefined){
+        const items = prepareOptions(categories);
+        setOptions(items);
       }
-    }, [id])
+    }, [categories])
     
-    const getProductDetail = async (id) => {
+    useEffect(() => { (id && id !== undefined)? dispatch( startGettingProductById(id) ) : reset({}) }, [id])
 
-      const res = await getProductById(id);
-
-      if(res.product.category_id){
-        const { Category } = res.product;
-        setIdCategory({ value: Category.id, label: Category.name });
-      }
-
-      reset(res.product);
-    }
-
-    const fetchCategories = async () => {
-      const res = await getAllCategories();
-      const items = prepareOptions(res.categories);
-      setOptions(items);
-    }
-
-    const handleChangingCategory = (input) => {
-      if(input){
-        setIdCategory(input)
-      } else {
-        setIdCategory({value:"", label: "Seleccione una categoría"})
-      }
-    }
+    const handleChangingCategory = (input) => { input? setIdCategory(input) : setIdCategory(defaultCategory) }
 
     const onSubmit = async data => { 
       
@@ -82,20 +72,7 @@ export const Form = ({ title }) => {
       formData.append("quantity", data.quantity);
       formData.append("image", data.image[0]);
 
-      let res;
-  
-      if(!id){
-          res = await createProduct(formData);
-      }else{
-          res = await updateProduct(id, formData);
-      }
-
-      if(res.product){
-          (id)? reset(data) : reset();
-          swal("Completado!", "Datos guardados!", "success");
-      }else{
-          swal("Oops","Algo salio mal al guardar los datos","warning");
-      }
+      dispatch( startSendingProduct(formData, id) )
     } 
 
     if(user.role !== "ADM_ROLE"){
@@ -108,10 +85,10 @@ export const Form = ({ title }) => {
         <div className="card-body">
           <h5 className="card-title">{ title }</h5>
           <hr/>
-          <CAlert color="primary" visible={true}>
+          <CAlert color="primary" visible={(Object.entries(errors).length > 0 )}>
             Los campos con <b>*</b> son obligatorios
           </CAlert>
-          <div className='row mt-5'>
+          <div className='row mt-4'>
             <div className="col-4">
               <div className="form-group">
                 <label>Codigo/Serial:</label>

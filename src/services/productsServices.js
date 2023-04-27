@@ -13,6 +13,6 @@ export const createProduct = (data) => {
     return fetchData(`product`, 'POST', data, true);
 }
 
-export const updateProduct = (id, data) => {
+export const updateProduct = (data, id) => {
     return fetchData(`product/${id}`, 'PUT', data, true);
 }
