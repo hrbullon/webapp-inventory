@@ -1,7 +1,8 @@
 import { fetchData } from "src/helpers/helpers";
 
-export const getAllProducts = () => {
-    return fetchData(`products`, 'GET');
+export const getAllProducts = (data) => {
+    let params = new URLSearchParams(data).toString();
+    return fetchData(`products?${params}`, 'GET');
 }
 
 export const getProductById = (id) => {

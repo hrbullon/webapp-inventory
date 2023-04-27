@@ -1,30 +1,26 @@
-import React, { Fragment, useState, useEffect, useContext } from 'react';
+import React, { Fragment, useEffect, useContext } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { Link } from 'react-router-dom';
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
 
 import { CardProduct } from 'src/components/product/CardProduct';
-import { getAllProducts } from 'src/services/productsServices';
-import { Link } from 'react-router-dom';
+
 import { FormSearch } from './FormSearch';
 import { AuthContext } from 'src/context/AuthContext';
+
+//Actions products
+import { startGettingProducts } from '../../actions/product';
 
 const Products = () => {
 
     let { user } = useContext(AuthContext);
+
+    const dispatch = useDispatch()
+    const products = useSelector((state) => state.products);
   
-    const [copies, setCopies] = useState([])
-    const [products, setProducts] = useState([])
-
-    useEffect(() => {
-        fetchProducts();
-    }, []);
-
-    const fetchProducts = async () => {
-        const res = await getAllProducts();
-        setCopies(res.products);
-        setProducts(res.products);
-    }
+    useEffect(() => { dispatch( startGettingProducts() )  }, []);
 
     return (
         <Fragment>
@@ -37,10 +33,10 @@ const Products = () => {
                 </div>
             </div>}
 
-            <FormSearch setProducts={ setProducts } rows={ copies }/>
-
+            <FormSearch/>
+            
             <div className='row'>
-                { products.map( product => <CardProduct key={product.id} product={product}/>) }
+                { products && products.map( product => <CardProduct key={product.id} product={product}/>) }
             </div>
         </Fragment>
     )

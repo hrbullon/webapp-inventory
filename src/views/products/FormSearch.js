@@ -1,18 +1,12 @@
-import React from 'react'
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { startGettingProducts } from '../../actions/product';
 
-export const FormSearch = ({ setProducts, rows }) => {
+export const FormSearch = () => {
 
-    const handleFilter = (product) => {
-       
-        let filtered = rows
-        .filter( item => {
-            return item.code && item.code.toLowerCase().includes(product.toLowerCase()) ||
-            item.name && item.name.toLowerCase().includes(product.toLowerCase()) ||
-            item.description && item.description.toLowerCase().includes(product.toLowerCase()) 
-        })
+    const dispatch = useDispatch()
 
-        setProducts(filtered);
-    }
+    const handleFilter = (product) => { dispatch( startGettingProducts({ search: product }) ) }
 
     return (
         <form>
