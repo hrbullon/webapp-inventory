@@ -1,54 +1,53 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
-import swal from 'sweetalert';
 import { useForm } from 'react-hook-form';
 
 import { ErrorValidate } from 'src/components/forms/ErrorValidate';
 import { ActionButtons } from 'src/components/forms/ActionButtons';
-import { createExchange, updateExchange } from 'src/services/exchangesServices';
 
-export const Form = ({ exchange, fetchExchanges }) => {
+//Actions exchange
+import { startSendingExchange } from 'src/actions/exchange';
 
-    const [idExchange, setIdExchange] = useState(0);
+export const Form = ({ exchange }) => {
+
+    const dispatch = useDispatch();
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
     useEffect(() => {
         reset(exchange);
-        setIdExchange(exchange.id);
     }, [exchange]);
 
-    const onSubmit = async data => {
-        
-        let res;
-    
-        if(!idExchange){
-            res = await createExchange(data);
-        }else{
-            res = await updateExchange(idExchange, data);
-        }
-    
-        if(res.exchange){
-          (idExchange)? reset(data) : reset();
-          fetchExchanges();
-          swal("Listo","Datos guardados correctamente!!","success");
-        }else{
-          swal("Oops","Algo salio mal al guardar los datos","warning");
-        }
-    };
+    const onSubmit = async data => { dispatch( startSendingExchange(data) ) };
 
     return (
     <form onSubmit={handleSubmit(onSubmit)}>
         <h5 className="card-title">Datos de Tasa de cambio</h5>
         <div className="mb-3">
-            <input type="date" name="date" {...register("date", { required: true }) } className="form-control" placeholder="Fecha"/>
+            <input 
+                type="date" 
+                name="date" 
+                placeholder="Fecha"
+                className="form-control"
+                {...register("date", { required: true }) }/>
             <ErrorValidate error={ errors.date } />
         </div>
         <div className="mb-3">
-            <input type="text" name="amount" {...register("amount", { required: true }) } className="form-control" placeholder="Monto"/>
+            <input 
+                type="text" 
+                name="amount" 
+                placeholder="Monto"
+                className="form-control"
+                {...register("amount", { required: true }) }/>
             <ErrorValidate error={ errors.amount } />
         </div>
         <div className="mb-3">
-            <input type="text" name="description" {...register("description", { required: true, maxLength: 45 }) } className="form-control" placeholder="Descripción "/>
+            <input 
+                type="text" 
+                name="description" 
+                className="form-control"
+                placeholder="Descripción"
+                {...register("description", { required: true, maxLength: 45 }) }/>
             <ErrorValidate error={ errors.description } />
         </div>
         <ActionButtons />

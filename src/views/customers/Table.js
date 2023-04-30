@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useEffect, Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import CIcon from '@coreui/icons-react';
@@ -18,7 +18,7 @@ import { startGettingCustomers } from '../../actions/customer';
 
 export const Table = () => {
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     const loading = useSelector((state) => state.loading);
     const customers = useSelector((state) => state.customers);
 

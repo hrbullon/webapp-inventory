@@ -4,8 +4,9 @@ export const getLastExchange = () => {
     return  fetchData(`exchanges/1`, 'GET');
 }
 
-export const getAllExchanges = () => {
-    return  fetchData(`exchanges`, 'GET');
+export const getAllExchanges = (data) => {
+    let params = new URLSearchParams(data).toString();
+    return  fetchData(`exchanges?${params}`, 'GET');
 }
 
 export const createExchange = (data) => {

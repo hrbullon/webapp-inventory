@@ -1,25 +1,19 @@
 import React from 'react'
+import { useDispatch } from 'react-redux';
 
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
 import { useForm } from 'react-hook-form';
 
-export const FormSearch = ({ setExchanges, rows }) => {
+//Action Exchange
+import { startGettingExchanges } from 'src/actions/exchange';
 
+export const FormSearch = () => {
+
+    const dispatch = useDispatch();
     const { register, handleSubmit, reset } = useForm();
 
-    const handleFilter = (data) => {
-       
-        let filtered = rows
-        .filter( item => {
-            return (item.description && item.description.toLowerCase().includes(data.search.toLowerCase()) &&
-            item.date && item.date.toLowerCase().includes(data.date.toLowerCase())) ||
-            item.amount && item.amount.toLowerCase().includes(data.search.toLowerCase()) &&
-            item.date && item.date.toLowerCase().includes(data.date.toLowerCase())
-        })
-        
-        setExchanges(filtered);
-    }
+    const handleFilter = (data) => { dispatch( startGettingExchanges(data) ) }
 
     const handleReset = () => {
         reset({ search:'', date:'' });

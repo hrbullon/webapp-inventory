@@ -11,9 +11,7 @@ export const FormSearch = () => {
     const dispatch = useDispatch()
     const { register, handleSubmit, reset } = useForm();
     
-    const handleFilter = (data) => {
-        dispatch( startGettingCategory(data.name) );
-    }
+    const handleFilter = (data) => { dispatch( startGettingCategory(data.name) ) }
 
     const handleReset = () => {
         reset({ name:'' });

@@ -15,7 +15,8 @@ import { startGettingCategory } from 'src/actions/category';
 
 export const Table = () => {
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+    
     const categories = useSelector((state) => state.categories);
     
     useEffect( () => {
