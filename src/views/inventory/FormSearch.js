@@ -1,41 +1,35 @@
-import React from 'react'
+import React from 'react';
+import { useDispatch } from 'react-redux';
 
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
 import { useForm } from 'react-hook-form';
 
-export const FormSearch = ({ setProducts, fetchProducts, rows }) => {
+//Actions product
+import { startGettingProducts } from 'src/actions/product';
 
+export const FormSearch = () => {
+
+    const dispatch = useDispatch();
     const { register, handleSubmit, reset } = useForm();
 
-    const handleFilter = (data) => {
-       
-        let filtered = rows
-        .filter( item => {
-            return item.code && item.code.toLowerCase().includes(data.code.toLowerCase()) &&
-            item.name && item.name.toLowerCase().includes(data.product.toLowerCase())
-        })
-
-        setProducts(filtered);
-    }
+    const handleFilter = (data) => { dispatch( startGettingProducts(data) )  }
 
     const handleReset = () => {
-        reset({
-            code:'',
-            product:''
-        });
-
-        fetchProducts();
+        reset({ search:'' });
+        handleFilter({ search:'' });
     }
 
     return (
         <form onSubmit={handleSubmit(handleFilter)}>
             <div className='row mt-4'>
-                <div className='col-4'>
-                    <input type="text" className='form-control' autoComplete='off' {...register("code") }  placeholder='Buscar por codigo producto'/>  
-                </div>
-                <div className='col-4'>
-                    <input type="text" className='form-control' autoComplete='off' {...register("product") }  placeholder='Buscar por nombre producto'/>  
+                <div className='col-6'>
+                    <input 
+                        type="text" 
+                        {...register("search") }  
+                        className='form-control' 
+                        autoComplete='autoComplete' 
+                        placeholder='Buscar por codigo o descripción del producto'/>  
                 </div>
                 <div className='col'>
                     <button type='button' onClick={ handleReset } className='btn btn-secondary float-end mt-2 mb-2' title='Limpiar formulario'>

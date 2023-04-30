@@ -13,7 +13,7 @@ export const prepareList = data => {
             name: item.name,
             quantity: item.quantity,
             price: item.price,
-            subtotal: subtotal.toString()
+            subtotal: formatNumber(subtotal.toString())
         };
 
         rows.push(row);
@@ -28,7 +28,7 @@ export const getTotal = data => {
 
 export const getDataExport = (data, totalAmount) => {
 
-    let rows = data.map(({Customer, SaleDetails, Sale,...rest}) => rest);
+    let rows = data.map(({...rest}) => rest);
 
     rows.push({
         code: "",

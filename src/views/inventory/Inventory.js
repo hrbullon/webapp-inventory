@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import DataTable from 'react-data-table-component-footer';
 import config from '../../config/config.json';
@@ -11,38 +12,34 @@ import EclipseComponent from 'src/components/loader/EclipseComponent';
 
 import { getDataExport, getTotal, prepareList } from './selector';
 import { formatNumber } from 'src/helpers/helpers';
-import { getAllProducts } from 'src/services/productsServices';
 import { AuthContext } from 'src/context/AuthContext';
+
+//Actions product
+import { startGettingProducts } from 'src/actions/product';
 
 const Inventory = () => {
 
-    const [loading, setLoading] = useState(false);
+    const dispatch = useDispatch();
+    const loading = useSelector((state) => state.loading);
+    const products = useSelector((state) => state.products);
+
+    const [items, setItems] = useState([]);
     const [totalInventory, setTotalInventory] = useState(0);
-    const [products, setProducts ] = useState([]);
-    const [copies, setCopies] = useState([]);
 
     let { user } = useContext(AuthContext);
 
     useEffect(() => {
-      
-      let total = getTotal(products);
-      setTotalInventory(total);
-
+      if(products && products !== undefined){
+        let items = prepareList(products);
+        let total = getTotal(items);
+        setItems(items);
+        setTotalInventory(total);
+      }
     }, [products])
-    
 
     useEffect(() => {
-      fetchProducts();
-    }, []);
-
-    const fetchProducts = async () => {
-        setLoading(true);
-        const res = await getAllProducts();
-        const rows = prepareList(res.products);
-        setCopies(rows);
-        setProducts(rows);
-        setLoading(false);
-    }
+      dispatch( startGettingProducts() );
+    }, [])
 
     if(user.role !== "ADM_ROLE"){
       return <Page403/>
@@ -54,17 +51,18 @@ const Inventory = () => {
             
             <h5 className="card-title">Listado de existencia</h5>
             
-            <ButtonsExport 
-              data={ getDataExport(products, totalInventory) } 
+            { products && 
+              <ButtonsExport 
+              data={ getDataExport(items, totalInventory) } 
               headerOptions={ headerOptions } 
               title="Listado de existencia de productos "
-              fileName="Reporte-existencia"/>
+              fileName="Reporte-existencia"/>}
 
-            <FormSearch setProducts={setProducts} fetchProducts={ fetchProducts } rows={ copies } />
+            <FormSearch/>
 
             <DataTable
               columns={columns}
-              data={products}
+              data={items}
               progressPending={ loading }
               progressComponent={ <EclipseComponent/> }
               paginationComponentOptions={ config.paginationComponentOptions }

@@ -1,4 +1,3 @@
-
 export const headerOptions = [
     {
       name:"code",
@@ -51,12 +50,12 @@ export const columns = [
       name: 'Precio $US',
       sortable:true,
       right: true,
-      selector: row => (row.price),
+      selector: row => row.price,
     },
     {
       name: 'Subtotal $US',
       sortable:true,
       right: true,
-      selector: row => (row.subtotal) 
+      selector: row => row.subtotal 
     }
 ]
