@@ -10,6 +10,7 @@ import { CAlert } from '@coreui/react';
 import { prepareOptions } from 'src/helpers/helpers';
 import { ActionButtons } from 'src/components/forms/ActionButtons';
 import { ErrorValidate } from 'src/components/forms/ErrorValidate';
+import { Barcode } from 'src/components/barcode/Barcode';
 
 import { AuthContext } from 'src/context/AuthContext';
 import Page403 from '../error/page403/Page403';
@@ -31,10 +32,10 @@ export const Form = ({ title }) => {
 
     const [options, setOptions] = useState([]);
     const [idCategory, setIdCategory] = useState(defaultCategory);
-    const {register, handleSubmit, reset, formState: { errors } } = useForm({ defaultValues:{} });
-   
+    const {register, handleSubmit, reset, watch, formState: { errors } } = useForm({ defaultValues:{} });
+
     useEffect(() => { dispatch( startGettingCategory() ) }, [])
-    
+
     useEffect(() => { 
       if(model){
 
@@ -120,10 +121,14 @@ export const Form = ({ title }) => {
               </div>
             </div>
             <div className="col-4">
-              <div id='imagePreview'></div>
               <div className="form-group">
                 <label>Imagen:</label>
                 <input type="file" className="form-control" name="image" {...register("image")}/>
+              </div>
+              <div className="form-group mt-2">
+                { watch("code") &&
+                  <Barcode value={ watch("code") } />
+                }
               </div>
             </div>
           </div>
