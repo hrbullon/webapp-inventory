@@ -1,7 +1,8 @@
 import { fetchData } from "src/helpers/helpers";
 
-export const getAllSales = () => {
-    return fetchData(`sales`, 'GET');
+export const getAllSales = (data) => {
+    let params = new URLSearchParams(data).toString();
+    return fetchData(`sales?${params}`, 'GET');
 }
 
 export const getAllSalesToday = () => {

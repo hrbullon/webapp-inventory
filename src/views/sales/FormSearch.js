@@ -1,33 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
 import { useForm } from 'react-hook-form';
+import { startGettingSales } from 'src/actions/sales';
 
-export const FormSearch = ({ setSales, rows }) => {
+export const FormSearch = () => {
 
-    const { register, handleSubmit, reset } = useForm();
+    const dispatch = useDispatch();
+    const { register, handleSubmit, getValues, reset } = useForm();
 
-    const handleFilter = async data => { 
-        
-        let filtered = rows
-        .filter( item => {
-            return item.name && item.name.toLowerCase().includes(data.customer.toLowerCase()) && 
-            item.code && item.code.toLowerCase().includes(data.code.toLowerCase())
-        })
+    useEffect(() => {
+       dispatch( startGettingSales(getValues()) );
+    }, [])
 
-        if(data.start_date !== "" && data.end_date !== ""){
-            const filteredRows = filtered.filter(item => {
-                    const currentDate = item.date;
-                    return currentDate >= data.start_date && currentDate <= data.end_date;
-                
-            });
-
-            setSales(filteredRows);
-        }else{
-            setSales(filtered);
-        }
-    }
+    const handleFilter = async data => dispatch( startGettingSales(data) )
 
     const handleReset = () => {
         reset({
@@ -49,10 +37,10 @@ export const FormSearch = ({ setSales, rows }) => {
     <form onSubmit={handleSubmit(handleFilter)}>
         <div className='row mt-4'>
             <div className='col-3'>
-                <input type="text" className='form-control' autoComplete='off' {...register("customer") }  placeholder='Buscar por cliente'/>  
+                <input type="text" className='form-control' autoComplete='off' {...register("code") } placeholder='Buscar por nro de control'/>  
             </div>
             <div className='col-3'>
-                <input type="text" className='form-control' autoComplete='off' {...register("code") } placeholder='Buscar por nro de control'/>  
+                <input type="text" className='form-control' autoComplete='off' {...register("customer") }  placeholder='Buscar por cliente'/>  
             </div>
             <div className='col-3'>
                 <input type="date" className='form-control' autoComplete='off' {...register("start_date") } placeholder='Buscar por fecha desde'/>  

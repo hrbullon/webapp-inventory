@@ -4,5 +4,6 @@ export const CLG_MESSAGE = {
 }
 
 export const VIEW_MESSAGE = {
-    DATA_SAVED_SUCCESSFULLY: "Datos guardados!"
+    DATA_SAVED_SUCCESSFULLY: "Datos guardados!",
+    DATA_SAVED_FAILED: "No se encontró el elemento solicitado"
 }

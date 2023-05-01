@@ -1,13 +1,9 @@
 import React, { useState, useEffect, Fragment } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import Moment from 'moment';
-import swal from 'sweetalert';
-import CIcon from '@coreui/icons-react';
-import * as icon from '@coreui/icons';
 import DataTable from 'react-data-table-component-footer';
 
 import { 
-    CBadge,
     CModal, 
     CModalBody, 
     CModalFooter, 
@@ -17,130 +13,54 @@ from '@coreui/react';
 
 import { Link } from 'react-router-dom';
 
-import config from '../../config/config.json';
-import { headerOptions } from './config-table';
+import CIcon from '@coreui/icons-react';
+import * as icon from '@coreui/icons';
 
-import { deleteSale, getAllSales } from 'src/services/salesServices';
+import config from '../../config/config.json';
+import { getColums, headerOptions } from './config-table';
 
 import { Document } from 'src/components/report/Document';
 import { FormSearch } from './FormSearch';
 import { ButtonsExport } from 'src/components/table/ButtonsExport';
 import EclipseComponent from '../../components/loader/EclipseComponent';
 
-import { confirmDelete, formatNumber } from 'src/helpers/helpers';
+import { formatNumber } from 'src/helpers/helpers';
 import { getDataExport, getTotal, prepareList } from './selector';
+import { startDeletingSale } from 'src/actions/sales';
 
 export const Table = () => {
 
-    const [loading, setLoading] = useState(false);
+    const dispatch = useDispatch();
+    const sales = useSelector((state) => state.sales);
+    const loading = useSelector((state) => state.loading);
+
     const [visible, setVisible] = useState(false);
     const [sale, setSale] = useState({});
-    const [sales, setSales] = useState([]);
-    const [copies, setCopies] = useState([]);
+    const [items, setItems] = useState([]);
 
     const [totalSales, setTotalSales] = useState({
         total:0,
         totalConverted:0,
     });
 
-    const columns = [
-        {
-            name: 'Nro Control',
-            sortable:true,
-            selector: row => row.code,
-        },
-        {
-            name: 'Cliente',
-            sortable:true,
-            selector: row => row.name,
-        },
-        {
-            name: 'Fecha',
-            sortable:true,
-            selector: row => row.date ? Moment(row.date).format('DD/MM/YYYY') : "",
-        },
-        {
-            name: 'Tasa cambio.',
-            sortable:true,
-            right: true,
-            selector: row => (row.exchange_amount),
-        },
-        {
-            name: 'Monto $US',
-            sortable:true,
-            right: true,
-            selector: row => (row.total_amount),
-        },
-        {
-            name: 'Monto Bs.',
-            sortable:true,
-            right: true,
-            selector: row => (row.total_amount_converted)
-        },
-        {
-            name: 'Estado',
-            sortable:true,
-            right: true,
-            selector: row => <CBadge color={ row.state == "Completada" ? "success" : "danger" }>{ row.state }</CBadge>
-        },
-        {
-            name: 'Accion',
-            right: true,
-            selector: (row, key) => {
-                return (<Fragment>
-                    { row.id &&
-                    <button onClick={ (e) => handleShowSale(row)  } className='btn btn-sm btn-info m-1'>
-                        <CIcon icon={ icon.cilShortText }/>
-                    </button>}
-                    { row.state === "Completada" &&
-                    <button onClick={ (e) => handleDeleteSale(row)  } className='btn btn-sm btn-danger'>
-                        <CIcon icon={ icon.cilBackspace }/>
-                    </button>}
-                </Fragment>)
-            },
-        }
-    ];
-
     useEffect(() => {
-        fetchSales();
-    }, []);
 
-    const handleDeleteSale = async (sale) => {
+      if(sales && sales !== undefined){
+        const rows = prepareList(sales);
+        setItems(rows);
 
-        confirmDelete(`Quiere anular la venta: ${sale.code}`, async () => {
-            
-            const deleted = await deleteSale(sale.id);
-                
-            if(deleted.sale){
-                swal(
-                  'Venta anulada completada!',
-                  'Se anuló la venta correctamente!',
-                  'success'
-                );
-                fetchSales();
-            }else{
-                swal("Error","No se encontró la venta solicitada");
-            }
-        });
-    }
+        let newTotals = getTotal(sales);
+        setTotalSales({...totalSales, ...newTotals})
+        
+      }
+    }, [sales])
+    
+
+    const handleDeleteSale = async sale => dispatch( startDeletingSale(sale) );
 
     const handleShowSale = (sale) => {
         setSale(sale);
         setVisible(true);
-    }
-
-    const fetchSales = async () => {
-        
-        setLoading(true);
-        const res = await getAllSales();
-        const rows = prepareList(res.sales);
-       
-        setSales(rows);
-        setCopies(rows);
-        setLoading(false);
-
-        let newTotals = getTotal(res.sales);
-        setTotalSales({...totalSales, ...newTotals})
     }
 
     return (
@@ -152,16 +72,16 @@ export const Table = () => {
         <h5 className="card-title">Todas las ventas</h5>
 
         <ButtonsExport 
-            data={ getDataExport(sales, totalSales.total, totalSales.totalConverted) } 
+            data={ getDataExport(items, totalSales.total, totalSales.totalConverted) } 
             headerOptions={ headerOptions } 
             title="Listado de Ventas" 
             fileName="Reporte-ventas"/>
 
-        <FormSearch setSales={ setSales } rows={copies}/>
+        <FormSearch/>
 
         <DataTable 
-            columns={columns}
-            data={sales}
+            columns={ getColums( handleShowSale, handleDeleteSale ) }
+            data={items}
             progressPending={ loading }
             progressComponent={ <EclipseComponent/> }
             paginationComponentOptions={ config.paginationComponentOptions }
