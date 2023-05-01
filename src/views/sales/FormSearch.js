@@ -9,11 +9,9 @@ import { startGettingSales } from 'src/actions/sales';
 export const FormSearch = () => {
 
     const dispatch = useDispatch();
-    const { register, handleSubmit, getValues, reset } = useForm();
+    const { register, handleSubmit, getValues, reset } = useForm({});
 
-    useEffect(() => {
-       dispatch( startGettingSales(getValues()) );
-    }, [])
+    useEffect(() => { dispatch( startGettingSales(getValues()) ) }, [])
 
     const handleFilter = async data => dispatch( startGettingSales(data) )
 
