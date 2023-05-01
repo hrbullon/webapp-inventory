@@ -1,7 +1,7 @@
 import swal from "sweetalert";
 
 import { confirmDelete } from "src/helpers/helpers";
-import { deleteSale, getAllSales } from "src/services/salesServices";
+import { deleteSale, getAllSales, getAllSalesMonth, getAllSalesToday } from "src/services/salesServices";
 import { CLG_MESSAGE, VIEW_MESSAGE } from "src/strings";
 
 export const startGettingSales = (data) => {
@@ -10,6 +10,30 @@ export const startGettingSales = (data) => {
             dispatch({ type: "set", loading: true });
             const res = await getAllSales(data);
             dispatch({ type: "set", sales: [...res.sales], loading: false});
+        } catch (error) {
+            console.error(CLG_MESSAGE.ERROR_DATA_LOADING);            
+        }
+    }
+}
+
+export const startGettingSalesByMonth = (data) => {
+    return async (dispatch) => { 
+        try {
+            dispatch({ type: "set", loading: true });
+            const res = await getAllSalesMonth(data);
+            dispatch({ type: "set", salesDetails: [...res.sales], loading: false});
+        } catch (error) {
+            console.error(CLG_MESSAGE.ERROR_DATA_LOADING);            
+        }
+    }
+}
+
+export const startGettingSalesByDay = (data) => {
+    return async (dispatch) => { 
+        try {
+            dispatch({ type: "set", loading: true });
+            const res = await getAllSalesToday(data);
+            dispatch({ type: "set", salesDetails: [...res.sales], loading: false});
         } catch (error) {
             console.error(CLG_MESSAGE.ERROR_DATA_LOADING);            
         }

@@ -5,12 +5,14 @@ export const getAllSales = (data) => {
     return fetchData(`sales?${params}`, 'GET');
 }
 
-export const getAllSalesToday = () => {
-    return fetchData(`sales/today`, 'GET');
+export const getAllSalesToday = (data) => {
+    let params = new URLSearchParams(data).toString();
+    return fetchData(`sales/today?${params}`, 'GET');
 }
 
-export const getAllSalesMonth = () => {
-    return fetchData(`sales/month`, 'GET');
+export const getAllSalesMonth = (data) => {
+    let params = new URLSearchParams(data).toString();
+    return fetchData(`sales/month?${params}`, 'GET');
 }
 
 export const createSale = (data) => {

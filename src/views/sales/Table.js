@@ -44,7 +44,6 @@ export const Table = () => {
     });
 
     useEffect(() => {
-
       if(sales && sales !== undefined){
         const rows = prepareList(sales);
         setItems(rows);

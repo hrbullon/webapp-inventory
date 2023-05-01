@@ -1,23 +1,31 @@
-import React from 'react'
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
 import { useForm } from 'react-hook-form';
 
-export const FormSearch = ({ setSales, rows }) => {
+import { startGettingSalesByDay, startGettingSalesByMonth } from 'src/actions/sales';
 
-    const { register, handleSubmit, reset } = useForm();
+export const FormSearch = ({ type }) => {
 
-    const handleFilter = (data) => {
-       
-        let filtered = rows
-        .filter( item => {
-            return item.code && item.code.toLowerCase().includes(data.sale_code.toLowerCase()) && 
-            item.code_product && item.code_product.toLowerCase().includes(data.code.toLowerCase()) &&
-            item.description && item.description.toLowerCase().includes(data.product.toLowerCase())
-        })
+    const dispatch = useDispatch();
+    const { register, handleSubmit, getValues, reset } = useForm();
 
-        setSales(filtered);
+    useEffect(() => { 
+        if(type == "Month"){
+           dispatch( startGettingSalesByMonth(getValues()) );
+        }else{
+            dispatch( startGettingSalesByDay(getValues()) );
+        }
+    }, [])
+
+    const handleFilter = (data) => { 
+        if(type == "Month"){
+            dispatch( startGettingSalesByMonth(data) );
+        }else{
+            dispatch( startGettingSalesByDay(data) );
+        }
     }
 
     const handleReset = () => {

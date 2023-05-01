@@ -1,4 +1,5 @@
 import React, { Fragment, useState, useEffect }from 'react';
+import { useSelector } from 'react-redux';
 
 import DataTable from 'react-data-table-component-footer';
 
@@ -11,7 +12,6 @@ import { BadgesTotal } from './BadgesTotal';
 import { ButtonsExport } from 'src/components/table/ButtonsExport';
 import EclipseComponent from 'src/components/loader/EclipseComponent';
 
-import { getAllSalesMonth, getAllSalesToday } from 'src/services/salesServices';
 import { formatNumber } from 'src/helpers/helpers';
 
 import { getBestSeller, 
@@ -21,10 +21,10 @@ import { getBestSeller,
 
 export const Table = ({ type, title, fileName }) => {
 
-    const [loading, setLoading] = useState(false);
-    const [sales, setSales] = useState([]);
-    const [copies, setCopies] = useState([]);
+    const sales = useSelector((state) => state.salesDetails);
+    const loading = useSelector((state) => state.loading);
 
+    const [items, setItems] = useState([]);
     const [totalQuantity, setTotalQuantity] = useState(0);
     const [totalSales, setTotalSales] = useState(0);
     const [totalSalesConverted, setTotalSalesConverted] = useState(0);
@@ -35,43 +35,27 @@ export const Table = ({ type, title, fileName }) => {
     });
 
     useEffect(() => {
-        fetchSaleDetails();
-    }, []);
-   
-    const fetchSaleDetails = async () => {
+    
+      if(sales && sales !== undefined){
 
-        setLoading(true);
+            const { average, totalSales, totalSalesConverted ,totalQuantity } = totalize(sales);
 
-        let res;
-        
-        if(type == "today"){
-            res = await getAllSalesToday();
-        }
-        
-        if(type == "month"){
-            res = await getAllSalesMonth();
-        }
-        
-        const { average, totalSales, totalSalesConverted ,totalQuantity } = totalize(res.sales);
+            setAveExchange(average);
+            setTotalSales(totalSales);
+            setTotalSalesConverted(totalSalesConverted);
+            setTotalQuantity(totalQuantity);
 
-        setAveExchange(average);
-        setTotalSales(totalSales);
-        setTotalSalesConverted(totalSalesConverted);
-        setTotalQuantity(totalQuantity);
+            const { quantity, description } = getBestSeller(sales);
 
-        const { quantity, description } = getBestSeller(res.sales);
+            setBestSeller({
+                description: description,
+                quantity: quantity
+            });
 
-        setBestSeller({
-            description: description,
-            quantity: quantity
-        });
-
-        const rows = prepareList(res.sales);
-
-        setSales(rows);
-        setCopies(rows);
-        setLoading(false);
-    }
+            const rows = prepareList(sales);
+            setItems(rows);
+      }
+    }, [sales])
 
     return (
     <Fragment>
@@ -84,16 +68,16 @@ export const Table = ({ type, title, fileName }) => {
             totalQuantity={ totalQuantity } />
         
         <ButtonsExport 
-            data={ getDataExport(sales, totalSales, totalSalesConverted) } 
+            data={ getDataExport(items, totalSales, totalSalesConverted) } 
             headerOptions={ headerOptions } 
             title={ title } 
             fileName={ fileName }/>
 
-        <FormSearch setSales={ setSales } rows={copies}/>
+        <FormSearch type={ type }/>
 
         <DataTable 
             columns={columns}
-            data={sales}
+            data={items}
             progressPending={ loading }
             progressComponent={ <EclipseComponent/> }
             paginationComponentOptions={ config.paginationComponentOptions }

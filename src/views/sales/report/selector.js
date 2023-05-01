@@ -1,23 +1,24 @@
 import { formatNumber } from "src/helpers/helpers";
 
 export const totalize = (data) => {
-
+   
     let average = 0;
     let totalQuantity = 0;
     let totalSales = 0;
     let totalSalesConverted = 0;
     let totalExchanges = 0;
     
-    data.map( item => {
-
-        totalQuantity += Number(item.quantity);
-        totalExchanges += Number(item.Sale.exchange_amount);
-        totalSales += Number(item.subtotal_amount);
-        totalSalesConverted += Number(item.subtotal_amount_converted);
-
-    });
+    if(Object.keys(data).length > 0){
+        data.map( item => {
     
-    average = data.length > 0| (totalExchanges/data.length);
+            totalQuantity += Number(item.quantity);
+            totalExchanges += Number(item.Sale.exchange_amount);
+            totalSales += Number(item.subtotal_amount);
+            totalSalesConverted += Number(item.subtotal_amount_converted);
+    
+        });
+        average = data.length > 0| (totalExchanges/data.length);
+    }
 
     return {
         average,
