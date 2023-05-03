@@ -1,3 +1,4 @@
+import swal from "sweetalert";
 import config from "../config/config.json";
 const { API_URL } = config;
 
@@ -104,7 +105,7 @@ export const confirmDelete = (message, callback) => {
               closeModal: true,
             },
             confirm: {
-              text: "Anular",
+              text: "Procesar",
               value: true,
               visible: true,
               closeModal: true

@@ -1,7 +1,8 @@
 import { fetchData } from "src/helpers/helpers";
 
-export const getAllUsers = () => {
-    return  fetchData(`users`, 'GET');
+export const getAllUsers = (data) => {
+    let params = new URLSearchParams(data).toString();
+    return  fetchData(`users?${params}`, 'GET');
 }
 
 export const getUserById = (id) => {

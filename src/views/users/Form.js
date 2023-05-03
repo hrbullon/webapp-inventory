@@ -1,52 +1,47 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import swal from 'sweetalert';
 import { CAlert, CFormSwitch } from '@coreui/react'
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 
 import { ActionButtons } from 'src/components/forms/ActionButtons';
 import { ErrorValidate } from 'src/components/forms/ErrorValidate';
-import { createUser, getUserById, updateUser} from 'src/services/usersServices';
 import { formatDocument } from 'src/helpers/helpers';
+import { startSendingUser, startGettingUserById } from 'src/actions/users';
 
 export const Form = ({ title }) => {
 
+    const dispatch = useDispatch();
+
     let { id } = useParams();
+    const model = useSelector((state) => state.user);
+    const userSaved = useSelector((state) => state.userSaved);
     const [state, setState] = useState(true);
-    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+    const { register, handleSubmit, reset, formState: { errors } } = useForm({ defaultValues:{}});
+
+    useEffect(() => { (id)? dispatch( startGettingUserById(id) ) : reset({}) }, [id]);
+    
+    useEffect(() => {
+        if(userSaved){
+            (id)? reset(userSaved) : reset();
+        }
+    }, [userSaved])
 
     useEffect(() => {
-        if(id && id !== undefined){
-            getUser(id);
-        }
-    }, [id])
-    
-    const getUser = async (id) => {
-        const res = await getUserById(id);
-        let state = (res.user.state)? true : false;
-        setState(state);
-        reset(res.user);
-    }
+        if(model !== undefined){
+            let state = (model.state)? true : false;
+            setState(state);
+            reset(model);
+        }  
+    }, [model]);
 
     const onSubmit = async data => { 
-        
-        let res;
+
         let checked = document.getElementById("state").checked;
         data.state = (checked)? 1 : 0;
 
-        if(!id){
-            res = await createUser(data);
-        }else{
-            res = await updateUser(id, data);
-        }
-
-        if(res.user){
-            (id)? reset(data) : reset();
-            swal("Completado!", "Datos guardados!", "success");
-        }else{
-            swal("Oops","Algo salio mal al guardar los datos","warning");
-        }
+        dispatch( startSendingUser( data ) );
     }
 
     return (

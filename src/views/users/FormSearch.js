@@ -1,25 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
 import { useForm } from 'react-hook-form';
+import { startGettingUsers } from 'src/actions/users';
 
-export const FormSearch = ({ setUsers, rows }) => {
+export const FormSearch = () => {
 
-    const { register, handleSubmit, reset } = useForm();
+    const dispatch = useDispatch();
+    const { register, handleSubmit, getValues, reset } = useForm();
 
-    const handleFilter = (data) => {
-       
-        let filtered = rows
-        .filter( item => {
-            return item.dni && item.dni.toLowerCase().includes(data.dni.toLowerCase()) && 
-            item.firstname && item.firstname.toLowerCase().includes(data.firstname.toLowerCase()) &&
-            item.lastname && item.lastname.toLowerCase().includes(data.lastname.toLowerCase()) && 
-            item.account && item.account.toLowerCase().includes(data.account.toLowerCase())
-        })
+    useEffect(() => { dispatch( startGettingUsers(getValues()) ) }, [])
 
-        setUsers(filtered);
-    }
+    const handleFilter = data => dispatch( startGettingUsers(data) )
 
     const handleReset = () => {
         reset({
@@ -43,16 +37,16 @@ export const FormSearch = ({ setUsers, rows }) => {
         <form onSubmit={handleSubmit(handleFilter)}>
             <div className='row mt-4'>
                 <div className='col-3'>
-                    <input type="text" className='form-control' autoComplete='off' {...register("dni") }  placeholder='Buscar por DNI'/>  
+                    <input type="text" className='form-control' autoComplete='autoComplete' {...register("dni") }  placeholder='Buscar por DNI'/>  
                 </div>
                 <div className='col-3'>
-                    <input type="text" className='form-control' autoComplete='off' {...register("firstname") }  placeholder='Buscar por Nombre'/>  
+                    <input type="text" className='form-control' autoComplete='autoComplete' {...register("firstname") }  placeholder='Buscar por Nombre'/>  
                 </div>
                 <div className='col-3'>
-                    <input type="text" className='form-control' autoComplete='off' {...register("lastname") }  placeholder='Buscar por Apellido'/>  
+                    <input type="text" className='form-control' autoComplete='autoComplete' {...register("lastname") }  placeholder='Buscar por Apellido'/>  
                 </div>
                 <div className='col-3'>
-                    <input type="text" className='form-control' autoComplete='off' {...register("account") }  placeholder='Buscar por cuenta de usuario'/>  
+                    <input type="text" className='form-control' autoComplete='autoComplete' {...register("account") }  placeholder='Buscar por cuenta de usuario'/>  
                 </div>
                 <div className='col'>
                     <button type='button' onClick={ handleReset } className='btn btn-secondary float-end mt-2 mb-2' title='Limpiar formulario'>
