@@ -3,7 +3,8 @@ import swal from "sweetalert";
 import { 
     createExchange, 
     updateExchange,
-    getAllExchanges } 
+    getAllExchanges, 
+    getLastExchange} 
 from "src/services/exchangesServices";
 
 import { CLG_MESSAGE, VIEW_MESSAGE } from "src/strings";
@@ -13,6 +14,17 @@ export const startGettingExchanges = (data) => {
         try {
             const res = await getAllExchanges(data);
             dispatch({ type: "set", exchanges: [...res.exchanges]});
+        } catch (error) {
+            console.error(CLG_MESSAGE.ERROR_DATA_LOADING);            
+        }
+    }
+}
+
+export const startGettingLastExchange = () => {
+    return async (dispatch) => { 
+        try {
+            const res = await getLastExchange();
+            dispatch({ type: "set", lastExchange: {...res.exchanges[0] }});
         } catch (error) {
             console.error(CLG_MESSAGE.ERROR_DATA_LOADING);            
         }

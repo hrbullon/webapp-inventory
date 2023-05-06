@@ -1,5 +1,33 @@
 import { formatNumber } from "src/helpers/helpers";
 
+export const defaultValues = {
+    code:'----',
+    document:'',
+    date: '',
+    description: '',
+    exchange_amount:0,
+    total_amount:0,
+    total_amount_converted:0,
+    purchase_details: []
+}
+
+export const defaultValuesDetails = {
+    defaultValues: {
+        product: {},
+        quantity: 1,
+        price:"",
+        priceConverted:"",
+        salePrice: ""
+    }
+}
+
+export const errorsDefault = {
+    document:"",
+    date: "",
+    exchange_amount:"",
+    purchase_details:""
+}
+
 export const prepareList = data => {
 
     let rows = [];
@@ -28,6 +56,16 @@ export const getTotal = data => {
     return { total, totalConverted }
 }
 
+export const getTotalDetail = (items) => {
+
+    let total = 0;
+    let totalConverted = 0;
+
+    items.map( item => {  total += item.subtotal_amount });
+    items.map( item => {  totalConverted += item.subtotal_amount_converted });
+    return { total, totalConverted };
+}
+
 export const getDataExport = (data, totalAmount, totalAmountConverted) => {
 
     let rows = [];
@@ -49,4 +87,18 @@ export const getDataExport = (data, totalAmount, totalAmountConverted) => {
     }
 
     return rows
+}
+
+export const addRowDetail = (product, priceOne, priceTwo, quantity, salePrice) => {
+    return  {
+        product_id: product.id,
+        code: product.code,
+        description: product.name,
+        quantity:quantity,
+        price: priceOne,
+        subtotal_amount: (priceOne*quantity),
+        price_converted: priceTwo,
+        salePrice: salePrice,
+        subtotal_amount_converted: (priceTwo*quantity)
+    };
 }

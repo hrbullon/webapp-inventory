@@ -1,7 +1,9 @@
-import React, { Fragment, useState, useEffect } from 'react'
+import React, { Fragment, useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import swal from 'sweetalert';
 import Select from 'react-select';
+import { useForm } from 'react-hook-form';
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
 
@@ -11,42 +13,48 @@ import { CardTotal } from 'src/components/cards/CardTotal';
 
 import { formatCurrency } from 'src/helpers/helpers';
 
-import { getAllProducts } from 'src/services/productsServices';
-import { createPurchase } from 'src/services/purchasesServices';
-import { getLastExchange } from 'src/services/exchangesServices';
-import { useForm } from 'react-hook-form';
+import { addRowDetail, 
+         defaultValues, 
+         getTotalDetail,
+         defaultValuesDetails } from './selector';
+
+//Actions
+import { startGettingProducts } from 'src/actions/product';
+import { startGettingLastExchange } from 'src/actions/exchange';
+import { startCreatingPurchase } from 'src/actions/purchase';
 
 const Form = () => {
 
-    const [purchase, setPurchase] = useState({
-        code:'----',
-        document:'',
-        date: '',
-        description: '',
-        exchange_amount:0,
-        total_amount:0,
-        total_amount_converted:0,
-        purchase_details: []
-    });
-    
+    const dispatch = useDispatch();
+    const products = useSelector(( state ) => state.products );
+    const exchange = useSelector(( state ) => state.lastExchange );
+
+    const [purchase, setPurchase] = useState(defaultValues);
     const [product, setProduct] = useState("");
-    const [products, setProducts] = useState([]);
     const [options, setOptions] = useState([]);
 
-    const { register, getValues, watch, setValue} = useForm({
-        defaultValues: {
-            product: {},
-            quantity: 1,
-            price:"",
-            priceConverted:"",
-            salePrice: ""
-        }
-    });
+    const { 
+        watch, 
+        register, 
+        getValues, 
+        setValue} = useForm({ defaultValues: defaultValuesDetails });
 
     useEffect(() => {
         fetchAll();
     }, []);
+  
+    useEffect(() => {
+        if(products && products !== undefined){
+            const items = prepareOptions(products);
+            setOptions(items);
+        }
+
+        if(exchange && exchange !== undefined){
+            setPurchase({ ...purchase, exchange_amount: exchange.amount});
+        }
+    }, [ products, exchange ]);
     
+    //Watchers
     useEffect(() => {
         if(watch("price") !== ""){
             const priceConverted = Number(watch("price"))*purchase.exchange_amount;
@@ -68,31 +76,22 @@ const Form = () => {
     useEffect(() => {
 
         if(purchase.purchase_details.length > 0){
-            
-            let total = 0;
-            let totalConverted = 0;
-
-            purchase.purchase_details.map( item => {  total += item.subtotal_amount });
-            purchase.purchase_details.map( item => {  totalConverted += item.subtotal_amount_converted });
-
+            const { total, totalConverted } = getTotalDetail(purchase.purchase_details);
             setPurchase({ ...purchase, total_amount: total, total_amount_converted: totalConverted});
         }
+
     }, [purchase.purchase_details]);
 
     const fetchAll = async () => {
-        const res = await getAllProducts();
-        setProducts(res.products);
-        const items = await prepareOptions(res.products);
-        setOptions(items);
-        const resExchange = await getLastExchange();
-        setPurchase({ ...purchase, exchange_amount: resExchange.exchanges[0].amount});
+
+        dispatch( startGettingProducts() );
+        dispatch( startGettingLastExchange() );
     }
 
-    const handleChangingProduct = (input) => {
-        setProduct(input.value);
-    }
+    const handleChangingProduct = input => setProduct(input.value);
 
     const addRow = () => {
+
         const { quantity, price, priceConverted, salePrice } = getValues();
 
         if(quantity > 0 && product !== "" && (price !== "" || priceConverted !== "")) {
@@ -101,37 +100,38 @@ const Form = () => {
             let price = Number(getValues("price")).toFixed(2);
             let priceConverted = Number(getValues("priceConverted")).toFixed(2);
 
-            const item = {
-                product_id: productFiltered.id,
-                code: productFiltered.code,
-                description: productFiltered.name,
-                quantity:quantity,
-                price: price,
-                subtotal_amount: (price*quantity),
-                price_converted: priceConverted,
-                salePrice: salePrice,
-                subtotal_amount_converted: (priceConverted*quantity)
-            };
-    
-            setPurchase({ ...purchase, 
-                purchase_details: [ ...purchase.purchase_details, item]
-            }) 
+            const item = addRowDetail(productFiltered, price, priceConverted, quantity, salePrice);
+            setPurchase({ ...purchase, purchase_details: [ ...purchase.purchase_details, item] }) 
             
         }else{
             swal("Alerta","Debe seleccionar producto y precio","warning");
         }
     }
 
-    const handleSubmit = async () => {
+    const handleSubmit = () => {
 
-        let res = await createPurchase(purchase);
-        if(res.purchase){
-            swal("Completado!", "Datos guardados!", "success");
-            window.location.href = "/#/purchases";
-        }else{
-            swal("Oops","Algo salio mal al guardar los datos","warning");
+        const { document, date, exchange_amount, purchase_details } = purchase;
+        
+        if(purchase_details.length == 0){
+            swal("Error", "Debe agregar productos a la compra", "warning");
         }
-    }
+       
+        if(exchange_amount == ""){
+            swal("Error", "No se ha encontrado una tasa de cambio válida", "warning");
+        }
+
+        if(document == ""){
+            swal("Error", "Debe agregar un Nro Factura/Documento", "warning");
+        }
+
+        if(date == ""){
+            swal("Error", "Debe seleccionar una fecha", "warning");
+        }
+
+        if(document && date && exchange_amount &&  purchase_details.length > 0){
+            dispatch( startCreatingPurchase(purchase) )
+        }
+    };
 
     return (
         <Fragment>
@@ -161,7 +161,6 @@ const Form = () => {
                                     value={ purchase.document } 
                                     onChange={ (e) => setPurchase({...purchase, document: e.target.value}) }    
                                     placeholder='Seleccione una fecha de factura o documento' />
-
                             </div>
                             <div className="mb-3">
                                 <label>Observaciones</label>
@@ -219,7 +218,7 @@ const Form = () => {
                 <div className="col-12 mt-3">
                     <div className="card">
                         <div className="card-body">
-                            <TableDetails items={ purchase.purchase_details } model={purchase} setModel={setPurchase}/>
+                            <TableDetails items={ purchase.purchase_details } model={purchase} setModel={setPurchase} doc={"purchase"}/>
                         </div>
                     </div>
                 </div>

@@ -24,6 +24,14 @@ export const startCreatingPurchase = (data) => {
     return async (dispatch) => { 
         try {
             const res = await createPurchase(data);
+
+            if(res.purchase){
+                swal("Completado!", VIEW_MESSAGE.DATA_SAVED_SUCCESSFULLY, "success");
+                window.location.href = "/#/purchases";
+            }else{
+                swal("Oops",VIEW_MESSAGE.DATA_SAVED_FAILED,"warning");
+            }
+
             dispatch({ type: "set", purchase: {...res.purchase}});
         } catch (error) {
             console.error(CLG_MESSAGE.ERROR_DATA_LOADING);            
@@ -31,20 +39,19 @@ export const startCreatingPurchase = (data) => {
     }
 }
 
-
 export const startDeletingPurchase = (data) => {
     return async (dispatch) => {
         confirmDelete(`Quiere anular la compra: ${data.code}`, async () => {
                 
             const deleted = await deletePurchase(data.id);
                 
-            if(deleted.sale){
+            if(deleted.message){
                 swal(
                   'Compra anulada completada!',
                   'Se anuló la compra correctamente!',
                   'success'
                 );
-                //dispatch( startGettingSales({ code:"", customer: "", start_date:"", end_date: "" }) );
+                dispatch( startGettingPurchases({ code:"", document: "", start_date:"", end_date: "" }) );
             }else{
                 swal("Error", VIEW_MESSAGE.DATA_SAVED_FAILED);
             }
