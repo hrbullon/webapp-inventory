@@ -1,33 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
 import { useForm } from 'react-hook-form';
 
-export const FormSearch = ({ setPurchases, rows }) => {
+//Actions purchase
+import { startGettingPurchases } from 'src/actions/purchase';
 
-    const { register, handleSubmit, reset } = useForm();
+export const FormSearch = () => {
 
-    const handleFilter = async data => { 
-        
-        let filtered = rows
-        .filter( item => {
-            return item.code && item.code.toLowerCase().includes(data.code.toLowerCase()) &&
-            item.document && item.document.toLowerCase().includes(data.document.toLowerCase())
-        })
+    const dispatch = useDispatch();
+    const { register, handleSubmit, reset, getValues } = useForm();
 
-        if(data.start_date !== "" && data.end_date !== ""){
-            const filteredRows = filtered.filter(item => {
-                    const currentDate = item.date;
-                    return currentDate >= data.start_date && currentDate <= data.end_date;
-                
-            });
+    useEffect(() => { dispatch( startGettingPurchases(getValues()) ) }, [])
 
-            setPurchases(filteredRows);
-        }else{
-            setPurchases(filtered);
-        }
-    }
+    const handleFilter = async data => { dispatch(startGettingPurchases(data)) }
 
     const handleReset = () => {
         reset({
@@ -49,16 +37,16 @@ export const FormSearch = ({ setPurchases, rows }) => {
     <form onSubmit={handleSubmit(handleFilter)}>
         <div className='row mt-4'>
             <div className='col-3'>
-                <input type="text" className='form-control' autoComplete='off' {...register("code") } placeholder='Buscar por nro de control'/>  
+                <input type="text" className='form-control' autoComplete='autoComplete' {...register("code") } placeholder='Buscar por nro de control'/>  
             </div>
             <div className='col-3'>
-                <input type="text" className='form-control' autoComplete='off' {...register("document") } placeholder='Buscar por nro de Fact/Doc'/>  
+                <input type="text" className='form-control' autoComplete='autoComplete' {...register("document") } placeholder='Buscar por nro de Fact/Doc'/>  
             </div>
             <div className='col-3'>
-                <input type="date" className='form-control' autoComplete='off' {...register("start_date") } placeholder='Buscar por fecha desde'/>  
+                <input type="date" className='form-control' autoComplete='autoComplete' {...register("start_date") } placeholder='Buscar por fecha desde'/>  
             </div>
             <div className='col-3'>
-                <input type="date" className='form-control' autoComplete='off' {...register("end_date") } placeholder='Buscar por fecha hasta'/>  
+                <input type="date" className='form-control' autoComplete='autoComplete' {...register("end_date") } placeholder='Buscar por fecha hasta'/>  
             </div>
             <div className='col'>
                 <button type='button' onClick={ handleReset } className='btn btn-secondary float-end mt-2 mb-2' title='Limpiar formulario'>

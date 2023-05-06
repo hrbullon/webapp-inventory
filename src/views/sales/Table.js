@@ -2,15 +2,6 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import DataTable from 'react-data-table-component-footer';
-
-import { 
-    CModal, 
-    CModalBody, 
-    CModalFooter, 
-    CModalHeader, 
-    CModalTitle } 
-from '@coreui/react';
-
 import { Link } from 'react-router-dom';
 
 import CIcon from '@coreui/icons-react';
@@ -19,7 +10,6 @@ import * as icon from '@coreui/icons';
 import config from '../../config/config.json';
 import { getColums, headerOptions } from './config-table';
 
-import { Document } from 'src/components/report/Document';
 import { FormSearch } from './FormSearch';
 import { ButtonsExport } from 'src/components/table/ButtonsExport';
 import EclipseComponent from '../../components/loader/EclipseComponent';
@@ -27,6 +17,7 @@ import EclipseComponent from '../../components/loader/EclipseComponent';
 import { formatNumber } from 'src/helpers/helpers';
 import { getDataExport, getTotal, prepareList } from './selector';
 import { startDeletingSale } from 'src/actions/sales';
+import { ViewModal } from 'src/components/modal/ViewModal';
 
 export const Table = () => {
 
@@ -90,17 +81,14 @@ export const Table = () => {
                 total_amount_converted: formatNumber(totalSales.totalConverted)
             }}
             noDataComponent={"No hay datos para mostrar"}/>
-
-        <CModal size="xl" visible={visible} onClose={() => setVisible(false)}>
-            <CModalHeader onClose={() => setVisible(false)}>
-            <CModalTitle>Detalles de Venta</CModalTitle>
-            </CModalHeader>
-            <CModalBody>
-                <Document data={ sale } details={ sale.SaleDetails } doc={ "sale" }/>
-            </CModalBody>
-            <CModalFooter>
-            </CModalFooter>
-        </CModal>
+        
+        <ViewModal 
+            visible={ visible }
+            setVisible={ setVisible }
+            title="Detalles de Venta" 
+            data={ sale } 
+            details={ sale.SaleDetails } 
+            doc={ "sale" }/>    
     </Fragment>
   )
 }
