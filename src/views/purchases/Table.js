@@ -25,7 +25,7 @@ export const Table = () => {
     const loading = useSelector((state) => state.loading );
     const purchases = useSelector((state) => state.purchases );
 
-    const [items, setItems] = useState({});
+    const [items, setItems] = useState([]);
     const [visible, setVisible] = useState(false);
     const [purchase, setPurchase] = useState({});
 

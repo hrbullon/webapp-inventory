@@ -69,22 +69,19 @@ export const getTotalDetail = (items) => {
 export const getDataExport = (data, totalAmount, totalAmountConverted) => {
 
     let rows = [];
-
-    if((Object.entries(data).length > 0)){
-        
-        let rows = data.map(({id, user_id, PurchaseDetails,...rest}) => rest);
-        
-        rows.push({
-            code: "",
-            date: "",
-            description:"",
-            document: "",
-            exchange_amount: "Total ventas",
-            state:"",
-            total_amount: formatNumber(totalAmount),
-            total_amount_converted: formatNumber(totalAmountConverted),
-        });
-    }
+   
+    rows = data.map(({id, user_id, PurchaseDetails,...rest}) => rest);
+    
+    rows.push({
+        code: "",
+        date: "",
+        description:"",
+        document: "",
+        exchange_amount: "Total ventas",
+        state:"",
+        total_amount: formatNumber(totalAmount),
+        total_amount_converted: formatNumber(totalAmountConverted),
+    });
 
     return rows
 }
