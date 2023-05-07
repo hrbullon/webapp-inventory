@@ -16,3 +16,7 @@ export const createProduct = (data) => {
 export const updateProduct = (data, id) => {
     return fetchData(`product/${id}`, 'PUT', data, true);
 }
+
+export const deleteProduct = (id) => {
+    return fetchData(`product/${id}`, 'DELETE');
+}

@@ -2,15 +2,15 @@ import { CLG_MESSAGE } from "src/strings";
 import { VIEW_MESSAGE } from '../strings';
 
 import swal from "sweetalert";
-import { getAllProducts } from 'src/services/productsServices';
 
 import { 
+    getAllProducts,
     createProduct, 
     updateProduct,
-    getProductById 
-}
-
-from "../services/productsServices";
+    getProductById,
+    deleteProduct
+} from "../services/productsServices";
+import { confirmDelete } from "src/helpers/helpers";
 
 export const startGettingProducts = (data) => {
     return async (dispatch) => { 
@@ -53,5 +53,25 @@ export const startSendingProduct = (data, id) => {
         } catch (error) {
             console.error(CLG_MESSAGE.ERROR_DATA_SAVING);       
         }
+    }
+}
+
+export const startDeletingProduct = (data) => {
+    return async (dispatch) => {
+        confirmDelete(`Quiere eliminar el producto: ${data.name}`, async () => {
+                
+            const deleted = await deleteProduct(data.id);
+                
+            if(deleted.message){
+                swal(
+                  'Producto eliminado!',
+                  'Se elminó el producto correctamente!',
+                  'success'
+                );
+                dispatch( startGettingProducts({ search:"" }) );
+            }else{
+                swal("Error", VIEW_MESSAGE.DATA_SAVED_FAILED);
+            }
+        });
     }
 }
