@@ -5,6 +5,7 @@ export const CardTotal = ({ model }) => {
   return (
     <div className="card">
         <div className="card-body">
+            <h5 className="card-title">Datos venta</h5>
             <div className="mb-3">
                 { <b>Nro#: {model.code}</b> } <br/>
                 { <b>Fecha: {model.date}</b> } <br/>

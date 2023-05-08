@@ -11,6 +11,11 @@
     object-fit: contain;
 }
 
+.table-container {
+    height: 300px; /* establece la altura máxima del contenedor */
+    overflow: auto; /* añade scrollbars al contenedor si el contenido excede la altura */
+}
+
 @media print {
     /* hide the default header and footer */
     @page {

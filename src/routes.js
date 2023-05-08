@@ -60,6 +60,7 @@ const routes = [
   { path: '/exchanges', name: 'Tasas de cambio', element: Exchanges },
   { path: '/company', name: 'Datos de la empresa', element: FormCompany },
 
+
 ]
 
 export default routes

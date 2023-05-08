@@ -24,7 +24,7 @@ export const TableDetails = ({ items, model, setModel, doc}) => {
     }
 
     return (
-    <div>
+    <div className='table-container'>
         <h5 className="card-title">Detalle de artículos</h5>
         <table className="table">
             <thead>

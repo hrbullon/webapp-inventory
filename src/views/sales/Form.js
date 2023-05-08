@@ -18,7 +18,7 @@ import { createSale } from 'src/services/salesServices';
 import { getLastExchange } from 'src/services/exchangesServices';
 import { formatCurrency } from 'src/helpers/helpers';
 
-const Form = () => {
+export const Form = () => {
 
     const [sale, setSale] = useState({
         code:'----',
@@ -203,4 +203,4 @@ const Form = () => {
     )
 }
 
-export default Form
+//export default Form
