@@ -12,7 +12,7 @@ export const FormSearch = () => {
         <form>
             <div className='row mt-4'>
                 <div className='col-12'>
-                    <input type="text" className='form-control' autoComplete='off' onKeyUp={ (e) => handleFilter(e.target.value) }  placeholder='Buscar producto por código/nombre/descripción'/>  
+                    <input type="text" className='form-control' autoComplete='autoComplete' onKeyUp={ (e) => handleFilter(e.target.value) }  placeholder='Buscar producto por código/nombre/descripción'/>  
                 </div>
             </div>  
         </form>

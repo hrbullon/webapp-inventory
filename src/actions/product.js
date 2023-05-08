@@ -57,20 +57,28 @@ export const startSendingProduct = (data, id) => {
 }
 
 export const startDeletingProduct = (data) => {
+
     return async (dispatch) => {
+
         confirmDelete(`Quiere eliminar el producto: ${data.name}`, async () => {
-                
-            const deleted = await deleteProduct(data.id);
-                
-            if(deleted.message){
-                swal(
-                  'Producto eliminado!',
-                  'Se elminó el producto correctamente!',
-                  'success'
-                );
-                dispatch( startGettingProducts({ search:"" }) );
-            }else{
-                swal("Error", VIEW_MESSAGE.DATA_SAVED_FAILED);
+            
+            try {
+
+                const deleted = await deleteProduct(data.id);
+        
+                if(deleted.message){
+                    swal(
+                    'Producto eliminado!',
+                    'Se elminó el producto correctamente!',
+                    'success'
+                    );
+                    dispatch( startGettingProducts({ search:"" }) );
+                }else{
+                    swal("Error", deleted.error,"warning");
+                }
+
+            } catch (error) {
+                console.log(error);
             }
         });
     }
