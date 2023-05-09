@@ -48,6 +48,8 @@ export const startSendingCustomer = (data) => {
 
             if(res.customer){
                 swal("Completado!", VIEW_MESSAGE.DATA_SAVED_SUCCESSFULLY, "success");
+                dispatch({ type:"set", customerSaved: res.customer });
+                return res.customer;
             }
         } catch (error) {
             console.error(CLG_MESSAGE.ERROR_DATA_SAVING);       

@@ -1,11 +1,12 @@
 import React, { Fragment, useState, useEffect } from 'react'
+import { useSelector } from 'react-redux';
 
 import swal from 'sweetalert';
 import Select from 'react-select';
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
 
-import config from"../../config/config.json";
+import { Form as FormCustomer } from "../customers/Form";
 
 import { CardBasic } from './CardBasic';
 import { CardTotal } from 'src/components/cards/CardTotal';
@@ -13,12 +14,16 @@ import { TableDetails } from 'src/components/product/TableDetails';
 
 import { getAllProducts, getProductById } from 'src/services/productsServices';
 import { getCustomerByDni } from 'src/services/customersServices'
-import { formatDocument, prepareOptions } from 'src/helpers/helpers';
 import { createSale } from 'src/services/salesServices';
 import { getLastExchange } from 'src/services/exchangesServices';
+
+import { formatDocument, prepareOptions } from 'src/helpers/helpers';
 import { formatCurrency } from 'src/helpers/helpers';
+import { CModal, CModalBody, CModalHeader, CModalTitle } from '@coreui/react';
 
 export const Form = () => {
+
+    const customerSaved = useSelector( (state) => state.customerSaved );
 
     const [sale, setSale] = useState({
         code:'----',
@@ -31,6 +36,9 @@ export const Form = () => {
         sale_details: []
     });
     
+
+    const [dni, setDni] = useState("");
+    const [visible, setVisible] = useState(false);
     const [customer, setCustomer] = useState({});
     const [quantity, setQuantity] = useState(1);
     const [products, setProducts] = useState([]);
@@ -39,6 +47,18 @@ export const Form = () => {
     useEffect(() => {
         fetchAll();
     }, []);
+
+    useEffect(() => {
+        if(customerSaved && customerSaved !== undefined){
+            setSale({
+                ...sale,
+                customer_id: customerSaved.id
+            })
+            setCustomer(customerSaved);
+            setVisible(false);
+        }
+    }, [customerSaved])
+    
     
     useEffect(() => {
 
@@ -72,6 +92,7 @@ export const Form = () => {
                 })
                 setCustomer(res.customer);
             }else{
+                setDni(evt.target.value);
                 setCustomer({});
 
                 swal({
@@ -87,7 +108,7 @@ export const Form = () => {
                     }
                 }).then((result) => {
                     if(result == "customer_register"){
-                        window.open(`${config.BASE_URL}/#/customers/create`, '_blank');
+                        setVisible(true);
                     }
                 })
             }
@@ -198,6 +219,15 @@ export const Form = () => {
                         <CIcon icon={icon.cilReload} title='Cancelar'/> Cancelar
                     </button>
                 </div>
+
+                <CModal size="xl" visible={visible} onClose={() => setVisible(false)}>
+                    <CModalHeader onClose={() => setVisible(false)}>
+                    <CModalTitle>Agregar clente</CModalTitle>
+                    </CModalHeader>
+                    <CModalBody>
+                            <FormCustomer dni={ dni }/>
+                    </CModalBody>
+                </CModal>
             </div>
         </Fragment>
     )

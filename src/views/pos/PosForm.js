@@ -15,7 +15,10 @@ const PosForm = () => {
 
   const dispatch = useDispatch()
   const showModal = useSelector( (state) => state.showModal );
+  const customerSaved = useSelector( (state) => state.customerSaved );
   const actionViewChanged = useSelector( (state) => state.actionViewChanged );
+
+
   const user = localStorage.getItem("user");
   const { token } = useContext(AuthContext);
   
@@ -28,6 +31,12 @@ const PosForm = () => {
       setAction(actionViewChanged);
     }
   }, [actionViewChanged])
+  
+  useEffect(() => {
+    if(customerSaved && customerSaved !== undefined){
+      setVisible(false);
+    }
+  }, [customerSaved])
   
 
   useEffect(() => {

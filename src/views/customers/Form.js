@@ -15,30 +15,41 @@ import {
     startGettingCustomerByID, 
 } from '../../actions/customer';
 
-export const Form = ({ title }) => {
+export const Form = ({ title, dni }) => {
 
     let { id } = useParams();
 
     const dispatch = useDispatch()
+
     const model = useSelector((state) => state.customer);
 
-    const { register, handleSubmit, reset, formState: { errors } } = useForm({ defaultValues:{} });
+    const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
     useEffect(() => { (model !== undefined)| reset(model) }, [model]);
     useEffect(() => { (id)? dispatch( startGettingCustomerByID(id) ) : reset({}) }, [id])
 
-    const onSubmit = async data => { dispatch( startSendingCustomer(data) ) }
+    useEffect(() => {
+      if(dni && dni !== undefined){
+        reset({
+            dni: dni
+        })
+      }
+    }, [dni])
+
+    const onSubmit = async data => { 
+        const res = dispatch( startSendingCustomer(data) ) 
+        res.then((result) => reset() );
+    }
 
     return (
     <form onSubmit={handleSubmit(onSubmit)}>
         <div className="card">
             <div className="card-body">
                 <h5 className="card-title">{ title }</h5>
-                <hr/>
                 <CAlert color="primary" visible={ (Object.entries(errors).length > 0 ) }>
                     Los campos con <b>*</b> son obligatorios
                 </CAlert>
-                <div className='row mt-4'>
+                <div className='row mt-3'>
                     <div className="col-6">
                         <div className="form-group">
                             <label>Nombre: *</label>

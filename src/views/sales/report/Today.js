@@ -7,7 +7,7 @@ const Today = () => {
         <div className='col'>
             <div className="card  mt-4">
                 <div className="card-body">
-                    <Table type="today" title="Listado de ventas diarias" fileName="Reporte-ventas-diarias"/>
+                    <Table type="today" title="Detalle de ventas diarias" fileName="Detalle-ventas-diarias"/>
                 </div>
             </div>
         </div>

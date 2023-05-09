@@ -6,7 +6,7 @@ import * as icon from '@coreui/icons';
 
 import routes from '../routes'
 
-import { CBreadcrumb, CBreadcrumbItem, CTooltip } from '@coreui/react'
+import { CBadge, CBreadcrumb, CBreadcrumbItem, CTooltip } from '@coreui/react'
 import { useDispatch } from 'react-redux';
 
 const AppBreadcrumb = () => {
@@ -59,8 +59,15 @@ const AppBreadcrumb = () => {
           <div style={{ display: "flex" }}>
             <div class="card" onClick={() => dispatch({ type: 'set', actionViewChanged: "today" })}>
               <div class="card-body">
-                <CTooltip content="Reporte de ventas">
+                <CTooltip content="Productos vendidos">
                   <CIcon icon={ icon.cilMoney } size='xxl'/>
+                </CTooltip>
+              </div>
+            </div>
+            <div class="card" onClick={() => dispatch({ type: 'set', actionViewChanged: "today" })}>
+              <div class="card-body">
+                <CTooltip content="Reporte de ventas diarias">
+                  <CIcon icon={ icon.cilList } size='xxl'/>
                 </CTooltip>
               </div>
             </div>
@@ -90,6 +97,16 @@ const AppBreadcrumb = () => {
                 <CTooltip content="Consultar producto">
                   <CIcon icon={ icon.cilSearch } size='xxl'/>
                 </CTooltip>
+              </div>
+            </div>
+            <div class="card" onClick={() => dispatch({ type: 'set', showModal: "products" })}>
+              <div class="card-body">
+                <CTooltip content="(2) Ventas pendientes">
+                  <CIcon icon={ icon.cilBell } size='xxl'/>
+                </CTooltip>
+                <CBadge color="danger" position="top-end" shape="rounded-pill">
+                  2+ <span className="visually-hidden">unread messages</span>
+                </CBadge>
               </div>
             </div>
           </div>
