@@ -9,11 +9,12 @@ import { Form as FormCustomer } from '../customers/Form';
 import Today from '../sales/report/Today';
 import { Cash } from './Cash';
 import Products from '../products/Products';
+import { CModal, CModalBody, CModalHeader, CModalTitle } from '@coreui/react';
 
 const PosForm = () => {
 
   const dispatch = useDispatch()
-  const showModalCustomer = useSelector( (state) => state.showModalCustomer );
+  const showModal = useSelector( (state) => state.showModal );
   const actionViewChanged = useSelector( (state) => state.actionViewChanged );
   const user = localStorage.getItem("user");
   const { token } = useContext(AuthContext);
@@ -22,26 +23,8 @@ const PosForm = () => {
   const [title, setTitle] = useState("");
   const [visible, setVisible] = useState(false);
 
-  const [customer, setCustomer] = useState({
-    name:"Haderson Bullon",
-    dni:"V20203256",
-    phone:"584246488813",
-    address:" Por estas calles men"
-  })
-
-  const [sale, setSale] = useState({
-    code:"----",
-    date:"07/05/2023",
-    total_amount:0,
-    total_amount_converted:0,
-    sale_details:[
-
-    ]
-  })
-
   useEffect(() => {
     if(actionViewChanged && actionViewChanged !== undefined){
-      console.log(actionViewChanged);
       setAction(actionViewChanged);
     }
   }, [actionViewChanged])
@@ -49,17 +32,24 @@ const PosForm = () => {
 
   useEffect(() => {
       if(!visible){
-        dispatch({ type: "set", showModalCustomer: false });
+        dispatch({ type: "set", showModal: false });
       }
   }, [visible])
-  
 
   useEffect(() => {
-    if(showModalCustomer){
-      setVisible(true);
-      setTitle("Agregar cliente");
+    if(showModal && showModal !== undefined){
+      setVisible(true)
+
+      const titles = {
+        customers:"Agregar cliente",
+        products: "Buscar producto",
+        cash: "Entrada/Salida de efectivo"
+      };
+
+      setTitle( titles[showModal] );
+
     }
-  }, [showModalCustomer])
+}, [showModal])
 
   useEffect(() => {
     const role  = JSON.parse(user).role;
@@ -88,6 +78,16 @@ const PosForm = () => {
                   { action == "sales" && <FormSale /> }
               </div>
               <AppFooter />
+              <CModal size="xl" visible={visible} onClose={() => setVisible(false)}>
+                <CModalHeader onClose={() => setVisible(false)}>
+                  <CModalTitle>{ title }</CModalTitle>
+                </CModalHeader>
+                <CModalBody>
+                  { showModal == "customers" && <FormCustomer /> }
+                  { showModal == "products" && <Products /> }
+                  { showModal == "cash" && <Cash /> }
+                </CModalBody>
+              </CModal>
             </div>
           </Fragment>
         }

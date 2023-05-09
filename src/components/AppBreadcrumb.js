@@ -71,21 +71,21 @@ const AppBreadcrumb = () => {
                 </CTooltip>
               </div>
             </div>
-            <div class="card" onClick={() => dispatch({ type: 'set', showModalCustomer: true })}>
+            <div class="card" onClick={() => dispatch({ type: 'set', showModal: "customers" })}>
               <div class="card-body">
                 <CTooltip content="Agregar cliente">
                   <CIcon icon={ icon.cilUserPlus } size='xxl'/>
                 </CTooltip>
               </div>
             </div>
-            <div class="card">
+            <div class="card" onClick={() => dispatch({ type: 'set', showModal: "cash" })}>
               <div class="card-body">
                 <CTooltip content="Entrada/Salida de efectivo">
                   <CIcon icon={ icon.cilDollar } size='xxl'/>
                 </CTooltip>
               </div>
             </div>
-            <div class="card">
+            <div class="card" onClick={() => dispatch({ type: 'set', showModal: "products" })}>
               <div class="card-body">
                 <CTooltip content="Consultar producto">
                   <CIcon icon={ icon.cilSearch } size='xxl'/>
