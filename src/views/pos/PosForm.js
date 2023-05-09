@@ -81,12 +81,12 @@ const PosForm = () => {
         token &&
           <Fragment>
             <div className="wrapper d-flex flex-column min-vh-100 bg-light">
-              <AppHeader />
+              
               <div className="body flex-grow-1 px-3">
                   { action == "today" && <Today /> }
                   { action == "sales" && <FormSale /> }
               </div>
-              <AppFooter />
+            
               <CModal size="xl" visible={visible} onClose={() => setVisible(false)}>
                 <CModalHeader onClose={() => setVisible(false)}>
                   <CModalTitle>{ title }</CModalTitle>
