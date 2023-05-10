@@ -82,21 +82,6 @@ const PosForm = () => {
           <Fragment>
             <div className="wrapper d-flex flex-column min-vh-100 bg-light">
               
-              <div className="body flex-grow-1 px-3">
-                  { action == "today" && <Today /> }
-                  { action == "sales" && <FormSale /> }
-              </div>
-            
-              <CModal size="xl" visible={visible} onClose={() => setVisible(false)}>
-                <CModalHeader onClose={() => setVisible(false)}>
-                  <CModalTitle>{ title }</CModalTitle>
-                </CModalHeader>
-                <CModalBody>
-                  { showModal == "customers" && <FormCustomer /> }
-                  { showModal == "products" && <Products /> }
-                  { showModal == "cash" && <Cash /> }
-                </CModalBody>
-              </CModal>
             </div>
           </Fragment>
         }

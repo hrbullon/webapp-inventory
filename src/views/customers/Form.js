@@ -15,7 +15,7 @@ import {
     startGettingCustomerByID, 
 } from '../../actions/customer';
 
-export const Form = ({ title, dni }) => {
+const Form = ({ title, dni }) => {
 
     let { id } = useParams();
 
@@ -88,3 +88,4 @@ export const Form = ({ title, dni }) => {
     </form>
   )
 }
+export default Form

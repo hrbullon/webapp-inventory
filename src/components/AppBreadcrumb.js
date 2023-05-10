@@ -1,17 +1,33 @@
-import React, { Fragment } from 'react'
-import { useLocation } from 'react-router-dom';
+import React, { useState } from 'react'
+import { useDispatch } from 'react-redux';
+import { Link, useLocation } from 'react-router-dom';
 
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
 
 import routes from '../routes'
 
-import { CBadge, CBreadcrumb, CBreadcrumbItem, CTooltip } from '@coreui/react'
-import { useDispatch } from 'react-redux';
+import { 
+  CBadge, 
+  CBreadcrumb, 
+  CBreadcrumbItem, 
+  CModal, 
+  CModalBody, 
+  CModalHeader, 
+  CModalTitle, 
+  CTooltip } from '@coreui/react'
+
+const FormCustomer = React.lazy(() => import('src/views/customers/Form'));
+const Products  = React.lazy(() => import('src/views/products/Products'));
+const Cash  = React.lazy(() => import('src/views/pos/Cash'));
 
 const AppBreadcrumb = () => {
 
   const dispatch = useDispatch();
+
+  const [title, setTitle] = useState("");
+  const [showModal, setShowModal] = useState("");
+  const [visible, setVisible] = useState(false);
 
   const user = JSON.parse(localStorage.getItem("user"))
   const currentLocation = useLocation().pathname
@@ -37,6 +53,20 @@ const AppBreadcrumb = () => {
     return breadcrumbs
   }
 
+  const handleShowModal = (option) => {
+    
+    setVisible(true)
+    setShowModal(option);
+
+    const titles = {
+      customers:"Agregar cliente",
+      products: "Buscar producto",
+      cash: "Entrada/Salida de efectivo"
+    };
+
+    setTitle( titles[option] );
+  }
+
   const breadcrumbs = getBreadcrumbs(currentLocation)
 
   return (
@@ -57,49 +87,55 @@ const AppBreadcrumb = () => {
       </CBreadcrumb>}
       { user.role == "STD_ROLE" && 
           <div style={{ display: "flex" }}>
-            <div class="card" onClick={() => dispatch({ type: 'set', actionViewChanged: "today" })}>
-              <div class="card-body">
-                <CTooltip content="Productos vendidos">
-                  <CIcon icon={ icon.cilMoney } size='xxl'/>
-                </CTooltip>
+            <Link to={ "sales/today" }>
+              <div class="card">
+                <div class="card-body">
+                  <CTooltip content="Productos vendidos">
+                    <CIcon icon={ icon.cilMoney } size='xxl'/>
+                  </CTooltip>
+                </div>
               </div>
-            </div>
-            <div class="card" onClick={() => dispatch({ type: 'set', actionViewChanged: "today" })}>
-              <div class="card-body">
-                <CTooltip content="Reporte de ventas diarias">
-                  <CIcon icon={ icon.cilList } size='xxl'/>
-                </CTooltip>
+            </Link>
+            <Link to={ "sales/today/summary" }>
+              <div class="card">
+                <div class="card-body">
+                  <CTooltip content="Reporte de ventas diarias">
+                    <CIcon icon={ icon.cilList } size='xxl'/>
+                  </CTooltip>
+                </div>
               </div>
-            </div>
-            <div class="card" onClick={() => dispatch({ type: 'set', actionViewChanged: "sales" })}>
-              <div class="card-body">
-                <CTooltip content="Punto de venta">
-                  <CIcon icon={ icon.cilCart } size='xxl'/>
-                </CTooltip>
+            </Link>
+            <Link to={ "/" }>
+              <div class="card" >
+                <div class="card-body">
+                  <CTooltip content="Punto de venta">
+                    <CIcon icon={ icon.cilCart } size='xxl'/>
+                  </CTooltip>
+                </div>
               </div>
-            </div>
-            <div class="card" onClick={() => dispatch({ type: 'set', showModal: "customers" })}>
+            </Link>
+            <div class="card" onClick={ () => handleShowModal("customers") }>
               <div class="card-body">
                 <CTooltip content="Agregar cliente">
                   <CIcon icon={ icon.cilUserPlus } size='xxl'/>
                 </CTooltip>
               </div>
             </div>
-            <div class="card" onClick={() => dispatch({ type: 'set', showModal: "cash" })}>
+            <div class="card" onClick={ () => handleShowModal("cash") }>
               <div class="card-body">
                 <CTooltip content="Entrada/Salida de efectivo">
                   <CIcon icon={ icon.cilDollar } size='xxl'/>
                 </CTooltip>
               </div>
             </div>
-            <div class="card" onClick={() => dispatch({ type: 'set', showModal: "products" })}>
+            <div class="card" onClick={ () => handleShowModal("products") }>
               <div class="card-body">
                 <CTooltip content="Consultar producto">
                   <CIcon icon={ icon.cilSearch } size='xxl'/>
                 </CTooltip>
               </div>
             </div>
-            <div class="card" onClick={() => dispatch({ type: 'set', showModal: "products" })}>
+            {/* <div class="card" onClick={() => dispatch({ type: 'set', showModal: "products" })}>
               <div class="card-body">
                 <CTooltip content="(2) Ventas pendientes">
                   <CIcon icon={ icon.cilBell } size='xxl'/>
@@ -108,7 +144,17 @@ const AppBreadcrumb = () => {
                   2+ <span className="visually-hidden">unread messages</span>
                 </CBadge>
               </div>
-            </div>
+            </div> */}
+            <CModal size="xl" visible={visible} onClose={() => setVisible(false)}>
+              <CModalHeader onClose={() => setVisible(false)}>
+                <CModalTitle>{ title }</CModalTitle>
+              </CModalHeader>
+              <CModalBody>
+                { showModal == "customers" && <FormCustomer /> }
+                { showModal == "products" && <Products /> }
+                { showModal == "cash" && <Cash /> }
+              </CModalBody>
+            </CModal>
           </div>
       }
     </div>

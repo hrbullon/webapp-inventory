@@ -19,7 +19,7 @@ import { getDataExport, getTotal, prepareList } from './selector';
 import { startDeletingSale } from 'src/actions/sales';
 import { ViewModal } from 'src/components/modal/ViewModal';
 
-export const Table = () => {
+export const Table = ({ title, today = null }) => {
 
     const dispatch = useDispatch();
     const sales = useSelector((state) => state.sales);
@@ -59,7 +59,7 @@ export const Table = () => {
         <Link to="/sales/create" title='Registrar venta' className="btn btn-sm btn-primary float-end">
             <CIcon icon={icon.cilPlus}/> 
         </Link>
-        <h5 className="card-title">Todas las ventas</h5>
+        <h5 className="card-title">{ title }</h5>
 
         <ButtonsExport 
             data={ getDataExport(items, totalSales.total, totalSales.totalConverted) } 
@@ -67,7 +67,7 @@ export const Table = () => {
             title="Listado de Ventas" 
             fileName="Reporte-ventas"/>
 
-        <FormSearch/>
+        <FormSearch today={ today }/>
 
         <DataTable 
             columns={ getColums( handleShowSale, handleDeleteSale ) }

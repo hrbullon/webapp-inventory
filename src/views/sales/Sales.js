@@ -8,7 +8,7 @@ const Sales = () => {
         <div className='col'>
             <div className="card  mt-4">
                 <div className="card-body">
-                    <Table />
+                    <Table title="Todas las ventas"/>
                 </div>
             </div>
         </div>

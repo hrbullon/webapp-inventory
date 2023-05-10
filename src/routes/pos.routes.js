@@ -1,11 +1,13 @@
-import React from 'react'
+import React from 'react';
 
-const Posform = React.lazy(() => import('../views/pos/PosForm.js'));
+const Form = React.lazy(() => import('../views/sales/Form.js'));
+const Today = React.lazy(() => import('../views/sales/report/Today'));
+const SalesToday = React.lazy(() => import('../views/sales/report/SalesToday'));
 
 const routes = [
-    { path: '/', exact: true, name: 'Inicio' },
-    { path: '/point-of-sale', name: 'Punto de venta', element: Posform },
-
+    { path: '/', exact: true, name: 'Inicio', element: Form },
+    { path: '/sales/today', name: 'Detalles de ventas diarias ', element: Today},
+    { path: '/sales/today/summary', name: 'Reporte de ventas diarias ', element: SalesToday},
 ]
 
 export default routes

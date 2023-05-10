@@ -4,11 +4,18 @@ import { confirmDelete } from "src/helpers/helpers";
 import { deleteSale, getAllSales, getAllSalesMonth, getAllSalesToday } from "src/services/salesServices";
 import { CLG_MESSAGE, VIEW_MESSAGE } from "src/strings";
 
-export const startGettingSales = (data) => {
+export const startGettingSales = (data, date = null) => {
     return async (dispatch) => { 
         try {
+            let params = data;
+
+            if(date){
+                let { today } = date;
+                params = { ...data, start_date: today, end_date: today };
+            }
+
             dispatch({ type: "set", loading: true });
-            const res = await getAllSales(data);
+            const res = await getAllSales(params);
             dispatch({ type: "set", sales: [...res.sales], loading: false});
         } catch (error) {
             console.error(CLG_MESSAGE.ERROR_DATA_LOADING);            

@@ -1,7 +1,7 @@
 import React from 'react'
 import { ActionButtons } from 'src/components/forms/ActionButtons'
 
-export const Cash = () => {
+const Cash = () => {
   return (
     <div>
         <div class="mb-3">
@@ -23,3 +23,5 @@ export const Cash = () => {
     </div>
   )
 }
+
+export default Cash;

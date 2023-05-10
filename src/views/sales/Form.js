@@ -6,8 +6,6 @@ import Select from 'react-select';
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
 
-import { Form as FormCustomer } from "../customers/Form";
-
 import { CardBasic } from './CardBasic';
 import { CardTotal } from 'src/components/cards/CardTotal';
 import { TableDetails } from 'src/components/product/TableDetails';
@@ -19,9 +17,8 @@ import { getLastExchange } from 'src/services/exchangesServices';
 
 import { formatDocument, prepareOptions } from 'src/helpers/helpers';
 import { formatCurrency } from 'src/helpers/helpers';
-import { CModal, CModalBody, CModalHeader, CModalTitle } from '@coreui/react';
 
-export const Form = () => {
+const Form = () => {
 
     const customerSaved = useSelector( (state) => state.customerSaved );
 
@@ -219,18 +216,9 @@ export const Form = () => {
                         <CIcon icon={icon.cilReload} title='Cancelar'/> Cancelar
                     </button>
                 </div>
-
-                <CModal size="xl" visible={visible} onClose={() => setVisible(false)}>
-                    <CModalHeader onClose={() => setVisible(false)}>
-                    <CModalTitle>Agregar clente</CModalTitle>
-                    </CModalHeader>
-                    <CModalBody>
-                            <FormCustomer dni={ dni }/>
-                    </CModalBody>
-                </CModal>
             </div>
         </Fragment>
     )
 }
 
-//export default Form
+export default Form
