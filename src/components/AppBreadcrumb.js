@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 import CIcon from '@coreui/icons-react';
@@ -8,7 +7,6 @@ import * as icon from '@coreui/icons';
 import routes from '../routes'
 
 import { 
-  CBadge, 
   CBreadcrumb, 
   CBreadcrumbItem, 
   CModal, 
@@ -23,14 +21,20 @@ const Cash  = React.lazy(() => import('src/views/pos/Cash'));
 
 const AppBreadcrumb = () => {
 
-  const dispatch = useDispatch();
-
   const [title, setTitle] = useState("");
   const [showModal, setShowModal] = useState("");
   const [visible, setVisible] = useState(false);
 
-  const user = JSON.parse(localStorage.getItem("user"))
-  const currentLocation = useLocation().pathname
+  const user = JSON.parse(localStorage.getItem("user"));
+  const started_session_pos = JSON.parse(localStorage.getItem("started_session_pos"));
+  const currentLocation = useLocation().pathname;
+
+  useEffect(() => {
+    if(started_session_pos && started_session_pos !== undefined){
+      window.location.href = "/#/pos";
+    }
+  }, [])
+  
 
   const getRouteName = (pathname, routes) => {
     const currentRoute = routes.find((route) => route.path === pathname)
@@ -85,7 +89,7 @@ const AppBreadcrumb = () => {
           )
         })}
       </CBreadcrumb>}
-      { user.role == "STD_ROLE" && 
+      { user.role == "STD_ROLE" && started_session_pos &&
           <div style={{ display: "flex" }}>
             <Link to={ "sales/today" }>
               <div class="card">
@@ -105,7 +109,7 @@ const AppBreadcrumb = () => {
                 </div>
               </div>
             </Link>
-            <Link to={ "/" }>
+            <Link to={ "/pos" }>
               <div class="card" >
                 <div class="card-body">
                   <CTooltip content="Punto de venta">
