@@ -27,6 +27,10 @@ class App extends Component {
     const token = localStorage.getItem("token");
     let user = localStorage.getItem("user");
     user = JSON.parse(user);
+   
+    if(!user){
+      window.location.href = "#/auth/login";
+    }
 
     const company = user? user.Company : {};
 
