@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
 import CIcon from '@coreui/icons-react';
@@ -41,15 +41,15 @@ export const FormSearch = (today = null) => {
             <div className='col-3'>
                 <input type="text" className='form-control' autoComplete='off' {...register("customer") }  placeholder='Buscar por cliente'/>  
             </div>
-            { !today &&
-                <div>
+            { !today || today.today == null &&
+                <Fragment>
                     <div className='col-3'>
                         <input type="date" className='form-control' autoComplete='off' {...register("start_date") } placeholder='Buscar por fecha desde'/>  
                     </div>
                     <div className='col-3'>
                         <input type="date" className='form-control' autoComplete='off' {...register("end_date") } placeholder='Buscar por fecha hasta'/>  
                     </div>
-                </div>
+                </Fragment>
             }
             <div className='col'>
                 <button type='button' onClick={ handleReset } className='btn btn-secondary float-end mt-2 mb-2' title='Limpiar formulario'>

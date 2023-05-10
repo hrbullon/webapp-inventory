@@ -8,8 +8,8 @@ export const startGettingSales = (data, date = null) => {
     return async (dispatch) => { 
         try {
             let params = data;
-
-            if(date){
+           
+            if(date.today !== null){
                 let { today } = date;
                 params = { ...data, start_date: today, end_date: today };
             }
