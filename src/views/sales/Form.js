@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react'
+import React, { Fragment, useState, useEffect, useContext } from 'react'
 import { useSelector } from 'react-redux';
 
 import swal from 'sweetalert';
@@ -10,6 +10,8 @@ import { CardBasic } from './CardBasic';
 import { CardTotal } from 'src/components/cards/CardTotal';
 import { TableDetails } from 'src/components/product/TableDetails';
 
+import { Form as FormCustomer } from 'src/views/customers/Form';
+
 import { getAllProducts, getProductById } from 'src/services/productsServices';
 import { getCustomerByDni } from 'src/services/customersServices'
 import { createSale } from 'src/services/salesServices';
@@ -17,9 +19,12 @@ import { getLastExchange } from 'src/services/exchangesServices';
 
 import { formatDocument, prepareOptions } from 'src/helpers/helpers';
 import { formatCurrency } from 'src/helpers/helpers';
+import { CModal, CModalBody, CModalHeader, CModalTitle } from '@coreui/react';
+import { AuthContext } from 'src/context/AuthContext';
 
 const Form = () => {
 
+    const user = useContext(AuthContext);
     const customerSaved = useSelector( (state) => state.customerSaved );
 
     const [sale, setSale] = useState({
@@ -150,7 +155,11 @@ const Form = () => {
         let res = await createSale(sale);
         if(res.sale){
             swal("Completado!", "Datos guardados!", "success");
-            window.location.href = "/#/sales";
+            if(user.role == "ADM_ROLE"){
+                window.location.href = "/#/sales";
+            }else{
+                window.location.href = "/#/sales/today/summary";
+            }
         }else{
             swal("Oops","Algo salio mal al guardar los datos","warning");
         }
@@ -216,6 +225,14 @@ const Form = () => {
                         <CIcon icon={icon.cilReload} title='Cancelar'/> Cancelar
                     </button>
                 </div>
+                <CModal size="xl" visible={visible} onClose={() => setVisible(false)}>
+                <CModalHeader onClose={() => setVisible(false)}>
+                    <CModalTitle>Agregar cliente</CModalTitle>
+                </CModalHeader>
+                <CModalBody>
+                    <FormCustomer dni={ dni }/>
+                </CModalBody>
+                </CModal>
             </div>
         </Fragment>
     )

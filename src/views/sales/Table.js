@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect, Fragment, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import DataTable from 'react-data-table-component-footer';
@@ -18,8 +18,11 @@ import { formatNumber } from 'src/helpers/helpers';
 import { getDataExport, getTotal, prepareList } from './selector';
 import { startDeletingSale } from 'src/actions/sales';
 import { ViewModal } from 'src/components/modal/ViewModal';
+import { AuthContext } from 'src/context/AuthContext';
 
 export const Table = ({ title, today = null }) => {
+
+    const user = useContext(AuthContext);
 
     const dispatch = useDispatch();
     const sales = useSelector((state) => state.sales);
@@ -55,10 +58,11 @@ export const Table = ({ title, today = null }) => {
 
     return (
     <Fragment>
-
+        { user.role == "ADM_ROLE" &&
         <Link to="/sales/create" title='Registrar venta' className="btn btn-sm btn-primary float-end">
             <CIcon icon={icon.cilPlus}/> 
-        </Link>
+        </Link>}
+
         <h5 className="card-title">{ title }</h5>
 
         <ButtonsExport 

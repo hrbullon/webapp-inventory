@@ -15,7 +15,7 @@ import {
     startGettingCustomerByID, 
 } from '../../actions/customer';
 
-const Form = ({ title, dni }) => {
+export const Form = ({ title, dni }) => {
 
     let { id } = useParams();
 
