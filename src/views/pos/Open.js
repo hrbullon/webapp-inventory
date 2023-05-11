@@ -27,6 +27,7 @@ export const Open = () => {
             if(resp){
                 setStartedSale(true);
                 localStorage.setItem("started_session_pos", true);
+                window.location.href = "/#/pos";
             }
           })
         }

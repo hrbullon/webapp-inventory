@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
 
-import routes from '../routes'
+import routes from '../routes/main.routes'
 
 import { 
   CBreadcrumb, 

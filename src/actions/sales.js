@@ -70,12 +70,12 @@ export const startDeletingSale = (data) => {
 export const startCheckingStarted = () => {
     return async (dispatch) => { 
         try {
-            return await { 
+            return await null/* { 
                 date: "",
                 hour: "",
                 user: 1,
                 amount: "1000.00"
-             }
+             } */
         } catch (error) {
             console.error(CLG_MESSAGE.ERROR_DATA_LOADING);            
         }
