@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 
 import CIcon from '@coreui/icons-react';
@@ -15,11 +16,17 @@ import {
   CModalTitle, 
   CTooltip } from '@coreui/react'
 
+import { AuthContext } from 'src/context/AuthContext';
+import { startCheckingStarted } from 'src/actions/transaction';
+
 const FormCustomer = React.lazy(() => import('src/views/customers/Form'));
 const Products  = React.lazy(() => import('src/views/products/Products'));
 const Cash  = React.lazy(() => import('src/views/pos/Cash'));
 
 const AppBreadcrumb = () => {
+
+  const dispatch = useDispatch();
+  const context = useContext(AuthContext);
 
   const [title, setTitle] = useState("");
   const [showModal, setShowModal] = useState("");
@@ -29,13 +36,21 @@ const AppBreadcrumb = () => {
   const started_session_pos = JSON.parse(localStorage.getItem("started_session_pos"));
   const currentLocation = useLocation().pathname;
 
-  useEffect(() => {
-    if(started_session_pos && started_session_pos !== undefined){
-      window.location.href = "/#/pos";
+  useEffect( ()=> {
+        
+    if(context.user.role == "STD_ROLE"){
+      
+      let started = dispatch( startCheckingStarted(1) );
+
+      started.then( resp => {
+        if(resp.transaction){
+            localStorage.setItem("started_session_pos", true);
+            window.location.href = "/#/pos";
+        }
+      }) 
     }
   }, [])
   
-
   const getRouteName = (pathname, routes) => {
     const currentRoute = routes.find((route) => route.path === pathname)
     return currentRoute ? currentRoute.name : false
