@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect, useContext } from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import swal from 'sweetalert';
 import Select from 'react-select';
@@ -12,43 +12,60 @@ import { TableDetails } from 'src/components/product/TableDetails';
 
 import { Form as FormCustomer } from 'src/views/customers/Form';
 
-import { getAllProducts, getProductById } from 'src/services/productsServices';
+import { getProductById } from 'src/services/productsServices';
 import { getCustomerByDni } from 'src/services/customersServices'
 import { createSale } from 'src/services/salesServices';
-import { getLastExchange } from 'src/services/exchangesServices';
 
-import { formatDocument, prepareOptions } from 'src/helpers/helpers';
+import { formatDocument, getTotalDetail, prepareOptions } from 'src/helpers/helpers';
 import { formatCurrency } from 'src/helpers/helpers';
 import { CModal, CModalBody, CModalHeader, CModalTitle } from '@coreui/react';
 import { AuthContext } from 'src/context/AuthContext';
+import { startGettingProducts } from 'src/actions/product';
+import { startGettingLastExchange } from 'src/actions/exchange';
+import { addRowDetail } from './selector';
 
 const Form = () => {
 
+    const dispatch = useDispatch();
     const user = useContext(AuthContext);
+    const products = useSelector(( state ) => state.products );
+    const exchange = useSelector(( state ) => state.lastExchange );
     const customerSaved = useSelector( (state) => state.customerSaved );
+
+    const checkoutId = JSON.parse(localStorage.getItem("checkoutId"));
 
     const [sale, setSale] = useState({
         code:'----',
         customer_id: null,
         date: new Date(Date.now()).toLocaleDateString(),
         description:'',
+        checkout_id: checkoutId,
         exchange_amount:0,
         total_amount:0,
         total_amount_converted:0,
         sale_details: []
     });
     
-
     const [dni, setDni] = useState("");
     const [visible, setVisible] = useState(false);
     const [customer, setCustomer] = useState({});
     const [quantity, setQuantity] = useState(1);
-    const [products, setProducts] = useState([]);
     const [options, setOptions] = useState([]);
 
     useEffect(() => {
         fetchAll();
     }, []);
+
+    useEffect(() => {
+        if(products && products !== undefined){
+            const items = prepareOptions(products);
+            setOptions(items);
+        }
+
+        if(exchange && exchange !== undefined){
+            setSale({ ...sale, exchange_amount: exchange.amount});
+        }
+    }, [ products, exchange ]);
 
     useEffect(() => {
         if(customerSaved && customerSaved !== undefined){
@@ -65,24 +82,16 @@ const Form = () => {
     useEffect(() => {
 
         if(sale.sale_details.length > 0){
-            
-            let total = 0;
-            let totalConverted = 0;
-
-            sale.sale_details.map( item => {  total += item.subtotal_amount });
-            sale.sale_details.map( item => {  totalConverted += item.subtotal_amount_converted });
-            
+            const { total, totalConverted } = getTotalDetail(sale.sale_details);
             setSale({ ...sale, total_amount: total, total_amount_converted: totalConverted});
         }
+
     }, [sale.sale_details]);
 
     const fetchAll = async () => {
-        const res = await getAllProducts();
-        setProducts(res.products);
-        const items = await prepareOptions(res.products);
-        setOptions(items);
-        const resExchange = await getLastExchange();
-        setSale({ ...sale, exchange_amount: resExchange.exchanges[0].amount});
+
+        dispatch( startGettingProducts() );
+        dispatch( startGettingLastExchange() );
     }
 
     const handleFindCustomer = async (evt) => {
@@ -128,19 +137,7 @@ const Form = () => {
         let total = productFiltered.reduce((acum, product) => acum + Number(product.quantity), 0);
 
         if(Number(product.quantity) >= (total+Number(quantity))) {
-
-            const price_converted = (Number(product.price)*sale.exchange_amount);
-            const item = {
-                product_id: product.id,
-                code: product.code,
-                description: product.name,
-                quantity:quantity,
-                price: product.price,
-                subtotal_amount: (Number(product.price)*quantity),
-                price_converted: price_converted,
-                subtotal_amount_converted: (price_converted*quantity)
-            };
-    
+            const item = addRowDetail(product, quantity, sale);
             setSale({ ...sale, 
                 sale_details: [ ...sale.sale_details, item]
             })
@@ -153,6 +150,7 @@ const Form = () => {
     const handleSubmit = async () => {
 
         let res = await createSale(sale);
+        
         if(res.sale){
             swal("Completado!", "Datos guardados!", "success");
             if(user.role == "ADM_ROLE"){

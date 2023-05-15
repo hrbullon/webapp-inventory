@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
 
-import { prepareOptions } from 'src/helpers/helpers';
+import { getTotalDetail, prepareOptions } from 'src/helpers/helpers';
 import { TableDetails } from 'src/components/product/TableDetails';
 import { CardTotal } from 'src/components/cards/CardTotal';
 
@@ -15,7 +15,6 @@ import { formatCurrency } from 'src/helpers/helpers';
 
 import { addRowDetail, 
          defaultValues, 
-         getTotalDetail,
          defaultValuesDetails } from './selector';
 
 //Actions

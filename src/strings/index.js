@@ -7,3 +7,13 @@ export const VIEW_MESSAGE = {
     DATA_SAVED_SUCCESSFULLY: "Datos guardados!",
     DATA_SAVED_FAILED: "No se encontró el elemento solicitado"
 }
+
+export const text = {
+    pos: "Punto de venta",
+    close_checkout: "Cerrar/Finalizar ventas",
+    find_products: "Consultar producto",
+    in_out_cash: "Entrada/Salida de efectivo",
+    add_customer: "Agregar cliente",
+    daily_sales_report: "Reporte de ventas diarias",
+    sold_products: "Productos vendidos",
+}

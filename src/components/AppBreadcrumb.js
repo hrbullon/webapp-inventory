@@ -18,10 +18,12 @@ import {
 
 import { AuthContext } from 'src/context/AuthContext';
 import { startCheckingStarted } from 'src/actions/transaction';
+import { text } from 'src/strings';
 
 const FormCustomer = React.lazy(() => import('src/views/customers/Form'));
 const Products  = React.lazy(() => import('src/views/products/Products'));
 const Cash  = React.lazy(() => import('src/views/pos/Cash'));
+const CloseCheckout  = React.lazy(() => import('src/views/pos/CloseCheckout'));
 
 const AppBreadcrumb = () => {
 
@@ -78,9 +80,10 @@ const AppBreadcrumb = () => {
     setShowModal(option);
 
     const titles = {
-      customers:"Agregar cliente",
-      products: "Buscar producto",
-      cash: "Entrada/Salida de efectivo"
+      customers: text.add_customer,
+      products: text.find_products,
+      cash: text.in_out_cash,
+      close_checkout: text.close_checkout
     };
 
     setTitle( titles[option] );
@@ -109,7 +112,7 @@ const AppBreadcrumb = () => {
             <Link to={ "sales/today" }>
               <div class="card">
                 <div class="card-body">
-                  <CTooltip content="Productos vendidos">
+                  <CTooltip content={ text.sold_products }>
                     <CIcon icon={ icon.cilMoney } size='xxl'/>
                   </CTooltip>
                 </div>
@@ -118,7 +121,7 @@ const AppBreadcrumb = () => {
             <Link to={ "sales/today/summary" }>
               <div class="card">
                 <div class="card-body">
-                  <CTooltip content="Reporte de ventas diarias">
+                  <CTooltip content={ text.daily_sales_report }>
                     <CIcon icon={ icon.cilList } size='xxl'/>
                   </CTooltip>
                 </div>
@@ -127,7 +130,7 @@ const AppBreadcrumb = () => {
             <Link to={ "/pos" }>
               <div class="card" >
                 <div class="card-body">
-                  <CTooltip content="Punto de venta">
+                  <CTooltip content={ text.pos }>
                     <CIcon icon={ icon.cilCart } size='xxl'/>
                   </CTooltip>
                 </div>
@@ -135,35 +138,32 @@ const AppBreadcrumb = () => {
             </Link>
             <div class="card" onClick={ () => handleShowModal("customers") }>
               <div class="card-body">
-                <CTooltip content="Agregar cliente">
+                <CTooltip content={ text.add_customer }>
                   <CIcon icon={ icon.cilUserPlus } size='xxl'/>
                 </CTooltip>
               </div>
             </div>
             <div class="card" onClick={ () => handleShowModal("cash") }>
               <div class="card-body">
-                <CTooltip content="Entrada/Salida de efectivo">
+                <CTooltip content={ text.in_out_cash }>
                   <CIcon icon={ icon.cilDollar } size='xxl'/>
                 </CTooltip>
               </div>
             </div>
             <div class="card" onClick={ () => handleShowModal("products") }>
               <div class="card-body">
-                <CTooltip content="Consultar producto">
+                <CTooltip content={ text.find_products }>
                   <CIcon icon={ icon.cilSearch } size='xxl'/>
                 </CTooltip>
               </div>
             </div>
-            {/* <div class="card" onClick={() => dispatch({ type: 'set', showModal: "products" })}>
+            <div class="card" onClick={ () => handleShowModal("close_checkout") }>
               <div class="card-body">
-                <CTooltip content="(2) Ventas pendientes">
-                  <CIcon icon={ icon.cilBell } size='xxl'/>
+                <CTooltip content={ text.close_checkout }>
+                  <CIcon icon={ icon.cilLockLocked } size='xxl'/>
                 </CTooltip>
-                <CBadge color="danger" position="top-end" shape="rounded-pill">
-                  2+ <span className="visually-hidden">unread messages</span>
-                </CBadge>
               </div>
-            </div> */}
+            </div>
             <CModal size="xl" visible={visible} onClose={() => setVisible(false)}>
               <CModalHeader onClose={() => setVisible(false)}>
                 <CModalTitle>{ title }</CModalTitle>
@@ -172,6 +172,7 @@ const AppBreadcrumb = () => {
                 { showModal == "customers" && <FormCustomer /> }
                 { showModal == "products" && <Products /> }
                 { showModal == "cash" && <Cash /> }
+                { showModal == "close_checkout" && <CloseCheckout /> }
               </CModalBody>
             </CModal>
           </div>

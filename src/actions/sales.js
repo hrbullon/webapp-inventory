@@ -59,7 +59,12 @@ export const startDeletingSale = (data) => {
                   'Se anuló la venta correctamente!',
                   'success'
                 );
-                dispatch( startGettingSales({ code:"", customer: "", start_date:"", end_date: "" }) );
+                
+                //Page reload
+                setTimeout( () => {
+                    window.location.reload();
+                }, 2000)
+                
             }else{
                 swal("Error", VIEW_MESSAGE.DATA_SAVED_FAILED);
             }

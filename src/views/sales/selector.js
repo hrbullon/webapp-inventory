@@ -32,6 +32,24 @@ export const getTotal = data => {
     return { total, totalConverted }
 }
 
+export const addRowDetail = (product, quantity, sale) => {
+
+    const price_converted = (Number(product.price)*sale.exchange_amount);
+
+    const item = {
+        product_id: product.id,
+        code: product.code,
+        description: product.name,
+        quantity:quantity,
+        price: product.price,
+        subtotal_amount: (Number(product.price)*quantity),
+        price_converted: price_converted,
+        subtotal_amount_converted: (price_converted*quantity)
+    };
+
+    return item;
+}
+
 export const getDataExport = (data, totalAmount, totalAmountConverted) => {
 
     let rows = data.map(({id, Customer, SaleDetails, Sale,...rest}) => rest);

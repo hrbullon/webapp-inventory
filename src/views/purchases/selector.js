@@ -56,16 +56,6 @@ export const getTotal = data => {
     return { total, totalConverted }
 }
 
-export const getTotalDetail = (items) => {
-
-    let total = 0;
-    let totalConverted = 0;
-
-    items.map( item => {  total += item.subtotal_amount });
-    items.map( item => {  totalConverted += item.subtotal_amount_converted });
-    return { total, totalConverted };
-}
-
 export const getDataExport = (data, totalAmount, totalAmountConverted) => {
 
     let rows = [];
