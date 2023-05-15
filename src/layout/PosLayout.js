@@ -6,7 +6,7 @@ import { Fragment } from 'react';
 import PosContent from 'src/components/PosContent';
 
 const PosLayout = () => {
-
+  
   const { token } = useContext(AuthContext);
   
   useEffect(() => {

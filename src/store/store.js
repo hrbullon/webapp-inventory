@@ -4,6 +4,7 @@ import thunk from "redux-thunk";
 
 const initialState = {
   sidebarShow: true,
+  checkoutId: 0
 }
 
 const changeState = (state = initialState, { type, ...rest }) => {

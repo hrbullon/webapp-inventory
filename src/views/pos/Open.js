@@ -32,8 +32,10 @@ export const Open = () => {
         let selectedOption = selectElement.options[selectedIndex];
         let selectedText = selectedOption.text;
 
+        let checkoutId = getValues("checkout_id");
+
         let started = dispatch( startCreatingTransactions({
-            checkout_id: getValues("checkout_id"),
+            checkout_id: checkoutId,
             user_id: userId,
             transaction_id:1,
             note:`Apertura de caja: ${selectedText}`,
@@ -42,7 +44,9 @@ export const Open = () => {
 
         started.then( resp => {
             if(resp){
+
                 setStartedSale(true);
+                localStorage.setItem("checkoutId", checkoutId);
                 localStorage.setItem("started_session_pos", true);
                 window.location.href = "/#/pos";
             }

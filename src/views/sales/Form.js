@@ -170,7 +170,7 @@ const Form = () => {
             <div className="row">
                 <div className="col-8">
                     <div className="mb-3">
-                        <input type="text" name="name" autoFocus className="form-control" onKeyUp={ (e) => handleFindCustomer(e) } placeholder="Seleccione un cliente"/>
+                        <input type="text" name="name" autoComplete='autoComplete' autoFocus className="form-control" onKeyUp={ (e) => handleFindCustomer(e) } placeholder="Seleccione un cliente"/>
                     </div>
                     <CardBasic customer={customer} />
                 </div>
