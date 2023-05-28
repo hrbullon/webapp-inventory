@@ -9,7 +9,7 @@ export const prepareList = data => {
         let subtotal = (Number(item.price)*Number(item.quantity));
         
         const row = {
-            code: item.code,
+            code: item.code? item.code : "S/I",
             name: item.name,
             quantity: item.quantity,
             price: item.price,

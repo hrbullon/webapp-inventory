@@ -7,7 +7,7 @@ const Month = () => {
         <div className='col'>
             <div className="card  mt-4">
                 <div className="card-body">
-                    <Table type="month" title="Listado de ventas mensual" fileName="Reporte-ventas-mensual"/>
+                    <Table type="Month" title="Listado de ventas mensual" fileName="Reporte-ventas-mensual"/>
                 </div>
             </div>
         </div>
