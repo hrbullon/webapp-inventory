@@ -93,16 +93,16 @@ export const Form = ({ title }) => {
             <div className="col-4">
               <div className="form-group">
                 <label>Codigo/Serial:</label>
-                <input type="text" className="form-control" name="code" {...register("code")}/>
+                <input type="text" className="form-control" name="code" {...register("code")} autoComplete='autoComplete' />
               </div>
               <div className="form-group">
                 <label>Nombre: *</label>
-                <input type="text" className="form-control" name="name" {...register("name", { required: true, maxLength: 150 }) }/>
+                <input type="text" className="form-control" name="name" {...register("name", { required: true, maxLength: 150 }) } autoComplete='autoComplete'/>
                 <ErrorValidate error={ errors.name }/>
               </div>
               <div className="form-group">
                 <label>Description:</label>
-                <textarea className='form-control' name="description" {...register("description", { maxLength: 300 })}>
+                <textarea className='form-control' name="description" {...register("description", { maxLength: 300 })} >
                 </textarea>
               </div>
             </div>
@@ -113,11 +113,11 @@ export const Form = ({ title }) => {
               </div>
               <div className="form-group">
                 <label>Marca:</label>
-                <input type="text" className="form-control" name="brand" {...register("brand")}/>
+                <input type="text" className="form-control" name="brand" {...register("brand")} autoComplete='autoComplete'/>
               </div>
               <div className="form-group">
                 <label>Modelo:</label>
-                <input type="text" className="form-control" name="model" {...register("model")}/>
+                <input type="text" className="form-control" name="model" {...register("model")} autoComplete='autoComplete'/>
               </div>
             </div>
             <div className="col-4">
