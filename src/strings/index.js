@@ -10,7 +10,7 @@ export const VIEW_MESSAGE = {
 
 export const text = {
     pos: "Punto de venta",
-    close_checkout: "Cerrar/Finalizar ventas",
+    close_checkout: "Resumen de ventas",
     find_products: "Consultar producto",
     in_out_cash: "Entrada/Salida de efectivo",
     add_customer: "Agregar cliente",
