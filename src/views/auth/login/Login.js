@@ -13,11 +13,11 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow
-} from '@coreui/react'
+} from '@coreui/react';
 
 import CIcon from '@coreui/icons-react';
 
-import { cilLockLocked, cilUser } from '@coreui/icons'
+import { cilLockLocked, cilUser } from '@coreui/icons';
 import { CardMessage } from './CardMessage';
 import { login } from 'src/services/authServices';
 
@@ -25,7 +25,7 @@ import { AuthContext } from 'src/context/AuthContext';
 
 const Login = () => {
 
-  const {register, handleSubmit, reset, formState: { errors } } = useForm();
+  const {register, handleSubmit } = useForm();
 
   const { token } = useContext(AuthContext);
   
