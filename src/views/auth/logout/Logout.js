@@ -13,6 +13,7 @@ export const Logout = () => {
     //Data from localstorage
     localStorage.removeItem("user");
     localStorage.removeItem("token");
+    localStorage.removeItem("session_pos");
     localStorage.removeItem("started_session_pos");
     
     setTimeout(() => {

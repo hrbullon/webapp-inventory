@@ -70,11 +70,11 @@ export const Table = ({ title, today = null }) => {
             headerOptions={ headerOptions } 
             title="Listado de Ventas" 
             fileName="Reporte-ventas"/>
-
+        
         <FormSearch today={ today }/>
 
         <DataTable 
-            columns={ getColums( handleShowSale, handleDeleteSale ) }
+            columns={ getColums(  ) }
             data={items}
             progressPending={ loading }
             progressComponent={ <EclipseComponent/> }

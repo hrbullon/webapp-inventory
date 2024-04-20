@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { CAlert } from '@coreui/react'
 import { useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import { ActionButtons } from 'src/components/forms/ActionButtons';
 import { ErrorValidate } from 'src/components/forms/ErrorValidate';
@@ -18,6 +18,7 @@ import {
 export const Form = ({ title, dni }) => {
 
     let { id } = useParams();
+    let navigate = useNavigate();
 
     const dispatch = useDispatch()
 
@@ -36,9 +37,29 @@ export const Form = ({ title, dni }) => {
       }
     }, [dni])
 
+    useEffect(() => {
+      
+        const params = window.location.href.split("document=");
+
+        if(params.length > 1){
+            reset({
+                dni: params[1]
+            });
+        } 
+    }, [])
+    
+
     const onSubmit = async data => { 
         const res = dispatch( startSendingCustomer(data) ) 
-        res.then((result) => reset() );
+        
+        res.then((result) => {
+
+            if(/document/.test(window.location.href)){
+                reset();
+                navigate("/pos");
+            }
+
+        });
     }
 
     return (
@@ -53,29 +74,29 @@ export const Form = ({ title, dni }) => {
                     <div className="col-6">
                         <div className="form-group">
                             <label>Nombre: *</label>
-                            <input type="text" className="form-control" name="name" autoComplete='off' {...register("name", { required: true, maxLength: 45 })}/>
+                            <input type="text" className="form-control" name="name" autoComplete='autoComplete' {...register("name", { required: true, maxLength: 45 })}/>
                             <ErrorValidate error={ errors.name }/>
                         </div>
                         <div className="form-group">
                             <label>DNI/Cedula: *</label>
-                            <input type="text" className="form-control" name="dni" autoComplete='off' onKeyUp={ (e) => formatDocument(e) } {...register("dni", { required: true, maxLength: 20 })}/>
+                            <input type="text" className="form-control" name="dni" autoComplete='autoComplete' onKeyUp={ (e) => formatDocument(e) } {...register("dni", { required: true, maxLength: 20 })}/>
                             <ErrorValidate error={ errors.dni }/>
                         </div>
                         <div className="form-group">
                             <label>Direccion: *</label>
-                            <textarea className="form-control" name="address" autoComplete='off' {...register("address", { required: true, maxLength: 100 })}/>
+                            <textarea className="form-control" name="address" autoComplete='autoComplete' {...register("address", { required: true, maxLength: 100 })}/>
                             <ErrorValidate error={ errors.address }/>                        
                         </div>
                     </div>
                     <div className="col-6">
                         <div className="form-group">
                             <label>Telefono: *</label>
-                            <input type="text" className="form-control" name="phone" autoComplete='off' {...register("phone", { required: true, maxLength: 12, pattern:'/[0-1]*/' })}/>
+                            <input type="text" className="form-control" name="phone" autoComplete="autoComplete" {...register("phone", { required: true, maxLength: 12, pattern:'/[0-1]*/' })}/>
                             <ErrorValidate error={ errors.phone }/>                        
                         </div>
                         <div className="form-group">
                             <label>Correo: *</label>
-                            <input type="text" className="form-control" name="email" autoComplete='off' {...register("email", { required: true, maxLength: 45 })}/>
+                            <input type="email" className="form-control" name="email" autoComplete='autoComplete' {...register("email", { required: true, maxLength: 45 })}/>
                             <ErrorValidate error={ errors.email }/>     
                         </div>
                     </div>

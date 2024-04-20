@@ -42,30 +42,6 @@ const AppHeader = () => {
         <CHeaderNav className="d-none d-md-flex me-auto">
           <CNavItem>
             <CNavLink to="/" component={NavLink}>
-              
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#"></CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#"></CNavLink>
-          </CNavItem>
-        </CHeaderNav>
-        <CHeaderNav>
-          <CNavItem>
-            <CNavLink href="#">
-              {/*<CIcon icon={cilBell} size="lg" />*/}
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">
-              {/*<CIcon icon={cilList} size="lg" />*/}
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">
-              {/*<CIcon icon={cilEnvelopeOpen} size="lg" />*/}
             </CNavLink>
           </CNavItem>
         </CHeaderNav>

@@ -103,3 +103,35 @@ export const getDataExport = (data, totalAmount, totalAmountConverted) => {
 
     return rows
 }
+
+export const getSalesAndPaymentsWIthTotalAmount = (items, type) => {
+    
+    let rows = [...items];
+    
+    let totalQuantity = 0;
+    let totalAmount = 0;
+    let totalAmountConverted = 0;
+
+    items.map( (item) => {
+        totalQuantity += Number(item.quantity);
+        totalAmount += Number(item.total_amount);
+        totalAmountConverted += Number(item.total_amount_converted);
+    })
+
+    if(type == "sales"){
+        rows.push({ 
+            product: "",
+            quantity: formatNumber(totalQuantity),
+            total_amount: formatNumber(totalAmount),
+            total_amount_converted: formatNumber(totalAmountConverted),
+        });
+    }else{
+        rows.push({ 
+            payment_method: "",
+            total_amount: formatNumber(totalAmount),
+            total_amount_converted: formatNumber(totalAmountConverted),
+        });
+    }
+
+    return rows;
+}

@@ -9,11 +9,9 @@ const DefaultLayout = () => {
   const { token } = useContext(AuthContext);
   
   useEffect(() => {
- 
     if(!token){
       window.location.href = "/#/auth/login";
     }
-    
   }, [token]);
 
   return (

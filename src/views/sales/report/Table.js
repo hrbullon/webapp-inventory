@@ -1,7 +1,10 @@
-import React, { Fragment, useState, useEffect }from 'react';
+import React, { Fragment, useState, useEffect, useContext }from 'react';
 import { useSelector } from 'react-redux';
 
 import DataTable from 'react-data-table-component-footer';
+
+import CIcon from '@coreui/icons-react';
+import * as icon from '@coreui/icons';
 
 import config from '../../../config/config.json';
 import { headerOptions, columns } from './config-table';
@@ -72,7 +75,7 @@ export const Table = ({ type, title, fileName }) => {
             headerOptions={ headerOptions } 
             title={ title } 
             fileName={ fileName }/>
-
+        
         <FormSearch type={ type }/>
 
         <DataTable 

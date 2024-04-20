@@ -44,9 +44,9 @@ export const Open = () => {
 
         started.then( resp => {
             if(resp){
-
                 setStartedSale(true);
                 localStorage.setItem("checkoutId", checkoutId);
+                localStorage.setItem("session_pos", resp.transaction.checkout_session_id);
                 localStorage.setItem("started_session_pos", true);
                 window.location.href = "/#/pos";
             }
@@ -54,8 +54,8 @@ export const Open = () => {
     }
 
     return (
-    <div class="card">
-        <div class="card-body text-center">
+    <div className="card">
+        <div className="card-body text-center">
             { startedSale == false &&
             <button className='btn btn-large btn-primary' onClick={ () => setVisible(true) }>Iniciar ventas</button>}
         </div>
@@ -72,7 +72,7 @@ export const Open = () => {
                     name='checkout_id'
                     className='form-control mt-2 mb-2'
                     {...register("checkout_id", { required: true }) }>
-                    <option value="1" key="1">Caja principal</option>
+                    <option value="4883646e-3d83-4850-9efb-b1ca032a7b81" key="1">POS001</option>
                 </select>
 
                 <label><b>Fondo de caja:</b></label>

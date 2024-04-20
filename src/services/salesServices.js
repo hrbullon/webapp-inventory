@@ -23,3 +23,11 @@ export const deleteSale = (id) => {
     return fetchData(`sales/${id}`, 'DELETE');
 }
 
+export const closeSale = (id) => {
+    return fetchData(`sales/close`, 'POST', { sale_id: id });
+}
+
+export const getSalesSummary = (checkoutId, date) => {
+    return fetchData(`sales/summary/${ checkoutId }/${ date }`, 'GET');
+}
+

@@ -22,6 +22,7 @@ const Page404 = React.lazy(() => import('./views/error/page404/Page404'))
 const Page500 = React.lazy(() => import('./views/error/page500/Page500'))
 
 class App extends Component {
+
   render() {
 
     const token = localStorage.getItem("token");

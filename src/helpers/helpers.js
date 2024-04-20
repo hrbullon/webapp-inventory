@@ -25,7 +25,20 @@ export const fetchData = async ( url, method , body = {}, multipart = false) => 
     }
     
     return await fetch(`${API_URL}/${url}`, options)
-    .then(response => response.json())
+    .then(response => {
+
+        if(response.status == 401){
+
+            localStorage.removeItem("user");
+            localStorage.removeItem("token");
+            localStorage.removeItem("checkoutId");
+            localStorage.removeItem("started_session_pos");
+
+            window.location.href = "#/auth/login";
+        }
+        
+        return response.json();
+    })
     .then(data => data)
     .catch(error => console.log(error));
 }
@@ -69,7 +82,7 @@ export const formatDocument = (event) => {
 }
 
 export const formatNumber = (number) => {
-    return number.toLocaleString('es', {minimumFractionDigits: 2});
+    return number.toLocaleString('es', {minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 export const getTotalDetail = (items) => {
@@ -88,7 +101,7 @@ export const printHTML = (id) => {
     var printWindow = window.open('', '');
     
     printWindow.document.write('<html><head>');
-    printWindow.document.write('<link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">');
+    printWindow.document.write('<link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">');
     printWindow.document.write('</head><body >');
     printWindow.document.write(content);
     printWindow.document.write('</body></html>');

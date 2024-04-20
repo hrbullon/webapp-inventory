@@ -32,9 +32,11 @@ const Cash = () => {
 
     const onSubmit = (data) => {
         
-        let checkoutId = JSON.parse(localStorage.getItem("checkoutId"))
+        let checkoutId = localStorage.getItem("checkoutId");
+        let sessionPOS = localStorage.getItem("session_pos");
 
         let body = { ...data };
+        body.session_pos = sessionPOS;
         body.checkout_id = checkoutId;
         body.user_id = context.user.id;
         
@@ -50,43 +52,51 @@ const Cash = () => {
 
     return (
     <form onSubmit={handleSubmit(onSubmit)}>
-        <CAlert color="primary" visible={ (Object.entries(errors).length > 0 ) }>
-            Los campos con <b>*</b> son obligatorios
-        </CAlert>
-        <div class="mb-3">
-            <label>Tipo de operación</label>
-            <select 
-                class="form-select" 
-                name="transaction_id"
-                {...register("transaction_id", { required: true }) }>
-                {   
-                    transactionsType.map( item => { 
-                        return <option key={ item.name } value={ item.id }>{ item.description }</option>
-                    })
-                }
-            </select>
-            <ErrorValidate error={ errors.transaction_id } />
+        <div className="card">
+            <div className="card-body">
+                <h5 className="card-title">Entrada/Salida de efectivo</h5>
+
+                <CAlert color="primary" visible={ (Object.entries(errors).length > 0 ) }>
+                    Los campos con <b>*</b> son obligatorios
+                </CAlert>
+                <div class="mb-3">
+                    <label>Tipo de operación</label>
+                    <select 
+                        class="form-select" 
+                        name="transaction_id"
+                        {...register("transaction_id", { required: true }) }>
+                        {   
+                            transactionsType.map( item => { 
+                                return <option key={ item.name } value={ item.id }>{ item.description }</option>
+                            })
+                        }
+                    </select>
+                    <ErrorValidate error={ errors.transaction_id } />
+                </div>
+                <div class="mb-3">
+                    <label>Motivo</label>
+                    <textarea 
+                        class="form-control" 
+                        name="note" 
+                        rows="3"
+                        autoComplete='autoComplete'
+                        {...register("note", { required: true }) }></textarea>
+                    <ErrorValidate error={ errors.note } />
+                </div>
+                <div class="mb-3">
+                    <label>Cantidad</label>
+                    <input 
+                        type="number" 
+                        class="form-control" 
+                        name="amount"
+                        autoComplete='autoComplete'
+                        {...register("amount", { required: true }) }/>
+                    <ErrorValidate error={ errors.amount } />
+                </div>
+
+                <ActionButtons />
+            </div>
         </div>
-        <div class="mb-3">
-            <label>Motivo</label>
-            <textarea 
-                class="form-control" 
-                name="note" 
-                rows="3"
-                {...register("note", { required: true }) }></textarea>
-            <ErrorValidate error={ errors.note } />
-        </div>
-        <div class="mb-3">
-            <label>Cantidad</label>
-            <input 
-                type="number" 
-                class="form-control" 
-                name="amount"
-                autoComplete='autoComplete'
-                {...register("amount", { required: true }) }/>
-            <ErrorValidate error={ errors.amount } />
-        </div>
-        <ActionButtons />
     </form>
   )
 }

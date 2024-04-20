@@ -1,7 +1,7 @@
 import { fetchData } from "src/helpers/helpers";
 
-export const getAllTransactionsByCheckoutId = (checkoutId) => {
-    return fetchData(`transactions/${checkoutId}`, 'GET');
+export const getAllTransactionsBySession = (sessionPOS) => {
+    return fetchData(`transactions/${sessionPOS}`, 'GET');
 }
 
 export const createTransaction = (data) => {
@@ -10,4 +10,13 @@ export const createTransaction = (data) => {
 
 export const checkStartedTransaction = (checkoutId) => {
     return fetchData(`transaction/check/${checkoutId}`, 'GET');
+}
+
+export const getTransactionSummary = (sessionPOS, date) => {
+    return fetchData(`transaction/summary/${sessionPOS}/${date}`, 'GET');
+}
+
+export const closeTransactionCheckout = (sessionPOS, date) => {
+    const data = { sessionPOS, date };
+    return fetchData(`transaction/checkout/close`, 'POST', data);
 }

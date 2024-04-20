@@ -46,7 +46,7 @@ export const getColums = ( firstCb, secondCb ) => {
             name: 'Estado',
             sortable:true,
             right: true,
-            selector: row => <CBadge color={ row.state == "Completada" ? "success" : "danger" }>{ row.state }</CBadge>
+            selector: row => <CBadge color={ row.state == "Completada" ? "success" : row.state == "Anulada"? "danger" : "info" }>{ row.state }</CBadge>
         },
         {
             name: 'Accion',

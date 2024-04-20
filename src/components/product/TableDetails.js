@@ -6,6 +6,10 @@ import { formatNumber } from 'src/helpers/helpers';
 
 export const TableDetails = ({ items, model, setModel, doc}) => {
 
+    const textAlignRight = {
+        textAlign: "right"
+    };
+
     const handleDeleteItem = (index) => {
         
         items.splice(index, 1);
@@ -26,24 +30,23 @@ export const TableDetails = ({ items, model, setModel, doc}) => {
     return (
     <div className='table-container'>
         <h5 className="card-title">Detalle de artículos</h5>
-        <table className="table">
+        <table className="table" style={ { fontSize: "12px" } }>
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th>Code</th>
-                    <th>Artículo</th>
-                    <th className='text-right'>Cantidad</th>
-                    
-                    <th className='text-right'>Precio $US</th>
-                    <th className='text-right'>Subtotal $US</th>
-                    
-                    <th className='text-right'>Precio Bs</th>
-                    <th className='text-right'>Subtotal Bs</th>
+                    <th >#</th>
+                    <th >Code</th>
+                    <th >Serial</th>
+                    <th >Artículo</th>
+                    <th style={ textAlignRight }>Cantidad</th>
+                    <th style={ textAlignRight }>Precio $US</th>
+                    <th style={ textAlignRight }>Subtotal $US</th>
+                    <th style={ textAlignRight }>Precio Bs</th>
+                    <th style={ textAlignRight }>Subtotal Bs</th>
                     { doc == "purchase" && 
-                    <th className='text-right'>Precio $US (Venta)</th>
+                    <th style={ textAlignRight }>Precio $US (Venta)</th>
                     }
                     { setModel &&
-                        <th className='text-right'>Acciones</th>
+                        <th style={ textAlignRight }>Acciones</th>
                     }
                 </tr>
             </thead>
@@ -54,20 +57,19 @@ export const TableDetails = ({ items, model, setModel, doc}) => {
                             <tr key={ index }>
                                 <td>{ index+1 }</td>
                                 <td>{ item.code }</td>
+                                <td>{ item.serial }</td>
                                 <td>{ item.description }</td>
                                 
-                                <td className='text-right'>{ item.quantity }</td>
-                                
-                                <td className='text-right'>{ formatNumber(item.price) }</td>
-                                <td className='text-right'>{ formatNumber(item.subtotal_amount) }</td>
-                                
-                                <td className='text-right'>{ formatNumber(item.price_converted) }</td>
-                                <td className='text-right'>{ formatNumber(item.subtotal_amount_converted) }</td>
+                                <td style={ textAlignRight }>{ item.quantity }</td>
+                                <td style={ textAlignRight }>{ formatNumber(item.price) }</td>
+                                <td style={ textAlignRight }>{ formatNumber(item.subtotal_amount) }</td>
+                                <td style={ textAlignRight }>{ formatNumber(item.price_converted) }</td>
+                                <td style={ textAlignRight }>{ formatNumber(item.subtotal_amount_converted) }</td>
                                 { doc == "purchase" && 
-                                <td className='text-right'>{ formatNumber(item.salePrice) }</td>
+                                <td style={ textAlignRight }>{ formatNumber(item.salePrice) }</td>
                                 }
                                 { setModel &&
-                                <td className='text-right'>
+                                <td style={ textAlignRight }>
                                     <button onClick={ (e) => handleDeleteItem(index) } className='btn btn-sm btn-danger'>
                                         <CIcon icon={ icon.cilDelete }/>
                                     </button>
@@ -79,14 +81,16 @@ export const TableDetails = ({ items, model, setModel, doc}) => {
             </tbody>
             <tfoot>
                 <tr>
-                    <td className='text-right' colSpan={7}><b>Total Bs.:</b></td>
-                    <td className='text-right'>
+                    <td colSpan={7}></td>
+                    <td style={ textAlignRight }><b>Total Bs.:</b></td>
+                    <td style={ textAlignRight }>
                         <b>{ formatNumber(model.total_amount_converted) }</b>
                     </td>
                 </tr>
                 <tr>
-                    <td className='text-right' colSpan={7}><b>Total $US:</b></td>
-                    <td className='text-right'>
+                    <td colSpan={7}></td>
+                    <td style={ textAlignRight }><b>Total $US:</b></td>
+                    <td style={ textAlignRight }>
                         <b>{ formatNumber(model.total_amount) }</b>
                     </td>
                 </tr>

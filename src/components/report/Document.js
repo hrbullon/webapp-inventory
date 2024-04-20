@@ -14,7 +14,7 @@ export const Document = ({ data, details, doc }) => {
 
     return (
     <Fragment>
-        <div id='printDocument'> 
+        <div id='printDocument' style={ {fontSize: "13px" } }> 
             <div className="row">
                 <div className="col-xs-12 text-center">
                     <b>{ company.name }</b><br/>
@@ -27,7 +27,7 @@ export const Document = ({ data, details, doc }) => {
             <div className="row mt-4">
                 {  data.Customer &&  
                 <div className="col-6">	
-                    <ul className='list'>
+                    <ul className='list' style={ { listStyleType: "none" } }>
                         <li><b>CLIENTE</b></li>
                         <li><b>Nombre:</b> { data.Customer.name}</li>
                         <li><b>Nro Documento:</b> { data.Customer.dni}</li>
@@ -36,7 +36,7 @@ export const Document = ({ data, details, doc }) => {
                     </ul>
                 </div>}	
                 <div className="col-6">	
-                    <ul className='list'>
+                    <ul className='list' style={ { listStyleType: "none" } }>
                         <li><b>COMPROBANTE</b></li>
                         <li><b>Nro de Comprobante:</b> { data.code}</li>
                         <li><b>Fecha:</b> { data.date }</li>
@@ -46,7 +46,7 @@ export const Document = ({ data, details, doc }) => {
             </div>
             <div className="row">
                 <div className="col-12">	
-                    <ul className='list'>
+                    <ul className='list' style={ { listStyleType: "none" } }>
                         <li><b>Observaciones:</b> { data.description}</li>
                     </ul>
                 </div>

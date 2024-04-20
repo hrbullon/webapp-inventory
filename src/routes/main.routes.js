@@ -29,6 +29,8 @@ const PurchasesCreate = React.lazy(() => import('../views/purchases/Form'))
 const Exchanges = React.lazy(() => import('../views/exchanges/Exchanges'))
 const FormCompany = React.lazy(() => import('../views/company/Form'))
 
+const DailySales = React.lazy(() => import('../views/daily_sales/DailySales'))
+
 const routes = [
   { path: '/', exact: true, name: 'Inicio' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
@@ -45,6 +47,9 @@ const routes = [
   { path: '/sales/create', name: 'Nueva venta', element: SalesCreate },
   { path: '/sales-month', name: 'Ventas del mes', element: SalesMonth },
   { path: '/sales-today', name: 'Ventas diarias', element: SalesToday },
+
+  { path: '/daily_sales', name: 'Cierres de caja', element: DailySales },
+
 
   { path: '/customers', name: 'Clientes', element: Customers },
   { path: '/customers/create', name: 'Crear cliente', element: CreateCustomer },

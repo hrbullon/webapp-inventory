@@ -1,7 +1,7 @@
 import swal from "sweetalert";
 
 import { confirmDelete } from "src/helpers/helpers";
-import { deleteSale, getAllSales, getAllSalesMonth, getAllSalesToday } from "src/services/salesServices";
+import { closeSale, deleteSale, getAllSales, getAllSalesMonth, getAllSalesToday, getSalesSummary } from "src/services/salesServices";
 import { CLG_MESSAGE, VIEW_MESSAGE } from "src/strings";
 
 export const startGettingSales = (data, date = null) => {
@@ -69,5 +69,40 @@ export const startDeletingSale = (data) => {
                 swal("Error", VIEW_MESSAGE.DATA_SAVED_FAILED);
             }
         });
+    }
+}
+
+export const startClosingSale = (saleId) => {
+    return async (dispatch) => {
+
+        confirmDelete(`Quiere finalizar la venta`, async () => {
+                
+            const closed = await closeSale(saleId);
+                
+            if(closed.sale){
+                swal(
+                  'Venta finalizada!',
+                  'Se completó la venta correctamente!',
+                  'success'
+                );
+                
+                dispatch({ type: "set", saleClosed: true });
+
+            }else{
+                swal("Error", VIEW_MESSAGE.DATA_SAVED_FAILED);
+            }
+        });
+    }
+}
+
+export const startGettingSaleSummary = ( checkoutId, date ) => {
+    return async (dispatch) => { 
+        const res  = await getSalesSummary( checkoutId, date );
+        if(res.summary){
+            let salesSummary = res.summary;
+            dispatch({ type: "set", salesSummary });
+        }else{
+            swal("Error", VIEW_MESSAGE.ERROR_DATA_LOADING);
+        }
     }
 }

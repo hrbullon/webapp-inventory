@@ -108,13 +108,13 @@ export const ButtonsExport = ({ data, headerOptions, title, fileName }) => {
     }
     
     return (
-    <div>
+    <>
         <button className='btn btn-secondary' title='Descargar Hoja de Calculo' onClick={ handleClickExcel }>
             <CIcon icon={icon.cilSpreadsheet} />
         </button>
         <button className='btn btn-secondary m-2' title='Descargar PDF' onClick={ handleClickPDF }>
             <CIcon icon={icon.cilFile} />
         </button>
-    </div>
+    </>
   )
 }

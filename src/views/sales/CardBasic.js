@@ -4,7 +4,7 @@ export const CardBasic = ({ customer }) => {
   return (
     <div className="card">
         <div className="card-body">
-            <h5 className="card-title">Datos básicos</h5>
+            <h5 className="card-title">Datos del cliente</h5>
             { customer &&
             <div className="mb-3">
                 <b>Nombre:</b> { customer.name }<br/>

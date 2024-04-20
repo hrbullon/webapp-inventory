@@ -103,6 +103,11 @@ const _nav = [
         component: CNavItem,
         name: 'Ventas diarias',
         to: '/sales-today',
+      },
+      {
+        component: CNavItem,
+        name: 'Cierres de caja',
+        to: '/daily_sales',
       }
     ],
   }

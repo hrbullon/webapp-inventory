@@ -17,7 +17,7 @@ export const prepareList = data => {
             exchange_amount: sale.exchange_amount,
             total_amount: sale.total_amount,
             total_amount_converted: sale.total_amount_converted,
-            state: sale.state == "1"? "Completada" : "Anulada"
+            state: sale.state === "0"? "Pendiente" : sale.state === "1"?  "Completada" : "Anulada"
         };
 
         rows.push(row);
@@ -32,13 +32,14 @@ export const getTotal = data => {
     return { total, totalConverted }
 }
 
-export const addRowDetail = (product, quantity, sale) => {
+export const addRowDetail = ({ product, quantity, sale, serial }) => {
 
     const price_converted = (Number(product.price)*sale.exchange_amount);
 
     const item = {
         product_id: product.id,
         code: product.code,
+        serial: serial,
         description: product.name,
         quantity:quantity,
         price: product.price,
