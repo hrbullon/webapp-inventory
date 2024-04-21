@@ -1,13 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import Select from 'react-select';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 
 import { CAlert } from '@coreui/react';
 
-import { prepareOptions } from 'src/helpers/helpers';
 import { ActionButtons } from 'src/components/forms/ActionButtons';
 import { ErrorValidate } from 'src/components/forms/ErrorValidate';
 import { Barcode } from 'src/components/barcode/Barcode';
@@ -16,8 +14,8 @@ import { AuthContext } from 'src/context/AuthContext';
 import Page403 from '../error/page403/Page403';
 
 //Actions
-import { startGettingCategory } from '../../actions/category';
 import { startGettingProductById, startSendingProduct } from '../../actions/product';
+import { CategorySelect } from 'src/components/forms/select/CategorySelect';
 
 export const Form = ({ title }) => {
 
@@ -25,16 +23,12 @@ export const Form = ({ title }) => {
     let { user } = useContext(AuthContext);
 
     const dispatch = useDispatch()
-    const model = useSelector((state) => state.product);
-    const categories = useSelector((state) => state.categories);
-    
-    const defaultCategory = { value:'', label:'Seleccione una categoría' }
+    const model = useSelector((state) => state.product);    
 
-    const [options, setOptions] = useState([]);
+    const defaultCategory = { value:'', label:'Seleccione una categoría' };
     const [idCategory, setIdCategory] = useState(defaultCategory);
-    const {register, handleSubmit, reset, watch, formState: { errors } } = useForm({ defaultValues:{} });
 
-    useEffect(() => { dispatch( startGettingCategory() ) }, [])
+    const {register, handleSubmit, reset, watch, formState: { errors } } = useForm({ defaultValues:{} });
 
     useEffect(() => { 
       if(model){
@@ -48,16 +42,7 @@ export const Form = ({ title }) => {
       }
     }, [model])
 
-    useEffect(() => {
-      if(categories && categories !== undefined){
-        const items = prepareOptions(categories);
-        setOptions(items);
-      }
-    }, [categories])
-    
     useEffect(() => { (id && id !== undefined)? dispatch( startGettingProductById(id) ) : reset({}) }, [id])
-
-    const handleChangingCategory = (input) => { input? setIdCategory(input) : setIdCategory(defaultCategory) }
 
     const onSubmit = async data => { 
       
@@ -107,10 +92,9 @@ export const Form = ({ title }) => {
               </div>
             </div>
             <div className="col-4">
-              <div className="form-group">
-                <label>Categoria:</label>
-                <Select name="category_id" value={ idCategory }  options={options} onChange={handleChangingCategory}/>
-              </div>
+              
+              <CategorySelect idCategory={idCategory} setIdCategory={setIdCategory}/>
+          
               <div className="form-group">
                 <label>Marca:</label>
                 <input type="text" className="form-control" name="brand" {...register("brand")} autoComplete='autoComplete'/>
@@ -136,14 +120,14 @@ export const Form = ({ title }) => {
             <div className='col-4'>
               <div className="form-group">
                 <label>Precio: *</label>
-                <input type="text" className="form-control" name="price" {...register("price", { required: true }) }/>
+                <input type="number" className="form-control" name="price" {...register("price", { required: true }) }/>
                 <ErrorValidate error={ errors.price }/>
                </div>
             </div>
             <div className='col-4'>
               <div className="form-group">
                 <label>Cantidad: *</label>
-                <input type="text" className="form-control" name="quantity" {...register("quantity", { required: true }) }/>
+                <input type="number" className="form-control" name="quantity" {...register("quantity", { required: true }) }/>
                 <ErrorValidate error={ errors.quantity }/>
               </div>
             </div>
