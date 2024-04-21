@@ -16,6 +16,7 @@ import Page403 from '../error/page403/Page403';
 //Actions
 import { startGettingProductById, startSendingProduct } from '../../actions/product';
 import { CategorySelect } from 'src/components/forms/select/CategorySelect';
+import { ADMIN_ROLE } from 'src/constants/variables';
 
 export const Form = ({ title }) => {
 
@@ -61,7 +62,7 @@ export const Form = ({ title }) => {
       dispatch( startSendingProduct(formData, id) )
     } 
 
-    if(user.role !== "ADM_ROLE"){
+    if(user.role !== ADMIN_ROLE){
       return <Page403/>
     }
 

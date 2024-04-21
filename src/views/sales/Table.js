@@ -19,6 +19,7 @@ import { getDataExport, getTotal, prepareList } from './selector';
 import { startDeletingSale } from 'src/actions/sales';
 import { ViewModal } from 'src/components/modal/ViewModal';
 import { AuthContext } from 'src/context/AuthContext';
+import { ADMIN_ROLE } from 'src/constants/variables';
 
 export const Table = ({ title, today = null }) => {
 
@@ -58,7 +59,7 @@ export const Table = ({ title, today = null }) => {
 
     return (
     <Fragment>
-        { user.role == "ADM_ROLE" &&
+        { user.role == ADMIN_ROLE &&
         <Link to="/sales/create" title='Registrar venta' className="btn btn-sm btn-primary float-end">
             <CIcon icon={icon.cilPlus}/> 
         </Link>}

@@ -5,7 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
 
-import routes from '../routes/main.routes'
+import routes from '../routes/main.routes';
 
 import { 
   CBreadcrumb, 
@@ -15,6 +15,8 @@ import {
 import { AuthContext } from 'src/context/AuthContext';
 import { startCheckingStarted } from 'src/actions/transaction';
 import { text } from 'src/strings';
+
+import { ADMIN_ROLE, STANDARD_ROLE } from "../constants/variables";
 
 const AppBreadcrumb = () => {
 
@@ -27,7 +29,7 @@ const AppBreadcrumb = () => {
 
   useEffect( ()=> {
         
-    if(context.user.role == "STD_ROLE"){
+    if(context.user.role == STANDARD_ROLE){
       
       let started = dispatch( startCheckingStarted( localStorage.getItem("checkoutId")) );
       
@@ -66,7 +68,7 @@ const AppBreadcrumb = () => {
 
   return (
     <div>
-      { user.role == "ADM_ROLE" &&
+      { user.role == ADMIN_ROLE &&
       <CBreadcrumb className="m-0 ms-2">
         <CBreadcrumbItem href="/">Inicio</CBreadcrumbItem>
         {breadcrumbs.map((breadcrumb, index) => {
@@ -80,7 +82,7 @@ const AppBreadcrumb = () => {
           )
         })}
       </CBreadcrumb>}
-      { user.role == "STD_ROLE" && started_session_pos &&
+      { user.role == STANDARD_ROLE && started_session_pos &&
           <div style={{ display: "flex" }}>
             <Link to={ "sales/today" }>
               <div className="card">

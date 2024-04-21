@@ -4,7 +4,9 @@ import { HashRouter, Route, Routes } from 'react-router-dom'
 import { AuthContext } from './context/AuthContext'
 import { Logout } from './views/auth/logout/Logout'
 
-import './scss/style.scss'
+import { ADMIN_ROLE, STANDARD_ROLE } from "./constants/variables";
+
+import './scss/style.scss';
 
 const loading = (
   <div className="pt-3 text-center">
@@ -46,8 +48,8 @@ class App extends Component {
             <Route exact path="/error/404" name="Page 404" element={<Page404 />} />
             <Route exact path="/error/500" name="Page 500" element={<Page500 />} />
      
-            { user && user !== undefined && user.role == "ADM_ROLE" && <Route path="*" name="Home" element={<DefaultLayout />} /> }
-            { user && user !== undefined && user.role == "STD_ROLE" && <Route path="*" name="Home" element={<PosLayout />} /> }
+            { user && user !== undefined && user.role == ADMIN_ROLE && <Route path="*" name="Home" element={<DefaultLayout />} /> }
+            { user && user !== undefined && user.role == STANDARD_ROLE && <Route path="*" name="Home" element={<PosLayout />} /> }
 
           </Routes>
         </Suspense>

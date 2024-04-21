@@ -14,6 +14,8 @@ import { getDataExport, getTotal, prepareList } from './selector';
 import { formatNumber } from 'src/helpers/helpers';
 import { AuthContext } from 'src/context/AuthContext';
 
+import { ADMIN_ROLE } from "../constants/variables";
+
 //Actions product
 import { startGettingProducts } from 'src/actions/product';
 
@@ -41,7 +43,7 @@ const Inventory = () => {
       dispatch( startGettingProducts() );
     }, [])
 
-    if(user.role !== "ADM_ROLE"){
+    if(user.role !== ADMIN_ROLE){
       return <Page403/>
     }
     

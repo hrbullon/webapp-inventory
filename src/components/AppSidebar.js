@@ -1,17 +1,18 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import React, { useState, useEffect, useContext } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { CSidebar, CSidebarBrand, CSidebarNav, CSidebarToggler } from '@coreui/react'
-import { AppSidebarNav } from './AppSidebarNav'
+import { CSidebar, CSidebarBrand, CSidebarNav, CSidebarToggler } from '@coreui/react';
+import { AppSidebarNav } from './AppSidebarNav';
 
-import SimpleBar from 'simplebar-react'
-import 'simplebar/dist/simplebar.min.css'
+import SimpleBar from 'simplebar-react';
+import 'simplebar/dist/simplebar.min.css';
 
 // sidebar nav config
 import adminNavigation from '../navigation/adm_nav';
 import userNavigation from '../navigation/std_nav';
 
-import { AuthContext } from 'src/context/AuthContext'
+import { AuthContext } from 'src/context/AuthContext';
+import { ADMIN_ROLE } from "../constants/variables";
 
 const AppSidebar = () => {
   
@@ -23,7 +24,7 @@ const AppSidebar = () => {
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
-      if(user.role == "ADM_ROLE"){
+      if(user.role == ADMIN_ROLE){
         setNavigation(adminNavigation);
       }else{
         setNavigation(userNavigation);

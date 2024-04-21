@@ -1,4 +1,4 @@
-import React, { Fragment, useContext } from 'react'
+import React, { Fragment, useContext } from 'react';
 
 import { Form } from './Form';
 import { Table } from './Table';
@@ -6,11 +6,13 @@ import { Table } from './Table';
 import { AuthContext } from 'src/context/AuthContext';
 import Page403 from '../error/page403/Page403';
 
+import { ADMIN_ROLE } from "../../constants/variables";
+
 const Categories = () => {
   
   let { user } = useContext(AuthContext);
 
-  if(user.role !== "ADM_ROLE"){
+  if(user.role !== ADMIN_ROLE){
     return <Page403/>
   }
 

@@ -1,6 +1,6 @@
-import React, { useContext } from 'react'
-import { NavLink } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
+import React, { useContext } from 'react';
+import { NavLink } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   CContainer,
   CHeader,
@@ -10,14 +10,16 @@ import {
   CHeaderToggler,
   CNavLink,
   CNavItem,
-} from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import { cilMenu } from '@coreui/icons'
+} from '@coreui/react';
+import CIcon from '@coreui/icons-react';
+import { cilMenu } from '@coreui/icons';
 
-import { AppBreadcrumb } from './index'
-import { AppHeaderDropdown } from './header/index'
-import { logo } from 'src/assets/brand/logo'
-import { AuthContext } from 'src/context/AuthContext'
+import { AppBreadcrumb } from './index';
+import { AppHeaderDropdown } from './header/index';
+import { logo } from 'src/assets/brand/logo';
+import { AuthContext } from 'src/context/AuthContext';
+
+import { ADMIN_ROLE } from "../constants/variables";
 
 const AppHeader = () => {
 
@@ -29,7 +31,7 @@ const AppHeader = () => {
   return (
     <CHeader position="sticky" className="mb-4">
       <CContainer fluid>
-        { user.role == "ADM_ROLE" &&
+        { user.role == ADMIN_ROLE &&
         <CHeaderToggler
           className="ps-1"
           onClick={() => dispatch({ type: 'set', sidebarShow: !sidebarShow })}

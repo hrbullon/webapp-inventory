@@ -12,6 +12,7 @@ import { AuthContext } from 'src/context/AuthContext';
 
 //Actions products
 import { startGettingProducts } from '../../actions/product';
+import { ADMIN_ROLE } from 'src/constants/variables';
 
 const Products = () => {
 
@@ -24,7 +25,7 @@ const Products = () => {
 
     return (
         <Fragment>
-            { user.role == "ADM_ROLE" &&
+            { user.role == ADMIN_ROLE &&
             <div className='row'>
                 <div className='col-12'>
                     <Link to="/products/create" className='btn btn-sm btn-primary float-end'>
