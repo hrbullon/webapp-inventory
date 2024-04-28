@@ -40,19 +40,17 @@ const Form = () => {
     const exchange = useSelector(( state ) => state.lastExchange );
     const customerSaved = useSelector( (state) => state.customerSaved );
 
-    const checkoutId = localStorage.getItem("checkoutId");
-    const sessionPos = localStorage.getItem("session_pos");
+    const checkout_session_id = localStorage.getItem("checkout_session_id");
 
     const [saleId, setSaleId] = useState( JSON.parse(localStorage.getItem("sale_id")));
 
     const [sale, setSale] = useState({
-        session_pos: sessionPos? sessionPos : '',
         code:'----',
         type_of_sale:1,
         customer_id: null,
         date: new Date(Date.now()).toLocaleDateString(),
         description:'',
-        checkout_id: checkoutId,
+        checkout_session_id: checkout_session_id? checkout_session_id : '',
         exchange_amount:0,
         total_amount:0,
         total_amount_converted:0,
@@ -234,7 +232,8 @@ const Form = () => {
     }
 
     const handleClickFinnish = async () => {
-       dispatch( startClosingSale( saleId ) );
+       const data = { checkout_session_id, sale_id: saleId }; 
+       dispatch( startClosingSale( data ) );
     }
 
     const handleSubmit = async () => {

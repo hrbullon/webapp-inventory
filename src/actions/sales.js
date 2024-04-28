@@ -72,12 +72,12 @@ export const startDeletingSale = (data) => {
     }
 }
 
-export const startClosingSale = (saleId) => {
+export const startClosingSale = (data) => {
     return async (dispatch) => {
 
         confirmDelete(`Quiere finalizar la venta`, async () => {
                 
-            const closed = await closeSale(saleId);
+            const closed = await closeSale(data);
                 
             if(closed.sale){
                 swal(

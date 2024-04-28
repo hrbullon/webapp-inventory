@@ -44,7 +44,7 @@ export const FormPayment = ({ sale, saleId, totalPayments }) => {
 
   const onSubmit = (data) => {
 
-    const session_pos = localStorage.getItem("session_pos");
+    const checkout_session_id = localStorage.getItem("checkout_session_id");
 
     const model = { 
       customer_id: sale.customer_id,
@@ -63,7 +63,7 @@ export const FormPayment = ({ sale, saleId, totalPayments }) => {
         }
     ]}
 
-    if(session_pos){ model.session_pos = session_pos }
+    if(checkout_session_id){ model.checkout_session_id = checkout_session_id }
 
     dispatch( startCreatingPayment(model) );
 

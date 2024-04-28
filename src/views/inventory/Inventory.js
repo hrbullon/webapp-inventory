@@ -14,10 +14,10 @@ import { getDataExport, getTotal, prepareList } from './selector';
 import { formatNumber } from 'src/helpers/helpers';
 import { AuthContext } from 'src/context/AuthContext';
 
-import { ADMIN_ROLE } from "../constants/variables";
 
 //Actions product
 import { startGettingProducts } from 'src/actions/product';
+import { ADMIN_ROLE } from 'src/constants/variables';
 
 const Inventory = () => {
 

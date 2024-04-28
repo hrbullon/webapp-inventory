@@ -46,8 +46,8 @@ export const Open = () => {
             if(resp){
                 setStartedSale(true);
                 localStorage.setItem("checkoutId", checkoutId);
-                localStorage.setItem("session_pos", resp.transaction.checkout_session_id);
                 localStorage.setItem("started_session_pos", true);
+                localStorage.setItem("checkout_session_id", resp.transaction.checkout_session_id);
                 window.location.href = "/#/pos";
             }
         })
