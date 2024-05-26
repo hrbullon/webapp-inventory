@@ -1,5 +1,6 @@
 import swal from "sweetalert";
 import config from "../config/config.json";
+import { CLG_MESSAGE } from "src/strings";
 const { API_URL } = config;
 
 export const fetchData = async ( url, method , body = {}, multipart = false) => {
@@ -139,4 +140,12 @@ export const confirmDelete = (message, callback) => {
             callback();
         }
       });
+}
+
+export const handleLoadingError = () => {
+    console.error(CLG_MESSAGE.ERROR_DATA_LOADING);            
+}
+
+export const handleSavingError = () => {
+    console.error(CLG_MESSAGE.ERROR_DATA_SAVING);            
 }

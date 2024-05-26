@@ -1,5 +1,3 @@
-import swal from "sweetalert";
-
 import { 
     createExchange, 
     updateExchange,
@@ -7,7 +5,7 @@ import {
     getLastExchange} 
 from "src/services/exchangesServices";
 
-import { CLG_MESSAGE, VIEW_MESSAGE } from "src/strings";
+import { handleLoadingError, handleSavingError } from "src/helpers/helpers";
 
 export const startGettingExchanges = (data) => {
     return async (dispatch) => { 
@@ -15,7 +13,7 @@ export const startGettingExchanges = (data) => {
             const res = await getAllExchanges(data);
             dispatch({ type: "set", exchanges: [...res.exchanges]});
         } catch (error) {
-            console.error(CLG_MESSAGE.ERROR_DATA_LOADING);            
+            handleLoadingError();
         }
     }
 }
@@ -26,7 +24,7 @@ export const startGettingLastExchange = () => {
             const res = await getLastExchange();
             dispatch({ type: "set", lastExchange: {...res.exchanges[0] }});
         } catch (error) {
-            console.error(CLG_MESSAGE.ERROR_DATA_LOADING);            
+            handleLoadingError();
         }
     }
 }
@@ -45,12 +43,10 @@ export const startSendingExchange = (data) => {
             }
 
             if(res.exchange){
-
-                dispatch( startGettingExchanges() )
-                swal("Completado!", VIEW_MESSAGE.DATA_SAVED_SUCCESSFULLY, "success");
+                dispatch({ type:"set", exchangeSaved: res.exchange });
             }
         } catch (error) {
-            console.error(CLG_MESSAGE.ERROR_DATA_SAVING);       
+            handleSavingError();       
         }
     }
 }
