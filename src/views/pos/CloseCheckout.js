@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Fragment, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import moment from 'moment';
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
 
@@ -8,14 +9,16 @@ import { confirmDelete, printHTML } from 'src/helpers/helpers';
 
 import { 
   startClosingTransactionCheckout,
-  startGettingTransactionsBySession, 
   startGettingTransactionsSummary } from 'src/actions/transaction';
+
 import { formatCurrency } from 'src/helpers/helpers';
 import { formatNumber } from 'src/helpers/helpers';
 import { TodaySummary } from '../sales/report/TodaySummary';
-import moment from 'moment';
+
 import { generateSummarySalesReport } from 'src/reports/pdf/summary_sales_report';
 import { AuthContext } from 'src/context/AuthContext';
+
+import { startGettingAllByCheckoutSessionId } from 'src/actions/checkout_register';
 
 export const CloseCheckout = () => {
 
@@ -25,7 +28,8 @@ export const CloseCheckout = () => {
 
   const today = moment().format("YYYY-MM-DD");
   const date = new Date(Date.now()).toLocaleDateString();
-  const sessionPOS = localStorage.getItem("session_pos");
+
+  const checkout_session_id = localStorage.getItem("checkout_session_id");
   const [startedSessionPos] = useState(localStorage.getItem("started_session_pos"));
 
   const [counterSales, setCounterSales] = useState(0);
@@ -35,7 +39,7 @@ export const CloseCheckout = () => {
   const [realTotalAmountSale, setRealTotalAmountSale] = useState(0);
   const [endingCashBalance, setEndingCashBalance] = useState(0);
 
-  const transactions = useSelector((state) => state.transactions);
+  const checkout_register_items = useSelector((state) => state.checkout_register_items);
   const transactionSummary = useSelector((state) => state.transactionSummary);
   const salesSummary = useSelector((state) => state.salesSummary );
   const paymentSummary = useSelector((state) => state.paymentSummary );
@@ -43,8 +47,8 @@ export const CloseCheckout = () => {
 
   useEffect(() => {
 
-    dispatch( startGettingTransactionsBySession(sessionPOS) );
-    dispatch( startGettingTransactionsSummary(sessionPOS, today) );
+    dispatch( startGettingAllByCheckoutSessionId(checkout_session_id) );
+    dispatch( startGettingTransactionsSummary(checkout_session_id, today) );
 
   }, [])
 
@@ -83,7 +87,7 @@ export const CloseCheckout = () => {
 
   const closeCheckout = async () => {
     confirmDelete(`Quiere cerrar la caja`, async () => { 
-      dispatch( startClosingTransactionCheckout(sessionPOS, today) )
+      dispatch( startClosingTransactionCheckout(checkout_session_id) )
     })
   }
   
@@ -153,18 +157,18 @@ export const CloseCheckout = () => {
               <tr>
                 <th width="300px">Código</th>
                 <th width="600px">Descripción</th>
-                <th width="400px">Ingreso</th>
-                <th width="400px">Egreso</th>
+                <th width="400px">$USD</th>
+                <th width="400px">Bs.</th>
               </tr>
             </thead>
             <tbody>
-              { transactions &&
-                transactions.map( item => {
+              { checkout_register_items &&
+                checkout_register_items.map( item => {
                   return (<tr  key={ item.id }>
                       <td>{ item.Transaction.name }</td>
                       <td>{ item.note }</td>
-                      <td className='table-success'>{ item.total_amount_in }</td>
-                      <td className='table-danger'>{ item.total_amount_out }</td>
+                      <td className='table-success'>{ item.total_amount }</td>
+                      <td className='table-danger'>{ item.total_amount_converted }</td>
                     </tr>)
                 })
               }
@@ -172,7 +176,7 @@ export const CloseCheckout = () => {
           </table>
 
           <div className='row'>
-            <TodaySummary checkoutId={ sessionPOS } today={ today }/>
+            <TodaySummary checkoutId={ checkout_session_id } today={ today }/>
           </div>
         </div> 
       </div> 

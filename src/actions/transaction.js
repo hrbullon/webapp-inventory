@@ -50,10 +50,10 @@ export const startGettingTransactionsSummary = (sessionPOS, date) => {
     }
 }
 
-export const startClosingTransactionCheckout = (sessionPOS, date) => {
+export const startClosingTransactionCheckout = (checkoutSessionId) => {
     return async (dispatch) => { 
         try {
-            let checkoutClosed = await closeTransactionCheckout(sessionPOS, date);
+            let checkoutClosed = await closeTransactionCheckout(checkoutSessionId);
             dispatch({ type: "set", checkoutClosed });
         } catch (error) {
             console.error(CLG_MESSAGE.ERROR_DATA_LOADING);            
