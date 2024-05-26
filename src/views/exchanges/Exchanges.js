@@ -1,11 +1,9 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment } from 'react'
 
 import { Form } from './Form';
 import { Table } from './Table';
 
 const Exchanges = () => {
-
-  const [exchange, setExchange] = useState({});
 
   return (
     <Fragment>
