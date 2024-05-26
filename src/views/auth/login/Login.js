@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import swal from 'sweetalert';
 import { useForm } from 'react-hook-form';
 
 import {
@@ -19,14 +19,16 @@ import CIcon from '@coreui/icons-react';
 
 import { cilLockLocked, cilUser } from '@coreui/icons';
 import { CardMessage } from './CardMessage';
-import { login } from 'src/services/authServices';
 
+import { startAuthLogin } from 'src/actions/auth';
 import { AuthContext } from 'src/context/AuthContext';
 
 const Login = () => {
 
+  const dispatch = useDispatch()
   const {register, handleSubmit } = useForm();
 
+  const { authorized } = useSelector( state => state );
   const { token } = useContext(AuthContext);
   
   useEffect(() => {
@@ -36,20 +38,18 @@ const Login = () => {
     }
     
   }, [token]);
+ 
+  useEffect(() => {
 
-  const onSubmit = async data => {
-
-    const res = await login(data);
-
-    if(res.token){
-      localStorage.setItem("user", JSON.stringify(res.user));
-      localStorage.setItem("token", res.token);
+    if(authorized){
+      localStorage.setItem("user", JSON.stringify(authorized.user));
+      localStorage.setItem("token", authorized.token);
       window.location.href = "/";
-    }else{
-      swal("Error!", res.message, "warning");
     }
+    
+  }, [authorized]);
 
-  }
+  const onSubmit = async data => dispatch( startAuthLogin(data) );
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
