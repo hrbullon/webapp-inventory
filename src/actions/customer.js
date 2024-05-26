@@ -1,8 +1,10 @@
-import { getAllCustomers, getCustomerById, createCustomer, updateCustomer } from 'src/services/customersServices';
+import { 
+    getAllCustomers, 
+    getCustomerById, 
+    createCustomer, 
+    updateCustomer } from 'src/services/customersServices';
 
-import swal from 'sweetalert';
 import { CLG_MESSAGE } from "src/strings";
-import { VIEW_MESSAGE } from '../strings';
 
 export const startResetingCustomer = () => {
     return async (dispatch) => { 
@@ -47,9 +49,7 @@ export const startSendingCustomer = (data) => {
             }
 
             if(res.customer){
-                swal("Completado!", VIEW_MESSAGE.DATA_SAVED_SUCCESSFULLY, "success");
                 dispatch({ type:"set", customerSaved: res.customer });
-                return res.customer;
             }
         } catch (error) {
             console.error(CLG_MESSAGE.ERROR_DATA_SAVING);       

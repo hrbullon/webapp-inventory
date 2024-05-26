@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
+import swal from 'sweetalert';
+
 import { CAlert } from '@coreui/react'
 import { useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -15,6 +17,8 @@ import {
     startGettingCustomerByID, 
 } from '../../actions/customer';
 
+import { VIEW_MESSAGE } from 'src/strings';
+
 export const Form = ({ title, dni }) => {
 
     let { id } = useParams();
@@ -23,6 +27,7 @@ export const Form = ({ title, dni }) => {
     const dispatch = useDispatch()
 
     const model = useSelector((state) => state.customer);
+    const customerSaved = useSelector((state) => state.customerSaved);
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
@@ -47,20 +52,20 @@ export const Form = ({ title, dni }) => {
             });
         } 
     }, [])
-    
 
-    const onSubmit = async data => { 
-        const res = dispatch( startSendingCustomer(data) ) 
-        
-        res.then((result) => {
+    useEffect(() => {
+      if(customerSaved){
 
-            if(/document/.test(window.location.href)){
-                reset();
-                navigate("/pos");
-            }
+        swal("Completado!", VIEW_MESSAGE.DATA_SAVED_SUCCESSFULLY, "success");
 
-        });
-    }
+        if(/document/.test(window.location.href)){
+            reset();
+            navigate("/pos");
+        }
+      }
+    }, [customerSaved])
+
+    const onSubmit = async data => dispatch( startSendingCustomer(data) );
 
     return (
     <form onSubmit={handleSubmit(onSubmit)}>
