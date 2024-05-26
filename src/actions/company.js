@@ -24,7 +24,6 @@ export const startSendingCompany = (data) => {
 
             if(res.company){
                 dispatch({ type:"set", companySaved: res.company });
-                swal("Completado!", VIEW_MESSAGE.DATA_SAVED_SUCCESSFULLY, "success");
             }
         } catch (error) {
             console.error(CLG_MESSAGE.ERROR_DATA_SAVING);       

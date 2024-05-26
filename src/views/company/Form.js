@@ -14,14 +14,24 @@ import {
     startSendingCompany } 
 from '../../actions/company';
 
+import { VIEW_MESSAGE } from 'src/strings';
+
 const Form = () => {
     
     const dispatch = useDispatch();
-    const model = useSelector((state) => state.company);
+
+    const  model = useSelector((state) => state.company);
+    const  companySaved  = useSelector((state) => state.companySaved);
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
     useEffect(() => { (model !== undefined)| reset(model) }, [model]);
+
+    useEffect(() => {
+        if(companySaved){
+            swal("Completado!", VIEW_MESSAGE.DATA_SAVED_SUCCESSFULLY, "success");
+        }
+    }, [companySaved])
 
     useEffect(() => {
 
