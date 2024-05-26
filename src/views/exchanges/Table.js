@@ -9,18 +9,17 @@ import { getColumns } from "./config-table";
 import EclipseComponent from 'src/components/loader/EclipseComponent';
 import { FormSearch } from './FormSearch';
 
-//Exchanges actions
-import { startGettingExchanges } from 'src/actions/exchange';
+import useExchanges from './useExchanges';
 
-export const Table = ({ setExchange }) => {
+export const Table = () => {
 
-    const dispatch = useDispatch();
+    const { settingExchange, gettingExchanges } = useExchanges();
+
     const exchanges = useSelector((state) => state.exchanges);
-    const columns = getColumns( setExchange );
 
-    useEffect( () => {
-        dispatch( startGettingExchanges() );
-    }, []);
+    const columns = getColumns( settingExchange );
+
+    useEffect( () => { gettingExchanges() }, []);
 
     return (
         <div className="card">

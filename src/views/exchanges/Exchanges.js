@@ -13,12 +13,12 @@ const Exchanges = () => {
         <div className='col-4'>
             <div className="card">
                 <div className="card-body">
-                  <Form exchange={exchange}/> 
+                  <Form/> 
                 </div>
             </div>
         </div>
         <div className='col-8'>
-            <Table setExchange={setExchange}/>
+            <Table/>
         </div>
       </div>
     </Fragment>

@@ -1,35 +1,15 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useForm } from 'react-hook-form';
-import swal from 'sweetalert';
+import React from 'react';
 
 import { ErrorValidate } from 'src/components/forms/ErrorValidate';
 import { ActionButtons } from 'src/components/forms/ActionButtons';
 
-//Actions exchange
-import { startGettingExchanges, startSendingExchange } from 'src/actions/exchange';
-import { VIEW_MESSAGE } from 'src/strings';
+import useExchanges from './useExchanges';
 
-export const Form = ({ exchange }) => {
+export const Form = () => {
 
-    const dispatch = useDispatch();
-    const exchangeSaved = useSelector( (state) => state.exchangeSaved );
+    const { sendFormData, register, handleSubmit, errors } = useExchanges();
 
-    const { register, handleSubmit, reset, formState: { errors } } = useForm();
-
-    useEffect(() => {
-        reset(exchange);
-    }, [exchange]);
-
-    useEffect(() => {
-        if(exchangeSaved){
-            swal("Completado!", VIEW_MESSAGE.DATA_SAVED_SUCCESSFULLY, "success");
-            dispatch( startGettingExchanges() );
-            reset();
-        }
-    }, [exchangeSaved])
-    
-    const onSubmit = async data => { dispatch( startSendingExchange(data) ) };
+    const onSubmit = async data => sendFormData(data);
 
     return (
     <form onSubmit={handleSubmit(onSubmit)}>

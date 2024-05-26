@@ -7,6 +7,12 @@ from "src/services/exchangesServices";
 
 import { handleLoadingError, handleSavingError } from "src/helpers/helpers";
 
+export const startSettingExchange = (data) => {
+    return (dispatch) => {
+        dispatch({ type:"set", exchange: data });
+    }
+};
+
 export const startGettingExchanges = (data) => {
     return async (dispatch) => { 
         try {
