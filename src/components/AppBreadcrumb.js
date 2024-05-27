@@ -13,7 +13,7 @@ import {
   CTooltip } from '@coreui/react'
 
 import { AuthContext } from 'src/context/AuthContext';
-import { startCheckingStarted } from 'src/actions/transaction';
+import { startCheckingStarted } from 'src/actions/checkout_register';
 import { text } from 'src/strings';
 
 import { ADMIN_ROLE, STANDARD_ROLE } from "../constants/variables";
@@ -34,8 +34,8 @@ const AppBreadcrumb = () => {
       let started = dispatch( startCheckingStarted( localStorage.getItem("checkoutId")) );
       
       started.then( resp => {
-        if(resp.transaction.transaction_id == "1" && window.location.hash == "" ){
-            localStorage.setItem("checkout_session_id", resp.transaction.checkout_session_id);
+        if(resp.checkout_register.transaction_id == "1" && window.location.hash == "" ){
+            localStorage.setItem("checkout_session_id", resp.checkout_register.checkout_session_id);
             localStorage.setItem("started_session_pos", true);
             window.location.href = "/#/pos";
         }
