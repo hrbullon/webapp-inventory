@@ -7,15 +7,15 @@ import * as icon from '@coreui/icons';
 import { CModal, CModalBody, CModalHeader, CModalTitle } from '@coreui/react';
 
 import { AuthContext } from 'src/context/AuthContext';
-import { startCreatingTransactions } from 'src/actions/transaction';
 import { useForm } from 'react-hook-form';
+import { startCreatingCheckoutOpen } from 'src/actions/checkout_register';
 
 export const Open = () => {
     
     const dispatch = useDispatch();
     const context = useContext(AuthContext);
 
-    const { register, handleSubmit, reset, getValues, formState: { errors } } = useForm();
+    const { register, getValues } = useForm();
 
     const { id: userId, firstname, lastname } = context.user;
 
@@ -34,7 +34,7 @@ export const Open = () => {
 
         let checkoutId = getValues("checkout_id");
 
-        let started = dispatch( startCreatingTransactions({
+        let started = dispatch( startCreatingCheckoutOpen({
             checkout_id: checkoutId,
             user_id: userId,
             transaction_id:1,
@@ -47,7 +47,7 @@ export const Open = () => {
                 setStartedSale(true);
                 localStorage.setItem("checkoutId", checkoutId);
                 localStorage.setItem("started_session_pos", true);
-                localStorage.setItem("checkout_session_id", resp.transaction.checkout_session_id);
+                localStorage.setItem("checkout_session_id", resp.checkout_register.checkout_session_id);
                 window.location.href = "/#/pos";
             }
         })

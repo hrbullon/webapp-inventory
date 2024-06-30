@@ -1,19 +1,22 @@
 import { CAlert } from '@coreui/react';
 import React, { useContext } from 'react'
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ActionButtons } from 'src/components/forms/ActionButtons'
 import { ErrorValidate } from 'src/components/forms/ErrorValidate';
 import { AuthContext } from 'src/context/AuthContext';
 
-import { startCreatingTransactions } from 'src/actions/transaction';
+import { startCreatingInAndOutCash } from 'src/actions/checkout_register';
 import swal from 'sweetalert';
 import { VIEW_MESSAGE } from 'src/strings';
+import { useEffect } from 'react';
 
 const Cash = () => {
 
     const dispatch = useDispatch();
     const context = useContext(AuthContext);
+
+    const checkoutInAndOut = useSelector((state) => state.checkoutInAndOut);
 
     const { register, handleSubmit, reset, getValues, formState: { errors } } = useForm();
 
@@ -30,24 +33,23 @@ const Cash = () => {
         }
     ]
 
+    useEffect(() => {
+        if(checkoutInAndOut){
+            reset();
+            swal("Completado!", VIEW_MESSAGE.DATA_SAVED_SUCCESSFULLY, "success");   
+        }
+    }, [checkoutInAndOut])
+    
+
     const onSubmit = (data) => {
         
-        let checkoutId = localStorage.getItem("checkoutId");
-        let sessionPOS = localStorage.getItem("session_pos");
+        let checkout_session_id = localStorage.getItem("checkout_session_id");
 
         let body = { ...data };
-        body.session_pos = sessionPOS;
-        body.checkout_id = checkoutId;
-        body.user_id = context.user.id;
+        body.checkout_session_id = checkout_session_id;
         
-        let res = dispatch( startCreatingTransactions(body) );
-
-        res.then( (response) => {
-            if(response.transaction){
-                reset();
-                swal("Completado!", VIEW_MESSAGE.DATA_SAVED_SUCCESSFULLY, "success");
-            }
-        })
+        dispatch( startCreatingInAndOutCash(body) );
+        
     }
 
     return (

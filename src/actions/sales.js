@@ -95,9 +95,9 @@ export const startClosingSale = (data) => {
     }
 }
 
-export const startGettingSaleSummary = ( checkoutId, date ) => {
+export const startGettingSaleSummary = ( checkout_session_id ) => {
     return async (dispatch) => { 
-        const res  = await getSalesSummary( checkoutId, date );
+        const res  = await getSalesSummary( checkout_session_id );
         if(res.summary){
             let salesSummary = res.summary;
             dispatch({ type: "set", salesSummary });

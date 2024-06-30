@@ -106,8 +106,7 @@ export const getDataExport = (data, totalAmount, totalAmountConverted) => {
 
 export const getSalesAndPaymentsWIthTotalAmount = (items, type) => {
     
-    let rows = [...items];
-    
+    let rows = [];
     let totalQuantity = 0;
     let totalAmount = 0;
     let totalAmountConverted = 0;
@@ -119,6 +118,13 @@ export const getSalesAndPaymentsWIthTotalAmount = (items, type) => {
     })
 
     if(type == "sales"){
+
+        rows = items.map( item => { return {...item, 
+            quantity: formatNumber(item.quantity),
+            total_amount: formatNumber(item.total_amount),
+            total_amount_converted: formatNumber(item.total_amount_converted)  
+        }});
+
         rows.push({ 
             product: "",
             quantity: formatNumber(totalQuantity),
@@ -126,6 +132,12 @@ export const getSalesAndPaymentsWIthTotalAmount = (items, type) => {
             total_amount_converted: formatNumber(totalAmountConverted),
         });
     }else{
+
+        rows = items.map( item => { return {...item, 
+            total_amount: formatNumber(item.total_amount),
+            total_amount_converted: formatNumber(item.total_amount_converted)  
+        }});
+
         rows.push({ 
             payment_method: "",
             total_amount: formatNumber(totalAmount),

@@ -5,15 +5,15 @@ import { startGettingPaymentSummary } from 'src/actions/payment';
 import { startGettingSaleSummary } from 'src/actions/sales';
 import { formatNumber } from 'src/helpers/helpers';
 
-export const TodaySummary = ( { checkoutId, today } ) => {
+export const TodaySummary = ( { checkoutSessionId } ) => {
     
     const dispatch = useDispatch();
     const salesSummary = useSelector((state) => state.salesSummary );
     const paymentSummary = useSelector((state) => state.paymentSummary );
 
     useEffect(() => {
-        dispatch( startGettingSaleSummary(checkoutId, today) );
-        dispatch( startGettingPaymentSummary(checkoutId, today) );
+        dispatch( startGettingSaleSummary(checkoutSessionId) );
+        dispatch( startGettingPaymentSummary(checkoutSessionId) );
     }, [])
 
     const getTotal = (items, column) => {
@@ -41,7 +41,7 @@ export const TodaySummary = ( { checkoutId, today } ) => {
                     </tr>
                     {
                         salesSummary.map( sale => {
-                            return <tr>
+                            return <tr key={ sale.id }>
                                 <td>{ sale.product }</td>
                                 <td className='text-right'>{ sale.quantity }</td>
                                 <td className='text-right'>{ formatNumber(parseFloat(sale.total_amount)) }</td>

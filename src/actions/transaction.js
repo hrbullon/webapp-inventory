@@ -8,10 +8,10 @@ from "src/services/transactionsServices";
 
 import { CLG_MESSAGE } from "src/strings";
 
-export const startGettingTransactionsBySession = (sessionPOS) => {
+export const startGettingTransactionsBySession = (checkout_session_id) => {
     return async (dispatch) => { 
         try {
-            let results = await getAllTransactionsBySession(sessionPOS);
+            let results = await getAllTransactionsBySession(checkout_session_id);
             dispatch({ type: "set", transactions: results.transactions });
         } catch (error) {
             console.error(CLG_MESSAGE.ERROR_DATA_LOADING);            
@@ -39,10 +39,10 @@ export const startCreatingTransactions = (data) => {
     }
 }
 
-export const startGettingTransactionsSummary = (sessionPOS, date) => {
+export const startGettingTransactionsSummary = (checkout_session_id) => {
     return async (dispatch) => { 
         try {
-            let results = await getTransactionSummary(sessionPOS, date);
+            let results = await getTransactionSummary(checkout_session_id);
             dispatch({ type: "set", transactionSummary: results.summary });
         } catch (error) {
             console.error(CLG_MESSAGE.ERROR_DATA_LOADING);            
@@ -50,10 +50,10 @@ export const startGettingTransactionsSummary = (sessionPOS, date) => {
     }
 }
 
-export const startClosingTransactionCheckout = (checkoutSessionId) => {
+export const startClosingTransactionCheckout = (checkout_session_id) => {
     return async (dispatch) => { 
         try {
-            let checkoutClosed = await closeTransactionCheckout(checkoutSessionId);
+            let checkoutClosed = await closeTransactionCheckout(checkout_session_id);
             dispatch({ type: "set", checkoutClosed });
         } catch (error) {
             console.error(CLG_MESSAGE.ERROR_DATA_LOADING);            

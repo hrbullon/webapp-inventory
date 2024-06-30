@@ -12,6 +12,6 @@ export const deletePayment = (payment) => {
     return fetchData(`payment/${payment}`, 'DELETE');
 }
 
-export const getPaymentSummary = (checkoutId, date) => {
-    return fetchData(`payments/summary/${ checkoutId }/${ date }`, 'GET');
+export const getPaymentSummary = (checkoutSessionId) => {
+    return fetchData(`payments/summary/${ checkoutSessionId }`, 'GET');
 }

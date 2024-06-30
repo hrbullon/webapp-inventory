@@ -31,7 +31,7 @@ const AppBreadcrumb = () => {
         
     if(context.user.role == STANDARD_ROLE){
       
-      let started = dispatch( startCheckingStarted( localStorage.getItem("checkoutId")) );
+      let started = dispatch( startCheckingStarted( localStorage.getItem("checkout_session_id")) );
       
       started.then( resp => {
         if(resp.checkout_register.transaction_id == "1" && window.location.hash == "" ){

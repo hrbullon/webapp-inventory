@@ -47,9 +47,9 @@ export const startCreatingPayment = (data) => {
 }
 
 
-export const startGettingPaymentSummary = ( checkoutId, date ) => {
+export const startGettingPaymentSummary = ( checkoutSessionId ) => {
     return async (dispatch) => { 
-        const res  = await getPaymentSummary( checkoutId, date );
+        const res  = await getPaymentSummary( checkoutSessionId );
         if(res.summary){
             let paymentSummary = res.summary;
             dispatch({ type: "set", paymentSummary });

@@ -27,7 +27,7 @@ export const closeSale = (data) => {
     return fetchData(`sales/close`, 'POST', data);
 }
 
-export const getSalesSummary = (checkoutId, date) => {
-    return fetchData(`sales/summary/${ checkoutId }/${ date }`, 'GET');
+export const getSalesSummary = (checkout_session_id) => {
+    return fetchData(`sales/summary/${ checkout_session_id }`, 'GET');
 }
 

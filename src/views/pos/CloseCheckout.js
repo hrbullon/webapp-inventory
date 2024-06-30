@@ -7,10 +7,6 @@ import * as icon from '@coreui/icons';
 
 import { confirmDelete, printHTML } from 'src/helpers/helpers';
 
-import { 
-  startClosingTransactionCheckout,
-  startGettingTransactionsSummary } from 'src/actions/transaction';
-
 import { formatCurrency } from 'src/helpers/helpers';
 import { formatNumber } from 'src/helpers/helpers';
 import { TodaySummary } from '../sales/report/TodaySummary';
@@ -18,7 +14,7 @@ import { TodaySummary } from '../sales/report/TodaySummary';
 import { generateSummarySalesReport } from 'src/reports/pdf/summary_sales_report';
 import { AuthContext } from 'src/context/AuthContext';
 
-import { startGettingAllByCheckoutSessionId } from 'src/actions/checkout_register';
+import { startGettingAllByCheckoutSessionId, startGettingCheckoutRegistersSummary } from 'src/actions/checkout_register';
 
 export const CloseCheckout = () => {
 
@@ -38,9 +34,12 @@ export const CloseCheckout = () => {
   const [totalAmountChange, setTotalAmountChange] = useState(0);
   const [realTotalAmountSale, setRealTotalAmountSale] = useState(0);
   const [endingCashBalance, setEndingCashBalance] = useState(0);
+  const [totalAmountInCash, setTotalAmountInCash] = useState(0);
+  const [totalAmountOutCash, setTotalAmountOutCash] = useState(0);
+  const [totalAmountCashSale, setTotalAmountCashSale] = useState(0);
 
   const checkout_register_items = useSelector((state) => state.checkout_register_items);
-  const transactionSummary = useSelector((state) => state.transactionSummary);
+  const checkoutRegisterSummary = useSelector((state) => state.checkoutRegisterSummary);
   const salesSummary = useSelector((state) => state.salesSummary );
   const paymentSummary = useSelector((state) => state.paymentSummary );
   const checkoutClosed = useSelector((state) => state.checkoutClosed );
@@ -48,20 +47,22 @@ export const CloseCheckout = () => {
   useEffect(() => {
 
     dispatch( startGettingAllByCheckoutSessionId(checkout_session_id) );
-    dispatch( startGettingTransactionsSummary(checkout_session_id, today) );
+    dispatch( startGettingCheckoutRegistersSummary(checkout_session_id) );
 
   }, [])
 
   useEffect(() => {
     
-    if(transactionSummary){
+    if(checkoutRegisterSummary){
 
       let { 
         total_amount_cash_starting, 
         count_sales, 
         total_amount_sales, 
+        total_amount_in_cash,
+        total_amount_out_cash,
         total_amount_change, real_total_sale, 
-        total_amount_cash_ending } = transactionSummary;
+        total_amount_cash_ending } = checkoutRegisterSummary;
 
         setCounterSales(count_sales);
         setTotalAmount(total_amount_sales);
@@ -69,9 +70,22 @@ export const CloseCheckout = () => {
         setTotalAmountChange(total_amount_change);
         setOpenAmount(total_amount_cash_starting);
         setEndingCashBalance(total_amount_cash_ending);
+        setTotalAmountInCash(total_amount_in_cash);
+        setTotalAmountOutCash(total_amount_out_cash);
     }
 
-  }, [transactionSummary]);
+  }, [checkoutRegisterSummary]);
+
+  useEffect(() => {
+    if(paymentSummary){
+      const payment = paymentSummary.filter( item => item.payment_method == "$USD Efectivo");
+
+      if(payment.length > 0){
+        setTotalAmountCashSale(payment[0].total_amount);
+      }
+    }
+  }, [paymentSummary])
+  
 
   useEffect(() => {
 
@@ -82,7 +96,7 @@ export const CloseCheckout = () => {
   }, [checkoutClosed])
   
   const generateSummarySalesReportPDF = async () =>  {
-    generateSummarySalesReport(company, salesSummary, paymentSummary, transactionSummary);
+    generateSummarySalesReport(company, salesSummary, paymentSummary, checkoutRegisterSummary, totalAmountCashSale);
   }
 
   const closeCheckout = async () => {
@@ -123,19 +137,9 @@ export const CloseCheckout = () => {
                 <td>{ formatNumber(counterSales) }</td>
               </tr>
               <tr>
-                <td>Total $US (inicio):</td>
-                <td></td>
-                <td>{ formatCurrency(openAmount) }</td>
-              </tr>
-              <tr>
                 <td>Monto Cobrado por Ventas:</td>
                 <td></td>
                 <td>{ formatCurrency(totalAmount) }</td>
-              </tr>
-              <tr>
-                <td>Monto Vueltos/Cambios:</td>
-                <td></td>
-                <td>{ formatCurrency(totalAmountChange) }</td>
               </tr>
               <tr>
                 <td>Monto Real Ventas:</td>
@@ -143,9 +147,38 @@ export const CloseCheckout = () => {
                 <td>{ formatCurrency(realTotalAmountSale) }</td>
               </tr>
               <tr>
+                <td colSpan={3}>___________Montos Efectivo________________</td>
+              </tr>
+              <tr>
+                <td>Monto apertura:</td>
+                <td></td>
+                <td>{ formatCurrency(openAmount) }</td>
+              </tr>
+              <tr>
+                <td>Monto ventas:</td>
+                <td></td>
+                <td>{ formatCurrency(totalAmountCashSale) }</td>
+              </tr>
+              <tr>
+                <td>Monto ingreso</td>
+                <td></td>
+                <td>{ formatCurrency(totalAmountInCash) }</td>
+              </tr>
+              <tr>
+                <td>Monto Salida:</td>
+                <td></td>
+                <td>{ formatCurrency(totalAmountOutCash) }</td>
+              </tr>
+              <tr>
+                <td>Monto Vueltos/Cambios:</td>
+                <td></td>
+                <td>{ formatCurrency(totalAmountChange) }</td>
+              </tr>
+              
+              <tr>
                 <td>Total Efectivo $US en caja:</td>
                 <td></td>
-                <td><b>{ formatCurrency(endingCashBalance) }</b></td>
+                <td><b>{ formatCurrency(  (openAmount+totalAmountCashSale+totalAmountInCash) - (totalAmountOutCash+(totalAmountChange*-1)) ) }</b></td>
               </tr>
             </tbody>
           </table>
@@ -157,8 +190,8 @@ export const CloseCheckout = () => {
               <tr>
                 <th width="300px">Código</th>
                 <th width="600px">Descripción</th>
-                <th width="400px">$USD</th>
-                <th width="400px">Bs.</th>
+                <th width="400px" className='text-right'>Ingreso $USD</th>
+                <th width="400px" className='text-right'>Salída $USD</th>
               </tr>
             </thead>
             <tbody>
@@ -167,8 +200,8 @@ export const CloseCheckout = () => {
                   return (<tr  key={ item.id }>
                       <td>{ item.Transaction.name }</td>
                       <td>{ item.note }</td>
-                      <td className='table-success'>{ item.total_amount }</td>
-                      <td className='table-danger'>{ item.total_amount_converted }</td>
+                      <td className='table-success text-right'>{ formatNumber(item.total_amount_in) }</td>
+                      <td className='table-danger text-right'>{ formatNumber(item.total_amount_out) }</td>
                     </tr>)
                 })
               }
@@ -176,7 +209,7 @@ export const CloseCheckout = () => {
           </table>
 
           <div className='row'>
-            <TodaySummary checkoutId={ checkout_session_id } today={ today }/>
+            <TodaySummary checkoutSessionId={ checkout_session_id }/>
           </div>
         </div> 
       </div> 
