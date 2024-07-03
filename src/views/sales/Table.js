@@ -75,7 +75,7 @@ export const Table = ({ title, today = null }) => {
         <FormSearch today={ today }/>
 
         <DataTable 
-            columns={ getColums(  ) }
+            columns={ getColums( handleShowSale, handleDeleteSale ) }
             data={items}
             progressPending={ loading }
             progressComponent={ <EclipseComponent/> }
