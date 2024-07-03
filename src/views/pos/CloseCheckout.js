@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
-import moment from 'moment';
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
 
@@ -14,18 +14,19 @@ import { TodaySummary } from '../sales/report/TodaySummary';
 import { generateSummarySalesReport } from 'src/reports/pdf/summary_sales_report';
 import { AuthContext } from 'src/context/AuthContext';
 
-import { startGettingAllByCheckoutSessionId, startGettingCheckoutRegistersSummary } from 'src/actions/checkout_register';
+import { startGettingAllByCheckoutSessionId, startGettingCheckoutRegistersSummary, startClosingCheckout } 
+from 'src/actions/checkout_register';
 
 export const CloseCheckout = () => {
 
   const dispatch = useDispatch();
+  let { checkout_session_id } = useParams();
 
   const { company } = useContext(AuthContext);
 
-  const today = moment().format("YYYY-MM-DD");
   const date = new Date(Date.now()).toLocaleDateString();
 
-  const checkout_session_id = localStorage.getItem("checkout_session_id");
+  //const checkout_session_id = localStorage.getItem("checkout_session_id");
   const [startedSessionPos] = useState(localStorage.getItem("started_session_pos"));
 
   const [counterSales, setCounterSales] = useState(0);
@@ -101,7 +102,7 @@ export const CloseCheckout = () => {
 
   const closeCheckout = async () => {
     confirmDelete(`Quiere cerrar la caja`, async () => { 
-      dispatch( startClosingTransactionCheckout(checkout_session_id) )
+      dispatch( startClosingCheckout(checkout_session_id) )
     })
   }
   
@@ -200,8 +201,8 @@ export const CloseCheckout = () => {
                   return (<tr  key={ item.id }>
                       <td>{ item.Transaction.name }</td>
                       <td>{ item.note }</td>
-                      <td className='table-success text-right'>{ formatNumber(item.total_amount_in) }</td>
-                      <td className='table-danger text-right'>{ formatNumber(item.total_amount_out) }</td>
+                      <td className='table-success text-right'>{ formatNumber(parseFloat(item.total_amount_in)) }</td>
+                      <td className='table-danger text-right'>{ formatNumber(parseFloat(item.total_amount_out)) }</td>
                     </tr>)
                 })
               }

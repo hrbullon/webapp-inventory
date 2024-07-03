@@ -24,6 +24,7 @@ const AppBreadcrumb = () => {
   const context = useContext(AuthContext);
 
   const user = JSON.parse(localStorage.getItem("user"));
+  const checkout_session_id = localStorage.getItem("checkout_session_id");
   const started_session_pos = JSON.parse(localStorage.getItem("started_session_pos"));
   const currentLocation = useLocation().pathname;
 
@@ -32,7 +33,7 @@ const AppBreadcrumb = () => {
     if(context.user.role == STANDARD_ROLE){
       
       let started = dispatch( startCheckingStarted( localStorage.getItem("checkout_session_id")) );
-      
+     
       started.then( resp => {
         if(resp.checkout_register.transaction_id == "1" && window.location.hash == "" ){
             localStorage.setItem("checkout_session_id", resp.checkout_register.checkout_session_id);
@@ -138,7 +139,7 @@ const AppBreadcrumb = () => {
                 </div>
               </div>
             </Link>
-            <Link to={ "checkout/transactions" }>
+            <Link to={ `checkout/session/${checkout_session_id}` }>
               <div className="card">
                 <div className="card-body">
                   <CTooltip content={ text.close_checkout }>

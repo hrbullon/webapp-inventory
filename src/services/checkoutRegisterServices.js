@@ -19,3 +19,8 @@ export const createCheckoutOpen = (data) => {
 export const createInAndOutCash = (data) => {
     return fetchData(`checkout_register/create_cash_transaction`, 'POST', data);
 }
+
+export const closeCheckout = (checkoutSessionId) => {
+    const data = { checkoutSessionId };
+    return fetchData(`checkout_register/checkout/close`, 'POST', data);
+}

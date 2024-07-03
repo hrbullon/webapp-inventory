@@ -30,6 +30,7 @@ const Exchanges = React.lazy(() => import('../views/exchanges/Exchanges'))
 const FormCompany = React.lazy(() => import('../views/company/Form'))
 
 const DailySales = React.lazy(() => import('../views/daily_sales/DailySales'))
+const CloseCheckout = React.lazy(() => import('../views/pos/CloseCheckout'))
 
 const routes = [
   { path: '/', exact: true, name: 'Inicio' },
@@ -49,6 +50,7 @@ const routes = [
   { path: '/sales-today', name: 'Ventas diarias', element: SalesToday },
 
   { path: '/daily_sales', name: 'Cierres de caja', element: DailySales },
+  { path: '/daily_sales/:checkout_session_id', name: 'Ver cierre de caja', element: CloseCheckout },
 
 
   { path: '/customers', name: 'Clientes', element: Customers },

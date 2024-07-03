@@ -80,7 +80,7 @@ export const getColums = ( ) => {
             selector: row => {
                 return (
                     <Fragment>
-                        <Link to={ `/customers/update/${row.id}` } className='btn btn-sm btn-primary m-1'>
+                        <Link to={ `/daily_sales/${row.checkout_session_id}` } className='btn btn-sm btn-primary m-1'>
                             <CIcon icon={ icon.cilInfo }/>
                         </Link>
                     </Fragment>

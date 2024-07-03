@@ -19,7 +19,7 @@ const routes = [
     { path: '/sales/today/summary', name: 'Reporte de ventas diarias ', element: SalesToday},
     { path: '/sales/today/report-x', name: 'Reporte de ventas diarias ', element: TodaySummary},
     { path: '/customers/create', name: 'Crear cliente', element: createCustomer },
-    { path: '/checkout/transactions', name: 'Registro de transacciones', element: CloseCheckout },
+    { path: '/checkout/session/:checkout_session_id', name: 'Registro de transacciones', element: CloseCheckout },
 ]
 
 export default routes

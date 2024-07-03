@@ -6,7 +6,7 @@ import { startGettingSaleSummary } from 'src/actions/sales';
 import { formatNumber } from 'src/helpers/helpers';
 
 export const TodaySummary = ( { checkoutSessionId } ) => {
-    
+
     const dispatch = useDispatch();
     const salesSummary = useSelector((state) => state.salesSummary );
     const paymentSummary = useSelector((state) => state.paymentSummary );
