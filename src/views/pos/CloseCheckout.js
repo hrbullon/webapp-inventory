@@ -26,7 +26,6 @@ export const CloseCheckout = () => {
 
   const date = new Date(Date.now()).toLocaleDateString();
 
-  //const checkout_session_id = localStorage.getItem("checkout_session_id");
   const [startedSessionPos] = useState(localStorage.getItem("started_session_pos"));
 
   const [counterSales, setCounterSales] = useState(0);

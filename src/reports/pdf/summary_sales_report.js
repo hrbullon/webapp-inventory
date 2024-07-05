@@ -91,8 +91,8 @@ export const generateSummarySalesReport = (company, sales, payments, transaction
 
         if ((pageNumber-1) == i) {
             doc.setFontSize(15);
-            doc.text("Pagos", 10, (pageData.length*10)+115, { align: "left"}); 
-            printTable(headerOptionsPayments, paymentsItems, 10, (pageData.length*10)+125);
+            doc.text("Pagos", 10, (pageData.length*10)+130, { align: "left"}); 
+            printTable(headerOptionsPayments, paymentsItems, 10, (pageData.length*10)+140);
         }
 
         printFooter(i,pageNumber);
