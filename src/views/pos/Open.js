@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState, useContext, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
@@ -8,21 +8,29 @@ import { CModal, CModalBody, CModalHeader, CModalTitle } from '@coreui/react';
 
 import { AuthContext } from 'src/context/AuthContext';
 import { useForm } from 'react-hook-form';
+
+import { startGettingCheckoutList } from 'src/actions/checkout';
 import { startCreatingCheckoutOpen } from 'src/actions/checkout_register';
 
 export const Open = () => {
     
     const dispatch = useDispatch();
+
     const context = useContext(AuthContext);
 
     const { register, getValues } = useForm();
-
-    const { id: userId, firstname, lastname } = context.user;
-
     const [visible, setVisible] = useState(false);
     const [startedSale, setStartedSale] = useState(false);
 
+    const checkouts = useSelector(( state ) => state.checkouts );
+
+    const { id: userId, firstname, lastname } = context.user;
+
     const today = new Date(Date.now()).toLocaleDateString();
+
+    useEffect(() => {
+        dispatch( startGettingCheckoutList() );
+    }, [])
 
     const handleStartTransactions = () => {
         
@@ -72,7 +80,13 @@ export const Open = () => {
                     name='checkout_id'
                     className='form-control mt-2 mb-2'
                     {...register("checkout_id", { required: true }) }>
-                    <option value="4883646e-3d83-4850-9efb-b1ca032a7b81" key="1">POS001</option>
+                    { checkouts &&
+                        checkouts.map( checkout => {
+                            return (
+                                <option value={ checkout.id } key={ checkout.id }>{ checkout.name }</option>
+                            )
+                        })
+                    }
                 </select>
 
                 <label><b>Fondo de caja:</b></label>
