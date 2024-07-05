@@ -5,6 +5,10 @@ export const getAllProducts = (data) => {
     return fetchData(`products?${params}`, 'GET');
 }
 
+export const getAllProductsWithStock = () => {
+    return fetchData(`products/stock`, 'GET');
+}
+
 export const getProductById = (id) => {
     return fetchData(`product/${id}`, 'GET');
 }

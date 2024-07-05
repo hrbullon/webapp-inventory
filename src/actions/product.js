@@ -8,7 +8,8 @@ import {
     createProduct, 
     updateProduct,
     getProductById,
-    deleteProduct
+    deleteProduct,
+    getAllProductsWithStock
 } from "../services/productsServices";
 import { confirmDelete } from "src/helpers/helpers";
 
@@ -17,6 +18,18 @@ export const startGettingProducts = (data) => {
         try {
             dispatch({ type: "set", loading: true });
             const res = await getAllProducts(data);
+            dispatch({ type: "set", products: [...res.products], loading: false});
+        } catch (error) {
+            console.error(CLG_MESSAGE.ERROR_DATA_LOADING);            
+        }
+    }
+}
+
+export const startGettingProductsWithStock = () => {
+    return async (dispatch) => { 
+        try {
+            dispatch({ type: "set", loading: true });
+            const res = await getAllProductsWithStock();
             dispatch({ type: "set", products: [...res.products], loading: false});
         } catch (error) {
             console.error(CLG_MESSAGE.ERROR_DATA_LOADING);            

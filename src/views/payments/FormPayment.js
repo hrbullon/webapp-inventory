@@ -1,46 +1,26 @@
+import { useEffect } from 'react';
+
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
 import { CFormCheck, CFormInput, CFormLabel, CInputGroup, CInputGroupText } from '@coreui/react';
 
 import { useForm } from 'react-hook-form';
 import { NumericFormat } from "react-number-format";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { startCreatingPayment } from 'src/actions/payment';
 import { formatNumber } from 'src/helpers/helpers';
+import { startGettingPaymentMethods } from 'src/actions/payment_methods';
 
 export const FormPayment = ({ sale, saleId, totalPayments }) => {
 
   const dispatch = useDispatch();
-
-  const paymentMethods = [
-    {
-      id:1,
-      name: 'pago_movil',
-      description:'Pago Móvil'
-    },
-    {
-      id:2,
-      name: 'transferencia',
-      description:'Transferencia'
-    },
-    {
-      id:3,
-      name: 'zelle',
-      description:'Zelle'
-    },
-    {
-      id:4,
-      name: 'usd_efectivo',
-      description:'$USD Efectivo'
-    },
-    {
-      id:5,
-      name: 'bs_efectivo',
-      description:'Bs. Efectivo'
-    },
-  ]
-
   const { register, handleSubmit, setValue } = useForm();
+
+  const payment_methods = useSelector( (state) => state.payment_methods );
+
+  useEffect(() => {
+      dispatch( startGettingPaymentMethods() );
+  }, [])
 
   const onSubmit = (data) => {
 
@@ -104,8 +84,8 @@ export const FormPayment = ({ sale, saleId, totalPayments }) => {
         
         <div class="mb-3">
           
-          {
-            paymentMethods.map( method => {
+          { payment_methods &&
+            payment_methods.map( method => {
 
               return (
               <CFormCheck 

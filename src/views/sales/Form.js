@@ -20,7 +20,7 @@ import { formatCurrency } from 'src/helpers/helpers';
 import { CModal, CModalBody, CModalHeader, CTable } from '@coreui/react';
 import { AuthContext } from 'src/context/AuthContext';
 
-import { startGettingProducts } from 'src/actions/product';
+import { startGettingProductsWithStock } from 'src/actions/product';
 import { startGettingLastExchange } from 'src/actions/exchange';
 import { startGettingPayments } from 'src/actions/payment';
 
@@ -150,7 +150,7 @@ const Form = () => {
 
     const fetchAll = async () => {
 
-        dispatch( startGettingProducts() );
+        dispatch( startGettingProductsWithStock() );
         dispatch( startGettingLastExchange() );
         dispatch( startGettingPayments(saleId) );
     }
