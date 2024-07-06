@@ -27,7 +27,6 @@ export const Table = ({ title, today = null }) => {
         if(dailySales){
             const parsedData = parseDailySalesData( dailySales );
             setItems(parsedData);
-            console.log(parsedData);
         }
 
     }, [dailySales])

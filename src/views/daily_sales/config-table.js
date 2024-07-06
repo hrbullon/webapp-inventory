@@ -12,13 +12,13 @@ export const getColums = ( ) => {
             name: 'Caja',
             sortable:true,
             right: true,
-            selector: row => (row.checkout_name),
+            selector: row => (row.checkout),
         },
         {
             name: 'Usuario',
             sortable:true,
             right: true,
-            selector: row => (row.user_fullname),
+            selector: row => (row.user),
         },
         {
             name: 'Fecha',
