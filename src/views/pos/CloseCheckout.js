@@ -178,7 +178,7 @@ export const CloseCheckout = () => {
               <tr>
                 <td>Total Efectivo $US en caja:</td>
                 <td></td>
-                <td><b>{ formatCurrency(  (openAmount+totalAmountCashSale+totalAmountInCash) - (totalAmountOutCash+(totalAmountChange*-1)) ) }</b></td>
+                <td><b>{ formatCurrency(endingCashBalance) }</b></td>
               </tr>
             </tbody>
           </table>
