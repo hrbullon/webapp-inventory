@@ -8,9 +8,6 @@ import {
     startSettingExchange } 
 from 'src/actions/exchange';
 
-import { VIEW_MESSAGE } from 'src/strings';
-import swal from 'sweetalert';
-
 const useExchanges = () => { 
 
     const dispatch = useDispatch();
@@ -28,8 +25,6 @@ const useExchanges = () => {
 
     useEffect(() => {
         if(exchangeSaved){
-            swal("Completado!", VIEW_MESSAGE.DATA_SAVED_SUCCESSFULLY, "success");
-            dispatch( startGettingExchanges() );
             reset();
         }
     }, [exchangeSaved]);

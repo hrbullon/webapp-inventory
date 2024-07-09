@@ -16,4 +16,5 @@ export const text = {
     add_customer: "Agregar cliente",
     daily_sales_report: "Reporte de ventas diarias",
     sold_products: "Productos vendidos",
+    exchanges:"Tasas de cambios"
 }

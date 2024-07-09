@@ -1,3 +1,5 @@
+import swal from 'sweetalert';
+
 import { 
     createExchange, 
     updateExchange,
@@ -5,6 +7,7 @@ import {
     getLastExchange} 
 from "src/services/exchangesServices";
 
+import { VIEW_MESSAGE } from 'src/strings';
 import { handleLoadingError, handleSavingError } from "src/helpers/helpers";
 
 export const startSettingExchange = (data) => {
@@ -49,7 +52,11 @@ export const startSendingExchange = (data) => {
             }
 
             if(res.exchange){
+
                 dispatch({ type:"set", exchangeSaved: res.exchange });
+                dispatch( startGettingExchanges() );
+                
+                swal("Completado!", VIEW_MESSAGE.DATA_SAVED_SUCCESSFULLY, "success");
             }
         } catch (error) {
             handleSavingError();       

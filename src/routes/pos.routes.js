@@ -9,6 +9,7 @@ const createCustomer = React.lazy(() => import('../views/customers/Create'));
 const Cash = React.lazy(() => import('../views/pos/Cash'));
 const Products = React.lazy(() => import('../views/products/Products'));
 const CloseCheckout = React.lazy(() => import('../views/pos/CloseCheckout'));
+const Exchanges = React.lazy(() => import('../views/exchanges/Exchanges'));
 
 const routes = [
     { path: '/', exact: true, name: 'Inicio', element: Open },
@@ -19,6 +20,7 @@ const routes = [
     { path: '/sales/today/summary', name: 'Reporte de ventas diarias ', element: SalesToday},
     { path: '/sales/today/report-x', name: 'Reporte de ventas diarias ', element: TodaySummary},
     { path: '/customers/create', name: 'Crear cliente', element: createCustomer },
+    { path: '/exchanges', name: 'Tasas de cambio', element: Exchanges },
     { path: '/checkout/session/:checkout_session_id', name: 'Registro de transacciones', element: CloseCheckout },
 ]
 

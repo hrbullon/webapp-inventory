@@ -130,6 +130,15 @@ const AppBreadcrumb = () => {
                 </div>
               </div>
             </Link>
+            <Link to={ "exchanges" }>
+              <div className="card">
+                <div className="card-body">
+                  <CTooltip content={ text.exchanges }>
+                    <CIcon icon={ icon.cilTransfer } size='xxl'/>
+                  </CTooltip>
+                </div>
+              </div>
+            </Link>
             <Link to={ "products" }>
               <div className="card">
                 <div className="card-body">
