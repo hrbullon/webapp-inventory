@@ -1,4 +1,9 @@
-import { createPayment, getAllPaymentsBySale, getPaymentSummary } from "src/services/paymentsServices";
+import { 
+    createPayment, 
+    deletePayment, 
+    getAllPaymentsBySale, 
+    getPaymentSummary } 
+from "src/services/paymentsServices";
 
 import { CLG_MESSAGE } from "src/strings";
 
@@ -11,6 +16,7 @@ export const startGettingPayments = (saleId) => {
 
             res.payments.map( item => {
                 payments.push({
+                    payment_id: item.id,
                     payment_method: item.PaymentMethod.description,
                     reference: item.reference !=="" ? item.reference : "S/I",
                     total_amount: item.total_amount,
@@ -53,6 +59,17 @@ export const startGettingPaymentSummary = ( checkoutSessionId ) => {
         if(res.summary){
             let paymentSummary = res.summary;
             dispatch({ type: "set", paymentSummary });
+        }else{
+            swal("Error", VIEW_MESSAGE.ERROR_DATA_LOADING);
+        }
+    }
+}
+
+export const startDeletingPayment = ( saleId, paymentId ) => {
+    return async (dispatch) => { 
+        const res  = await deletePayment( paymentId );
+        if(res.deleted){
+            dispatch( startGettingPayments(saleId) );
         }else{
             swal("Error", VIEW_MESSAGE.ERROR_DATA_LOADING);
         }

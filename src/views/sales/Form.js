@@ -10,6 +10,7 @@ import * as icon from '@coreui/icons';
 import { CardBasic } from './CardBasic';
 import { CardTotal } from 'src/components/cards/CardTotal';
 import { TableDetails } from 'src/components/product/TableDetails';
+import { TableDetails as PaymentDetails} from 'src/components/payment/TableDetails';
 
 import { getProductById } from 'src/services/productsServices';
 import { getCustomerByDni } from 'src/services/customersServices'
@@ -64,29 +65,6 @@ const Form = () => {
     const [serial, setSerial] = useState("");
     const [options, setOptions] = useState([]);
     const [totalPayments, setTotalPayments] = useState(0);
-    
-    const columns = [
-        {
-          key: 'payment_method',
-          label: 'Tipo de transacción',
-          _props: { scope: 'col' },
-        },
-        {
-            key: 'reference',
-            label: 'Referencia',
-            _props: { scope: 'col' },
-        },
-        {
-          key: 'total_amount_converted',
-          label: 'Monto Bs.',
-          _props: { scope: 'col' },
-        },
-        {
-            key: 'total_amount',
-            label: 'Monto $USD',
-            _props: { scope: 'col' },
-        }
-    ]
 
     useEffect(() => {
         checkSaleExist();
@@ -128,7 +106,6 @@ const Form = () => {
     useEffect(() => {
       
         if(payments){
-
             let { total } = getTotal(payments);
             setTotalPayments( total );
         }
@@ -344,7 +321,7 @@ const Form = () => {
                             <CardTotal model={sale} />
                         </div>
                         <div className='col-12 mb-3'>
-                            <CTable small striped columns={ columns } items={ payments } /> 
+                            <PaymentDetails items={ payments } />
                         </div>
 
                         <div className='col-12 mb-3 text-right'>
