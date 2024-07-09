@@ -8,8 +8,8 @@ export const createPayment = (data) => {
     return fetchData(`payment`, 'POST', data);
 }
 
-export const deletePayment = (payment) => {
-    return fetchData(`payment/${payment}`, 'DELETE');
+export const deletePayment = (payment, saleId) => {
+    return fetchData(`payment/${payment}/${saleId}`, 'DELETE');
 }
 
 export const getPaymentSummary = (checkoutSessionId) => {

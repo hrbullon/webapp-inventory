@@ -67,7 +67,7 @@ export const startGettingPaymentSummary = ( checkoutSessionId ) => {
 
 export const startDeletingPayment = ( saleId, paymentId ) => {
     return async (dispatch) => { 
-        const res  = await deletePayment( paymentId );
+        const res  = await deletePayment( paymentId, saleId );
         if(res.deleted){
             dispatch( startGettingPayments(saleId) );
         }else{
