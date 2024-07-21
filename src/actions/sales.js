@@ -61,9 +61,9 @@ export const startDeletingSale = (data) => {
                 );
                 
                 //Page reload
-                setTimeout( () => {
+                /* setTimeout( () => {
                     window.location.reload();
-                }, 2000)
+                }, 2000) */
                 
             }else{
                 swal("Error", VIEW_MESSAGE.DATA_SAVED_FAILED);

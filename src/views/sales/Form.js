@@ -28,6 +28,7 @@ import { startGettingPayments } from 'src/actions/payment';
 import { addRowDetail, getTotal } from './selector';
 import { FormPayment } from '../payments/FormPayment';
 import { startClosingSale } from 'src/actions/sales';
+import { startCreatingDiscount } from 'src/actions/discount';
 
 const Form = () => {
 
@@ -60,11 +61,13 @@ const Form = () => {
     
     const [dni, setDni] = useState("");
     const [visible, setVisible] = useState(false);
+    const [visibleDiscont, setVisibleDiscont] = useState(false);
     const [customer, setCustomer] = useState({});
     const [quantity, setQuantity] = useState(1);
     const [serial, setSerial] = useState("");
     const [options, setOptions] = useState([]);
     const [totalPayments, setTotalPayments] = useState(0);
+    const [totalDiscount, setTotalDiscount] = useState(0);
 
     useEffect(() => {
         checkSaleExist();
@@ -241,6 +244,18 @@ const Form = () => {
 
     }
 
+    const handleApplyDiscount = async () => {
+
+        const data = {
+            sale_id: saleId,
+            amount: sale.total_amount,
+            discount: totalDiscount,
+        };
+
+        dispatch( startCreatingDiscount(data) );
+
+    }
+
     return (
         <Fragment>
             <div className="row">
@@ -251,7 +266,7 @@ const Form = () => {
                     <CardBasic customer={customer} />
                 </div>
 
-                <div className="col-3">
+                <div className="col-5">
                     <div className="card">
                         <div className="card-body bg-info">
                             { sale.exchange_amount && 
@@ -259,16 +274,24 @@ const Form = () => {
                             }    
                         </div>
                     </div>
-                    <CardTotal model={sale} />
-                </div>
+                    <div className="card">
+                        <div className="card-body">
+                            
+                            <CardTotal model={sale} />
 
-                <div className="col-2 text-right">
-                    { sale.sale_details.length > 0 &&
-                        <button type='button' onClick={ handleSubmit } className='btn btn-warning m-2'>
-                            <CIcon icon={icon.cilDollar} title='Cobrar venta'/> Cobrar
-                        </button>
-                    }
-                </div>            
+                            { sale.sale_details.length > 0 &&
+                                <>
+                                    <button type='button' onClick={ handleSubmit } className='btn btn-warning m-2'>
+                                        <CIcon icon={icon.cilDollar} title='Cobrar venta'/> Cobrar
+                                    </button>
+                                    <button type='button' onClick={ () => setVisibleDiscont(true) } className='btn btn-success m-2'>
+                                        <CIcon icon={icon.cilDollar} title='Aplicar descuentoo'/> Descuento
+                                    </button>
+                                </>
+                            }
+                        </div>
+                    </div>
+                </div>
 
                 <div className='col-12'>
                     <div className="card mt-3">
@@ -305,6 +328,17 @@ const Form = () => {
                         </div>
                     </div>
                 </div>
+                <CModal size="md" visible={visibleDiscont} onClose={() => setVisibleDiscont(false)}>
+                <CModalHeader onClose={() => setVisible(false)}>
+                    <h2>Monto total venta 
+                        <b className='text-danger'> { formatCurrency(sale.total_amount) }</b> 
+                    </h2>
+                </CModalHeader>
+                <CModalBody>
+                    <input  type='number' value={ totalDiscount }  onChange={ (e) => setTotalDiscount(e.target.value) } className='form-control'/>
+                    <button className="btn btn-primary float-end mt-2" onClick={  handleApplyDiscount } >Aplicar</button>
+                </CModalBody>
+                </CModal>   
 
                 <CModal size="xl" visible={visible} onClose={() => setVisible(false)}>
                 <CModalHeader onClose={() => setVisible(false)}>
