@@ -11,7 +11,7 @@ import { startCreatingPayment } from 'src/actions/payment';
 import { formatNumber } from 'src/helpers/helpers';
 import { startGettingPaymentMethods } from 'src/actions/payment_methods';
 
-export const FormPayment = ({ sale, saleId, totalPayments }) => {
+export const FormPayment = ({ sale, saleId }) => {
 
   const dispatch = useDispatch();
   const { register, handleSubmit, setValue } = useForm();
@@ -170,8 +170,8 @@ export const FormPayment = ({ sale, saleId, totalPayments }) => {
               type="number" 
               size="lg" 
               disabled
-              className={`form-control form-control-lg ${ (sale.total_amount-totalPayments) == 0? "bg-success" : "bg-warning" }`  }
-              value={ (sale.total_amount - totalPayments)*-1 }
+              className={`form-control form-control-lg ${ (sale.total_amount-sale.total_amount_paid) == 0? "bg-success" : "bg-warning" }`  }
+              value={ (sale.total_amount - sale.total_amount_paid)*-1 }
               placeholder="0,00" 
               aria-label="Cambio / Vuelto"/>
 
@@ -181,8 +181,8 @@ export const FormPayment = ({ sale, saleId, totalPayments }) => {
               type="number" 
               size="lg" 
               disabled
-              className={`form-control form-control-lg ${ (sale.total_amount-totalPayments) == 0? "bg-success" : "bg-warning" }`  }
-              value={ ((sale.total_amount - totalPayments) * sale.exchange_amount)*-1 }
+              className={`form-control form-control-lg ${ (sale.total_amount-sale.total_amount_paid) == 0? "bg-success" : "bg-warning" }`  }
+              value={ ((sale.total_amount - sale.total_amount_paid) * sale.exchange_amount)*-1 }
               placeholder="0,00" 
               aria-label="Cambio / Vuelto"/>
 
@@ -190,7 +190,7 @@ export const FormPayment = ({ sale, saleId, totalPayments }) => {
          
         </div>
         <div class="mb-3 text-right">
-            { sale.total_amount-totalPayments > 0 &&
+            { sale.total_amount-sale.total_amount_paid > 0 &&
             <button type="submit" class="btn btn-warning">
               <CIcon icon={icon.cilPlus} title='Agregar pago'/>
                 Agregar

@@ -1,4 +1,5 @@
 import swal from "sweetalert";
+
 import config from "../config/config.json";
 import { CLG_MESSAGE } from "src/strings";
 const { API_URL } = config;
@@ -140,6 +141,25 @@ export const confirmDelete = (message, callback) => {
             callback();
         }
       });
+}
+
+export const customerNofound = (document, navigate) => {
+    swal({
+        title:'Oops',
+        text:'Cliente no registrado en el Sistema',
+        icon: "warning",
+        buttons: {
+            cancel: true,
+            roll: {
+                text: "Registrar cliente",
+                value: "customer_register",
+            },
+        }
+    }).then((result) => {
+        if(result == "customer_register"){
+            navigate(`/customers/create?document=${ document }`);
+        }
+    })
 }
 
 export const handleLoadingError = () => {

@@ -1,5 +1,9 @@
 import { fetchData } from "src/helpers/helpers";
 
+export const getSaleById = (id) => {
+    return fetchData(`sale/${id}`, 'GET');
+}
+
 export const getAllSales = (data) => {
     let params = new URLSearchParams(data).toString();
     return fetchData(`sales?${params}`, 'GET');
@@ -17,6 +21,10 @@ export const getAllSalesMonth = (data) => {
 
 export const createSale = (data) => {
     return fetchData(`sales`, 'POST', data);
+}
+
+export const createSaleDetails = (data) => {
+    return fetchData(`sales/details`, 'POST', data);
 }
 
 export const deleteSale = (id) => {

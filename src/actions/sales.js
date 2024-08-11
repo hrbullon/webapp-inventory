@@ -1,8 +1,58 @@
 import swal from "sweetalert";
 
 import { confirmDelete } from "src/helpers/helpers";
-import { closeSale, deleteSale, getAllSales, getAllSalesMonth, getAllSalesToday, getSalesSummary } from "src/services/salesServices";
+import { 
+        closeSale, 
+        createSale, 
+        deleteSale, 
+        getAllSales, 
+        createSaleDetails,
+        getAllSalesMonth, 
+        getAllSalesToday, 
+        getSalesSummary, 
+        getSaleById} 
+from "src/services/salesServices";
+
 import { CLG_MESSAGE, VIEW_MESSAGE } from "src/strings";
+
+export const startCreatingSale = (data) => {
+    return async (dispatch) => { 
+        try { 
+            let res = await createSale(data);
+            if(res.sale){
+                dispatch({ type: "set", saleCreated: res.sale });
+            }
+        }catch (error) {
+            console.error(CLG_MESSAGE.ERROR_DATA_LOADING);            
+        }
+    }
+}
+
+export const startGettingSaleById = (saleId) => {
+    return async (dispatch) => { 
+        try { 
+            let res = await getSaleById(saleId);
+            if(res.sale){
+                dispatch({ type: "set", saleLoaded: res.sale });
+            }
+        }catch (error) {
+            console.error(CLG_MESSAGE.ERROR_DATA_LOADING);            
+        }
+    }
+}
+
+export const startCreatingSaleDetails = (data) => {
+    return async (dispatch) => { 
+        try { 
+            let res = await createSaleDetails(data);
+            if(res.sale){
+                dispatch({ type: "set", saleDetailsCreated: res.sale });
+            }
+        }catch (error) {
+            console.error(CLG_MESSAGE.ERROR_DATA_LOADING);            
+        }
+    }
+}
 
 export const startGettingSales = (data, date = null) => {
     return async (dispatch) => { 

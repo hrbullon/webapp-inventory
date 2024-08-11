@@ -1,22 +1,37 @@
-import { createDiscount, deleteDiscount } from "src/services/discountServices";
+import { createDiscount, deleteDiscount, getDiscountsBySale } from "src/services/discountServices";
 import { CLG_MESSAGE } from "src/strings";
 
-export const startCreatingDiscount = (data) => {
+export const startGettingDiscountBySale = (saleId) => {
     return async (dispatch) => { 
         try {
-            const res = await createDiscount(data);
-            dispatch({ type: "set", discount: [...res.discount]});
+            const res = await getDiscountsBySale(saleId);
+            dispatch({ type: "set", discounts: [...res.discounts]});
         } catch (error) {
             console.error(CLG_MESSAGE.ERROR_DATA_LOADING);            
         }
     }
 }
 
-export const startDeletingDiscount = (id) => {
+export const startCreatingDiscount = (data) => {
+    return async (dispatch) => { 
+        try {
+            const res = await createDiscount(data);
+            if(res.discount){
+                dispatch( startGettingDiscountBySale(data.sale_id) );
+            }
+        } catch (error) {
+            console.error(CLG_MESSAGE.ERROR_DATA_LOADING);            
+        }
+    }
+}
+
+export const startDeletingDiscount = (saleId, id) => {
     return async (dispatch) => { 
         try {
             const res = await deleteDiscount(id);
-            dispatch({ type: "set", discount: [...res.discount]});
+            if(res.discount){
+                dispatch( startGettingDiscountBySale(saleId) );
+            }
         } catch (error) {
             console.error(CLG_MESSAGE.ERROR_DATA_LOADING);            
         }

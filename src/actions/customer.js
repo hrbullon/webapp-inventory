@@ -2,7 +2,8 @@ import {
     getAllCustomers, 
     getCustomerById, 
     createCustomer, 
-    updateCustomer } from 'src/services/customersServices';
+    updateCustomer, 
+    getCustomerByDni} from 'src/services/customersServices';
 
 import { CLG_MESSAGE } from "src/strings";
 
@@ -29,6 +30,17 @@ export const startGettingCustomerByID = (id) => {
         try {
             const res = await getCustomerById(id);
             dispatch({ type: "set", customer: {...res.customer}});
+        } catch (error) {
+            console.error(CLG_MESSAGE.ERROR_DATA_LOADING);            
+        }
+    }
+}
+
+export const startGettingCustomerByDni = (document) => {
+    return async (dispatch) => { 
+        try {
+            const res = await getCustomerByDni(document);
+            dispatch({ type: "set", customerLoaded: {...res.customer}});
         } catch (error) {
             console.error(CLG_MESSAGE.ERROR_DATA_LOADING);            
         }

@@ -1,5 +1,9 @@
 import { fetchData } from "src/helpers/helpers";
 
+export const getDiscountsBySale = (saleId) => {
+    return fetchData(`discounts/${saleId}`, 'GET');
+}
+
 export const createDiscount = (data) => {
     return fetchData(`discount`, 'POST', data);
 }
