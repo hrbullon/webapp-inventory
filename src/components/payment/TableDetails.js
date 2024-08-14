@@ -1,5 +1,5 @@
-import React from 'react'
-import { useDispatch } from 'react-redux';
+import { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
@@ -10,6 +10,22 @@ import { startDeletingPayment } from 'src/actions/payment';
 export const TableDetails = ({ items }) => {
 
     const dispatch = useDispatch();
+
+    const saleLoaded  = useSelector( (state) => state.saleLoaded );
+    const [sale, setSale] = useState({
+        total_amount: 0,
+        total_amount_converted: 0
+    });
+
+    useEffect(() => {
+      if(saleLoaded){
+        setSale( 
+            saleLoaded.total_amount, 
+            saleLoaded.total_amount_converted
+        );
+      }
+    }, [saleLoaded])
+    
 
     const textAlignRight = {
         textAlign: "right"
@@ -63,14 +79,14 @@ export const TableDetails = ({ items }) => {
                     <td colSpan={3}></td>
                     <td style={ textAlignRight }><b>Total Bs.:</b></td>
                     <td style={ textAlignRight }>
-                        <b>{ formatNumber(0) }</b>
+                        <b>{ formatNumber(saleLoaded.total_amount_paid*saleLoaded.exchange_amount) }</b>
                     </td>
                 </tr>
                 <tr>
                     <td colSpan={3}></td>
                     <td style={ textAlignRight }><b>Total $US:</b></td>
                     <td style={ textAlignRight }>
-                        <b>{ formatNumber(0) }</b>
+                        <b>{ formatNumber(saleLoaded.total_amount_paid) }</b>
                     </td>
                 </tr>
             </tfoot>

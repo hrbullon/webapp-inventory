@@ -17,6 +17,7 @@ export const startCreatingDiscount = (data) => {
         try {
             const res = await createDiscount(data);
             if(res.discount){
+                dispatch({ type: "set", discountSaved: res.discount});
                 dispatch( startGettingDiscountBySale(data.sale_id) );
             }
         } catch (error) {

@@ -131,6 +131,7 @@ export const confirmDelete = (message, callback) => {
             },
             confirm: {
               text: "Procesar",
+              className: "primary",
               value: true,
               visible: true,
               closeModal: true
@@ -141,6 +142,36 @@ export const confirmDelete = (message, callback) => {
             callback();
         }
       });
+}
+
+export const confirmSave = (callback) => {
+
+    swal({
+        title: 'Estás seguro?',
+        text: 'Desea guardar los cambios',
+        icon: 'info',
+        dangerMode: false,
+        buttons: {
+            cancel: {
+              text: "Cancelar",
+              value: null,
+              visible: true,
+              closeModal: true,
+            },
+            confirm: {
+              text: "Procesar",
+              className: "primary",
+              value: true,
+              visible: true,
+              closeModal: true
+            }
+        }
+      }).then( (result) => { 
+        if (result) {
+            callback();
+        }
+    });
+
 }
 
 export const customerNofound = (document, navigate) => {

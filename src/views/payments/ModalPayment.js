@@ -11,7 +11,9 @@ import { CardTotal } from 'src/components/cards/CardTotal';
 import { TableDetails as PaymentDetails} from 'src/components/payment/TableDetails';
 
 import { formatCurrency } from 'src/helpers/helpers';
+
 import { startGettingPayments } from 'src/actions/payment';
+import { startGettingSaleById } from 'src/actions/sales';
 
 export const ModalPayment = ({ sale, saleId }) => {
 
@@ -29,7 +31,13 @@ export const ModalPayment = ({ sale, saleId }) => {
 
         dispatch( startGettingPayments(saleId) );
 
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        if(payments){
+            dispatch( startGettingSaleById( saleId ) );
+        }
+    }, [payments])
 
     return (
     <>
@@ -62,7 +70,7 @@ export const ModalPayment = ({ sale, saleId }) => {
                     </div>
 
                     <div className='col-12 mb-3 text-right'>
-                        { (sale.total_amount <= sale.total_paid) &&
+                        { (sale.total_amount <= sale.total_amount_paid) &&
                         <button type='button' onClick={ handleClickFinnish } className='btn btn-success m-2'>
                             <CIcon icon={icon.cilCheck} title='Finalizar'/> Finalizar
                         </button>

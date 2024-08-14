@@ -1,30 +1,24 @@
 import React from 'react'
+import { useDispatch } from 'react-redux';
 
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
-import { formatNumber } from 'src/helpers/helpers';
+import { confirmDelete, formatNumber } from 'src/helpers/helpers';
 
-export const TableDetails = ({ items, model, setModel, doc}) => {
+import { startDeletingSaleDetails } from 'src/actions/sales';
+
+export const TableDetails = ({ items, model, setModel, doc, total = true}) => {
+
+    const dispatch = useDispatch();
 
     const textAlignRight = {
         textAlign: "right"
     };
 
-    const handleDeleteItem = (index) => {
-        
-        items.splice(index, 1);
-
-        let total = 0;
-        let totalConverted = 0;
-
-        items.map( item => {  total += item.subtotal_amount });
-        items.map( item => {  totalConverted += item.subtotal_amount_converted });
-        
-        setModel({ ...model, 
-            total_amount: total,
-            total_amount_converted: totalConverted,
-            details: [ ...items]
-        })
+    const handleDeleteItem = (detail) => {
+        confirmDelete(`Quiere eliminar la fila seleccionada?`, async () => { 
+            dispatch( startDeletingSaleDetails(model.id, detail) );
+        });
     }
 
     return (
@@ -70,7 +64,7 @@ export const TableDetails = ({ items, model, setModel, doc}) => {
                                 }
                                 { setModel &&
                                 <td style={ textAlignRight }>
-                                    <button onClick={ (e) => handleDeleteItem(index) } className='btn btn-sm btn-danger'>
+                                    <button onClick={ (e) => handleDeleteItem(item.id) } className='btn btn-sm btn-danger'>
                                         <CIcon icon={ icon.cilDelete }/>
                                     </button>
                                 </td>}
@@ -79,22 +73,23 @@ export const TableDetails = ({ items, model, setModel, doc}) => {
                     })
                 }
             </tbody>
+            { total && 
             <tfoot>
                 <tr>
-                    <td colSpan={7}></td>
+                    <td colSpan={8}></td>
                     <td style={ textAlignRight }><b>Total Bs.:</b></td>
                     <td style={ textAlignRight }>
                         <b>{ formatNumber(model.total_amount_converted) }</b>
                     </td>
                 </tr>
                 <tr>
-                    <td colSpan={7}></td>
+                    <td colSpan={8}></td>
                     <td style={ textAlignRight }><b>Total $US:</b></td>
                     <td style={ textAlignRight }>
                         <b>{ formatNumber(model.total_amount) }</b>
                     </td>
                 </tr>
-            </tfoot>
+            </tfoot>}
         </table>
     </div>
   )

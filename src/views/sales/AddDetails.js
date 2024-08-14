@@ -44,7 +44,7 @@ export const AddDetails = ({ sale, saleId }) => {
             setSerial("");
 
         } else {
-            swal("Alerta", `Cantidad: ${ quantity } no disponible, quedan ${ (product.quantity-total) }`,'warning');
+            swal("Alerta", `Cantidad: ${ quantity } no disponible, quedan ${ (product.quantity) }`,'warning');
         }
     }
 

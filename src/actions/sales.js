@@ -10,7 +10,8 @@ import {
         getAllSalesMonth, 
         getAllSalesToday, 
         getSalesSummary, 
-        getSaleById} 
+        getSaleById,
+        deleteSaleDetails} 
 from "src/services/salesServices";
 
 import { CLG_MESSAGE, VIEW_MESSAGE } from "src/strings";
@@ -110,15 +111,19 @@ export const startDeletingSale = (data) => {
                   'success'
                 );
                 
-                //Page reload
-                /* setTimeout( () => {
-                    window.location.reload();
-                }, 2000) */
-                
             }else{
                 swal("Error", VIEW_MESSAGE.DATA_SAVED_FAILED);
             }
         });
+    }
+}
+
+export const startDeletingSaleDetails = (saleId, detail) => {
+    return async (dispatch) => { 
+        const res = await deleteSaleDetails(saleId, detail);
+        if(res.deleted){
+            dispatch( startGettingSaleById(saleId) );
+        }
     }
 }
 

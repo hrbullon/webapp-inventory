@@ -3,13 +3,16 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 
+import CIcon from '@coreui/icons-react';
+import * as icon from '@coreui/icons';
+
 import { CardBasic } from './CardBasic';
 import { CardTotal } from 'src/components/cards/CardTotal';
 import { CardExchange } from 'src/components/cards/CardExchange';
 
 import { TableDetails } from 'src/components/product/TableDetails';
 
-import { customerNofound, formatDocument } from 'src/helpers/helpers';
+import { customerNofound, formatDocument, formatNumber } from 'src/helpers/helpers';
 
 import { startGettingLastExchange } from 'src/actions/exchange';
 
@@ -17,7 +20,8 @@ import { AddDetails } from './AddDetails';
 import { ModalPayment } from '../payments/ModalPayment';
 import { ModalDiscount } from 'src/components/discount/ModalDiscount';
 import { getCustomerByDni } from 'src/services/customersServices';
-import { startCreatingSale, startGettingSaleById } from 'src/actions/sales';
+import { startClosingSale, startCreatingSale, startGettingSaleById } from 'src/actions/sales';
+import { startGettingDiscountBySale } from 'src/actions/discount';
 
 const Form = () => {
 
@@ -28,6 +32,7 @@ const Form = () => {
     const saleClosed = useSelector( (state) => state.saleClosed );
     const exchange = useSelector(( state ) => state.lastExchange );
 
+    const discounts = useSelector(( state ) => state.discounts );
     const saleLoaded  = useSelector( (state) => state.saleLoaded );
     const saleCreated  = useSelector( (state) => state.saleCreated );
     const customerSaved = useSelector( (state) => state.customerSaved );
@@ -44,16 +49,26 @@ const Form = () => {
         description:'',
         checkout_session_id: checkout_session_id? checkout_session_id : '',
         exchange_amount:0,
+        subtotal_amount:0,
+        discount_amount:0,
         total_amount:0,
+        subtotal_amount_converted:0,
+        discount_amount_converted:0,
         total_amount_converted:0,
+        total_amount_paid:0,
         SaleDetails: []
     });
     
     const [dni, setDni] = useState("");
     const [customer, setCustomer] = useState({});
+    const [totalDiscount, setTotalDiscount] = useState({
+        discount:0,
+        discount_converted:0
+    });
 
     useEffect(() => {
         dispatch( startGettingLastExchange() );
+        dispatch( startGettingDiscountBySale(saleId) );
     }, []);
 
     useEffect(() => {
@@ -119,6 +134,19 @@ const Form = () => {
         }
       
     }, [saleClosed])
+
+    useEffect(() => {
+        if(discounts){
+
+            const discount = discounts.reduce((acum, value) => { return acum + value.discount }, 0);
+            const discount_converted = discounts.reduce((acum, value) => { return acum + value.discount_converted }, 0);
+            setTotalDiscount({...totalDiscount, discount, discount_converted});
+        }
+    }, [discounts])
+
+    const handleFinnish  = async () => {
+        dispatch( startClosingSale({ sale_id: saleId }) );
+    }
 
     const handleFindCustomer = async (evt) => {
         
@@ -210,8 +238,59 @@ const Form = () => {
                                 <div className='col-12'>
                                     <TableDetails 
                                         items={ sale.SaleDetails } 
-                                        model={sale} setModel={setSale}/>
+                                        model={sale} setModel={setSale}
+                                        total={ false }/>
                                 </div>   
+                                <div className='col-8'></div>
+                                <div className='col-2'>
+                                    <table className='table'>
+                                        <tbody>
+                                            <tr>
+                                                <td className='text-right'>Subtotal Bs.</td>
+                                                <td  width={100} className='text-right'>{ formatNumber(sale.subtotal_amount_converted) }</td>
+                                            </tr>
+                                            <tr >
+                                                <td className='text-right'>Descuento Bs.</td>
+                                                <td  width={100} className='text-right'>{ formatNumber(totalDiscount.discount_converted) }</td>
+                                            </tr>
+                                            <tr >
+                                                <td className='text-right'>Total Bs.</td>
+                                                <td  width={100} className='text-right'>{ formatNumber(sale.subtotal_amount_converted-totalDiscount.discount_converted) }</td>
+                                            </tr>
+                                            <tr >
+                                                <td className='text-right'>Pagado Bs.</td>
+                                                <td  width={100} className='text-right'>{ formatNumber(sale.total_amount_paid*sale.exchange_amount) }</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div className='col-2'>
+                                    <table className='table'>
+                                        <tbody>
+                                            <tr>
+                                                <td className='text-right'>Subtotal $US</td>
+                                                <td  width={100} className='text-right'>{ formatNumber(sale.subtotal_amount) }</td>
+                                            </tr>
+                                            <tr >
+                                                <td className='text-right'>Descuento $US</td>
+                                                <td  width={100} className='text-right'>{ formatNumber(totalDiscount.discount) }</td>
+                                            </tr>
+                                            <tr >
+                                                <td className='text-right'>Total $US</td>
+                                                <td  width={100} className='text-right'>{ formatNumber(sale.subtotal_amount-totalDiscount.discount) }</td>
+                                            </tr>
+                                            <tr >
+                                                <td className='text-right'>Pagado $USD.</td>
+                                                <td  width={100} className='text-right'>{ formatNumber(sale.total_amount_paid) }</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div className='col-12'>
+                                    <button onClick={ handleFinnish } className='btn btn-primary float-end'>
+                                        <CIcon icon={ icon.cilCheckCircle } /> Finalizar
+                                    </button>
+                                </div>
                             </div>   
                         </div>
                     </div>

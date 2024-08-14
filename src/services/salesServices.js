@@ -31,6 +31,10 @@ export const deleteSale = (id) => {
     return fetchData(`sales/${id}`, 'DELETE');
 }
 
+export const deleteSaleDetails = (sale, detail) => {
+    return fetchData(`sales/${sale}/details/${detail}`, 'DELETE');
+}
+
 export const closeSale = (data) => {
     return fetchData(`sales/close`, 'POST', data);
 }
