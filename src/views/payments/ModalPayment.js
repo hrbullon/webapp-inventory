@@ -23,10 +23,6 @@ export const ModalPayment = ({ sale, saleId }) => {
 
     const [visible, setVisible] = useState(false);
 
-    const handleClickFinnish = () => {
-
-    }
-
     useEffect(() => {
 
         dispatch( startGettingPayments(saleId) );
@@ -67,14 +63,6 @@ export const ModalPayment = ({ sale, saleId }) => {
                     </div>
                     <div className='col-12 mb-3'>
                         <PaymentDetails items={ payments } />
-                    </div>
-
-                    <div className='col-12 mb-3 text-right'>
-                        { (sale.total_amount <= sale.total_amount_paid) &&
-                        <button type='button' onClick={ handleClickFinnish } className='btn btn-success m-2'>
-                            <CIcon icon={icon.cilCheck} title='Finalizar'/> Finalizar
-                        </button>
-                        }
                     </div>
                 </div>
             </CModalBody>

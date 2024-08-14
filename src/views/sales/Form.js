@@ -221,17 +221,16 @@ const Form = () => {
                         <div className="card-body">
                             <div className='row'>
                                 <div className='col-12'>
-
-                                    <ModalDiscount 
-                                        sale={ sale }
-                                        saleId={ saleId }
-                                    />
-
-                                    <ModalPayment 
-                                        sale={ sale }
-                                        saleId={ saleId }
-                                    />
-                                    
+                                    { saleId > 0 &&
+                                    <>
+                                        <ModalDiscount 
+                                            sale={ sale }
+                                            saleId={ saleId }
+                                        />
+                                        <ModalPayment 
+                                            sale={ sale }
+                                            saleId={ saleId }/>
+                                    </>}
                                 </div>
                             </div>
                             <div className='row'>
@@ -286,11 +285,13 @@ const Form = () => {
                                         </tbody>
                                     </table>
                                 </div>
-                                <div className='col-12'>
-                                    <button onClick={ handleFinnish } className='btn btn-primary float-end'>
-                                        <CIcon icon={ icon.cilCheckCircle } /> Finalizar
-                                    </button>
-                                </div>
+                                { saleId > 0 &&
+                                    <div className='col-12'>
+                                        <button onClick={ handleFinnish } className='btn btn-primary float-end'>
+                                            <CIcon icon={ icon.cilCheckCircle } /> Finalizar
+                                        </button>
+                                    </div>
+                                }
                             </div>   
                         </div>
                     </div>
