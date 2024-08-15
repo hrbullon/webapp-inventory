@@ -141,11 +141,13 @@ const Form = () => {
             const discount = discounts.reduce((acum, value) => { return acum + value.discount }, 0);
             const discount_converted = discounts.reduce((acum, value) => { return acum + value.discount_converted }, 0);
             setTotalDiscount({...totalDiscount, discount, discount_converted});
+
+            dispatch( startGettingSaleById( saleId ) );
         }
     }, [discounts])
 
     const handleFinnish  = async () => {
-        dispatch( startClosingSale({ sale_id: saleId }) );
+        dispatch( startClosingSale({ sale_id: saleId, description: sale.description }) );
     }
 
     const handleFindCustomer = async (evt) => {
@@ -223,13 +225,14 @@ const Form = () => {
                                 <div className='col-12'>
                                     { saleId > 0 &&
                                     <>
+                                        <ModalPayment 
+                                            sale={ sale }
+                                            saleId={ saleId }/>
+                                        
                                         <ModalDiscount 
                                             sale={ sale }
                                             saleId={ saleId }
                                         />
-                                        <ModalPayment 
-                                            sale={ sale }
-                                            saleId={ saleId }/>
                                     </>}
                                 </div>
                             </div>
@@ -260,6 +263,10 @@ const Form = () => {
                                                 <td className='text-right'>Pagado Bs.</td>
                                                 <td  width={100} className='text-right'>{ formatNumber(sale.total_amount_paid*sale.exchange_amount) }</td>
                                             </tr>
+                                            <tr >
+                                                <td className='text-right'>Vuelto/Cambio Bs.</td>
+                                                <td  width={100} className='text-right'>{ formatNumber((sale.total_amount_change*-1)*sale.exchange_amount) }</td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -281,6 +288,10 @@ const Form = () => {
                                             <tr >
                                                 <td className='text-right'>Pagado $USD.</td>
                                                 <td  width={100} className='text-right'>{ formatNumber(sale.total_amount_paid) }</td>
+                                            </tr>
+                                            <tr >
+                                                <td className='text-right'>Vuelto/Cambio $USD.</td>
+                                                <td  width={100} className='text-right'>{ formatNumber(sale.total_amount_change*-1) }</td>
                                             </tr>
                                         </tbody>
                                     </table>
