@@ -53,7 +53,9 @@ export const Table = ({ title, today = null }) => {
     const handleDeleteSale = async sale => dispatch( startDeletingSale(sale) );
 
     const handleShowSale = (sale) => {
-        setSale(sale);
+
+        const saleFiltered = sales.filter( item => item.id == sale.id );
+        setSale(saleFiltered[0]);
         setVisible(true);
     }
 

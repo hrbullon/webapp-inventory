@@ -56,6 +56,7 @@ const Form = () => {
         discount_amount_converted:0,
         total_amount_converted:0,
         total_amount_paid:0,
+        total_amount_change:0,
         SaleDetails: []
     });
     
