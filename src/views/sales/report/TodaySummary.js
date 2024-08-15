@@ -1,6 +1,7 @@
 import React from 'react'
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { startGettingDiscountByCheckoutSession } from 'src/actions/discount';
 import { startGettingPaymentSummary } from 'src/actions/payment';
 import { startGettingSaleSummary } from 'src/actions/sales';
 import { formatNumber } from 'src/helpers/helpers';
@@ -8,12 +9,15 @@ import { formatNumber } from 'src/helpers/helpers';
 export const TodaySummary = ( { checkoutSessionId } ) => {
 
     const dispatch = useDispatch();
+
     const salesSummary = useSelector((state) => state.salesSummary );
     const paymentSummary = useSelector((state) => state.paymentSummary );
+    const discountSummary = useSelector((state) => state.discountSummary );
 
     useEffect(() => {
         dispatch( startGettingSaleSummary(checkoutSessionId) );
         dispatch( startGettingPaymentSummary(checkoutSessionId) );
+        dispatch( startGettingDiscountByCheckoutSession(checkoutSessionId) );
     }, [])
 
     const getTotal = (items, column) => {
@@ -56,6 +60,44 @@ export const TodaySummary = ( { checkoutSessionId } ) => {
                         <th className='text-right'><b>{ formatNumber(getTotal(salesSummary, 'quantity')) }</b></th>
                         <th className='text-right'><b>{ formatNumber(getTotal(salesSummary, 'total_amount')) }</b></th>
                         <th className='text-right'><b>{ formatNumber(getTotal(salesSummary, 'total_amount_converted')) }</b></th>
+                    </tr>
+                </tfoot>
+            </table>
+        }
+
+        <h5>Descuentos</h5>
+        { discountSummary &&
+            <table className='table table-bordered table-stripped'>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Descripción</th>
+                        <th className='text-right'>Porcentaje %</th>
+                        <th className='text-right'>Monto $USD</th>
+                        <th className='text-right'>Monto Bs</th>
+                    </tr>
+                </thead>
+                <tbody>
+                { 
+                    discountSummary.map( (discount, key) => {
+                        return <tr key={ discount.id }>
+                            <td>{ key+1 }</td>
+                            <td>{ discount.description }</td>
+                            <td className='text-right'>{ formatNumber(discount.percentage) }</td>
+                            <td className='text-right'>{ formatNumber(discount.discount) }</td>
+                            <td className='text-right'>{ formatNumber(discount.discount_converted) }</td>
+                        </tr>
+                    })
+                }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colSpan={4} className='text-right'>
+                            <b>{ formatNumber(getTotal(discountSummary, 'discount')) }</b>
+                        </th>
+                        <th className='text-right'>
+                            <b>{ formatNumber(getTotal(discountSummary, 'discount_converted')) }</b>
+                        </th>
                     </tr>
                 </tfoot>
             </table>

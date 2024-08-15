@@ -4,6 +4,10 @@ export const getDiscountsBySale = (saleId) => {
     return fetchData(`discounts/${saleId}`, 'GET');
 }
 
+export const getDiscountsByCheckoutSession = (checkoutSessionId) => {
+    return fetchData(`discounts/session/${checkoutSessionId}`, 'GET');
+}
+
 export const createDiscount = (data) => {
     return fetchData(`discount`, 'POST', data);
 }

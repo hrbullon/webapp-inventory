@@ -1,4 +1,10 @@
-import { createDiscount, deleteDiscount, getDiscountsBySale } from "src/services/discountServices";
+import { 
+    createDiscount, 
+    deleteDiscount, 
+    getDiscountsByCheckoutSession, 
+    getDiscountsBySale 
+} from "src/services/discountServices";
+
 import { CLG_MESSAGE } from "src/strings";
 
 export const startGettingDiscountBySale = (saleId) => {
@@ -6,6 +12,17 @@ export const startGettingDiscountBySale = (saleId) => {
         try {
             const res = await getDiscountsBySale(saleId);
             dispatch({ type: "set", discounts: [...res.discounts]});
+        } catch (error) {
+            console.error(CLG_MESSAGE.ERROR_DATA_LOADING);            
+        }
+    }
+}
+
+export const startGettingDiscountByCheckoutSession = (checkoutSessionId) => {
+    return async (dispatch) => { 
+        try {
+            const res = await getDiscountsByCheckoutSession(checkoutSessionId);
+            dispatch({ type: "set", discountSummary: [...res.discounts]});
         } catch (error) {
             console.error(CLG_MESSAGE.ERROR_DATA_LOADING);            
         }
