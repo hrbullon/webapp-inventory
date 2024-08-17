@@ -1,3 +1,4 @@
+import { useDispatch } from 'react-redux';
 
 import CIcon from '@coreui/icons-react';
 import * as icon from '@coreui/icons';
@@ -6,6 +7,8 @@ import { confirmDelete, formatNumber } from 'src/helpers/helpers';
 import { startDeletingSaleDetails } from 'src/actions/sales';
 
 export const TableDetails = ({ items, model, setModel, doc, total = true}) => {
+
+    const dispatch = useDispatch();
 
     const textAlignRight = {
         textAlign: "right"
