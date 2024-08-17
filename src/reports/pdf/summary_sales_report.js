@@ -93,31 +93,32 @@ export const generateSummarySalesReport = (company, sales, payments, transaction
     
         doc.text("Reporte diario de ventas X", 110, 50, { align: "center" }); 
         
-        doc.text(`Total ventas: ${ formatNumber(transactionSummary.count_sales) }`, 10, 55, { align: "left"}); 
-        doc.text(`Monto Cobrado por Ventas: ${ formatNumber(transactionSummary.total_amount_sales) }`, 10, 60, { align: "left"}); 
-        doc.text(`Monto Real Ventas: ${ formatNumber(transactionSummary.real_total_sale) }`, 10, 65, { align: "left"}); 
+        doc.text(`Cantidad Ventas: ${ formatNumber(transactionSummary.count_sales) }`, 10, 55, { align: "left"}); 
+        doc.text(`Monto Ventas - (Cobrado): ${ formatNumber(transactionSummary.total_amount_sales-transactionSummary.total_amount_cancelled) }`, 10, 60, { align: "left"}); 
+        doc.text(`Monto Ventas - (Total): ${ formatNumber(transactionSummary.real_total_sale-transactionSummary.total_amount_cancelled) }`, 10, 65, { align: "left"}); 
+        doc.text(`Monto Ventas - (Anuladas): ${ formatNumber(transactionSummary.total_amount_cancelled) }`, 10, 70, { align: "left"}); 
         
-        doc.text(`___________Montos Efectivo________________`, 10, 75, { align: "left"}); 
+        doc.text(`___________Montos Efectivo________________`, 10, 80, { align: "left"}); 
         
-        doc.text(`Monto apertura: ${ formatNumber(transactionSummary.total_amount_cash_starting) }`, 10, 80, { align: "left"}); 
-        doc.text(`Monto ventas: ${ formatNumber(totalAmountCashSale) }`, 10, 85, { align: "left"}); 
-        doc.text(`Monto ingreso: ${ formatNumber(transactionSummary.total_amount_in_cash) }`, 10, 90, { align: "left"}); 
-        doc.text(`Monto salida: ${ formatNumber(transactionSummary.total_amount_out_cash) }`, 10, 95, { align: "left"}); 
-        doc.text(`Monto Vueltos/Cambios: ${ formatNumber(transactionSummary.total_amount_change) }`, 10, 100, { align: "left"}); 
-        doc.text(`Total Efectivo $US en caja: ${ formatNumber(transactionSummary.total_amount_cash_ending) }`, 10, 105, { align: "left"}); 
+        doc.text(`Monto apertura: ${ formatNumber(transactionSummary.total_amount_cash_starting) }`, 10, 85, { align: "left"}); 
+        doc.text(`Monto ventas: ${ formatNumber(totalAmountCashSale) }`, 10, 90, { align: "left"}); 
+        doc.text(`Monto ingreso: ${ formatNumber(transactionSummary.total_amount_in_cash) }`, 10, 95, { align: "left"}); 
+        doc.text(`Monto salida: ${ formatNumber(transactionSummary.total_amount_out_cash) }`, 10, 100, { align: "left"}); 
+        doc.text(`Monto Vueltos/Cambios: ${ formatNumber(transactionSummary.total_amount_change) }`, 10, 105, { align: "left"}); 
+        doc.text(`Total Efectivo $US en caja: ${ formatNumber(transactionSummary.total_amount_cash_ending) }`, 10, 110, { align: "left"}); 
         
         if(pageData.length > 0){
             doc.setFontSize(15);
-            doc.text("Ventas", 10, 115, { align: "left"}); 
+            doc.text("Ventas", 10, 120, { align: "left"}); 
 
-            printTable(headerOptionsSales, pageData, 10, 120);
+            printTable(headerOptionsSales, pageData, 10, 125);
 
         }
 
         if ((pageNumber-1) == i) {
             doc.setFontSize(15);
-            doc.text("Descuentos", 10, (pageData.length*10)+130, { align: "left"}); 
-            printTable(headerOptionsDiscounts, discountItems, 10, (pageData.length*10)+140);
+            doc.text("Descuentos", 10, (pageData.length*10)+135, { align: "left"}); 
+            printTable(headerOptionsDiscounts, discountItems, 10, (pageData.length*10)+145);
         }
 
         if ((pageNumber-1) == i) {

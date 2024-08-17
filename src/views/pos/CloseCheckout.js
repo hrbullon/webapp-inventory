@@ -114,6 +114,7 @@ export const CloseCheckout = () => {
   
   return (
     <Fragment>
+      { checkoutRegisterSummary &&
       <div className='card'>
         <div className='row'>
             <div className='col'>
@@ -139,19 +140,24 @@ export const CloseCheckout = () => {
                 <td>{ date }</td>
               </tr>
               <tr>
-                <td width="400px">Total ventas:</td>
+                <td width="400px">Cantidad Ventas:</td>
                 <td></td>
-                <td>{ formatNumber(counterSales) }</td>
+                <td>{ formatNumber(checkoutRegisterSummary.count_sales) }</td>
               </tr>
               <tr>
-                <td>Monto Cobrado por Ventas:</td>
+                <td>Monto Ventas - (Cobrado):</td>
                 <td></td>
-                <td>{ formatCurrency(totalAmount) }</td>
+                <td>{ formatCurrency(totalAmount-checkoutRegisterSummary.total_amount_cancelled) }</td>
               </tr>
               <tr>
-                <td>Monto Real Ventas:</td>
+                <td>Monto Ventas - (Total):</td>
                 <td></td>
-                <td>{ formatCurrency(realTotalAmountSale) }</td>
+                <td>{ formatCurrency(realTotalAmountSale-checkoutRegisterSummary.total_amount_cancelled) }</td>
+              </tr>
+              <tr>
+                <td>Monto Ventas - (Anuladas):</td>
+                <td></td>
+                <td className='text-danger'>{ formatCurrency(checkoutRegisterSummary.total_amount_cancelled) }</td>
               </tr>
               <tr>
                 <td colSpan={3}>___________Montos Efectivo________________</td>
@@ -219,7 +225,7 @@ export const CloseCheckout = () => {
             <TodaySummary checkoutSessionId={ checkout_session_id }/>
           </div>
         </div> 
-      </div> 
+      </div>} 
     </Fragment>
   )
 }
