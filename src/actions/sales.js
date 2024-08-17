@@ -105,11 +105,16 @@ export const startDeletingSale = (data) => {
             const deleted = await deleteSale(data.id);
                 
             if(deleted.sale){
+
                 swal(
-                  'Venta anulada completada!',
+                  'Solicitud procesada!',
                   'Se anuló la venta correctamente!',
                   'success'
                 );
+
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
                 
             }else{
                 swal("Error", VIEW_MESSAGE.DATA_SAVED_FAILED);
