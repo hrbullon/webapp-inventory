@@ -14,8 +14,13 @@ import { TodaySummary } from '../sales/report/TodaySummary';
 import { generateSummarySalesReport } from 'src/reports/pdf/summary_sales_report';
 import { AuthContext } from 'src/context/AuthContext';
 
-import { startGettingAllByCheckoutSessionId, startGettingCheckoutRegistersSummary, startClosingCheckout } 
-from 'src/actions/checkout_register';
+import { 
+  startGettingAllByCheckoutSessionId, 
+  startGettingCheckoutRegistersSummary, 
+  startClosingCheckout 
+} from 'src/actions/checkout_register';
+
+import { startGettingDiscountByCheckoutSession } from 'src/actions/discount';
 
 export const CloseCheckout = () => {
 
@@ -42,12 +47,14 @@ export const CloseCheckout = () => {
   const checkoutRegisterSummary = useSelector((state) => state.checkoutRegisterSummary);
   const salesSummary = useSelector((state) => state.salesSummary );
   const paymentSummary = useSelector((state) => state.paymentSummary );
+  const discountSummary = useSelector((state) => state.discountSummary );
   const checkoutClosed = useSelector((state) => state.checkoutClosed );
 
   useEffect(() => {
 
     dispatch( startGettingAllByCheckoutSessionId(checkout_session_id) );
     dispatch( startGettingCheckoutRegistersSummary(checkout_session_id) );
+    dispatch( startGettingDiscountByCheckoutSession(checkout_session_id) );
 
   }, [])
 
@@ -96,7 +103,7 @@ export const CloseCheckout = () => {
   }, [checkoutClosed])
   
   const generateSummarySalesReportPDF = async () =>  {
-    generateSummarySalesReport(company, salesSummary, paymentSummary, checkoutRegisterSummary, totalAmountCashSale);
+    generateSummarySalesReport(company, salesSummary, paymentSummary, checkoutRegisterSummary, totalAmountCashSale, discountSummary);
   }
 
   const closeCheckout = async () => {

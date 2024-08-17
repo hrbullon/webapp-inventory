@@ -1,7 +1,7 @@
 import moment from "moment";
 import { createPdf, printFooter, printHeader, printTable } from "src/helpers/ReportPdf"
 import { formatNumber } from "src/helpers/helpers";
-import { getSalesAndPaymentsWIthTotalAmount } from "src/views/sales/report/selector";
+import { getDiscountsWithTotalAmount, getSalesAndPaymentsWIthTotalAmount } from "src/views/sales/report/selector";
 
 const headerOptionsSales = [
     {
@@ -44,7 +44,30 @@ const headerOptionsPayments = [
     },
 ]
 
-export const generateSummarySalesReport = (company, sales, payments, transactionSummary, totalAmountCashSale) => {
+const headerOptionsDiscounts = [
+    {
+        name:"description",
+        prompt:"Descripción",
+        width: 50,
+    },
+    {
+        name:"percentage",
+        prompt:"Porcentaje %",
+        width: 50,
+    },
+    {
+        name:"discount",
+        prompt:"Monto $USD",
+        width: 50,
+    },
+    {
+        name:"discount_converted",
+        prompt:"Monto Bs",
+        width: 50,
+    },
+]
+
+export const generateSummarySalesReport = (company, sales, payments, transactionSummary, totalAmountCashSale, discountSummary) => {
 
     const salesPerPage = 10;
     const doc = createPdf(company);
@@ -54,6 +77,7 @@ export const generateSummarySalesReport = (company, sales, payments, transaction
     
     const salesItems = getSalesAndPaymentsWIthTotalAmount(sales, "sales");
     const paymentsItems = getSalesAndPaymentsWIthTotalAmount(payments, "payments");
+    const discountItems = getDiscountsWithTotalAmount(discountSummary);
 
     for (let i = 0; i < pageNumber; i++) {
 
@@ -74,7 +98,6 @@ export const generateSummarySalesReport = (company, sales, payments, transaction
         doc.text(`Monto Real Ventas: ${ formatNumber(transactionSummary.real_total_sale) }`, 10, 65, { align: "left"}); 
         
         doc.text(`___________Montos Efectivo________________`, 10, 75, { align: "left"}); 
-
         
         doc.text(`Monto apertura: ${ formatNumber(transactionSummary.total_amount_cash_starting) }`, 10, 80, { align: "left"}); 
         doc.text(`Monto ventas: ${ formatNumber(totalAmountCashSale) }`, 10, 85, { align: "left"}); 
@@ -86,13 +109,24 @@ export const generateSummarySalesReport = (company, sales, payments, transaction
         if(pageData.length > 0){
             doc.setFontSize(15);
             doc.text("Ventas", 10, 115, { align: "left"}); 
+
             printTable(headerOptionsSales, pageData, 10, 120);
+
         }
 
         if ((pageNumber-1) == i) {
             doc.setFontSize(15);
-            doc.text("Pagos", 10, (pageData.length*10)+130, { align: "left"}); 
-            printTable(headerOptionsPayments, paymentsItems, 10, (pageData.length*10)+140);
+            doc.text("Descuentos", 10, (pageData.length*10)+130, { align: "left"}); 
+            printTable(headerOptionsDiscounts, discountItems, 10, (pageData.length*10)+140);
+        }
+
+        if ((pageNumber-1) == i) {
+
+            const startTable = (pageData.length*10)+(discountItems.length*10)+160;
+
+            doc.setFontSize(15);
+            doc.text("Pagos", 10, startTable, { align: "left"}); 
+            printTable(headerOptionsPayments, paymentsItems, 10, (startTable)+10);
         }
 
         printFooter(i,pageNumber);

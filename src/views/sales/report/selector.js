@@ -147,3 +147,31 @@ export const getSalesAndPaymentsWIthTotalAmount = (items, type) => {
 
     return rows;
 }
+
+export const getDiscountsWithTotalAmount = (items) => {
+
+    let rows = [];
+    let totalAmount = 0;
+    let totalAmountConverted = 0;
+
+    items.map( (item) => {
+        totalAmount += Number(item.discount);
+        totalAmountConverted += Number(item.discount_converted);
+    })
+
+    rows = items.map( item => { return {
+        description: item.description,
+        percentage: formatNumber(item.percentage),
+        discount: formatNumber(item.discount),
+        discount_converted: formatNumber(item.discount_converted)  
+    }});
+
+    rows.push({ 
+        description: "",
+        percentage: "",
+        discount: formatNumber(totalAmount),
+        discount_converted: formatNumber(totalAmountConverted),
+    });
+
+    return rows;
+}

@@ -40,11 +40,13 @@ export const printHeader = ( headerInfo ) => {
 
 export const printTable = ( headerOptions, data, x = 10, y) => {
 
-    doc.table(x, y, data , headerOptions, {
-        fontSize: 7,
-        headerBackgroundColor: "#185f9d",
-        headerTextColor: "white"
-    });
+    if(data.length > 0){
+        doc.table(x, y, data , headerOptions, {
+            fontSize: 7,
+            headerBackgroundColor: "#185f9d",
+            headerTextColor: "white"
+        });
+    }
 }
 
 export const printFooter = ( page, totalPage ) => {
