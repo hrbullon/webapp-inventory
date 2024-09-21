@@ -9,7 +9,8 @@ import * as icon from '@coreui/icons';
 
 import { AuthContext } from 'src/context/AuthContext';
 
-export const ButtonsExport = ({ data, headerOptions, title, fileName }) => {
+export const ButtonsExport = ({ data, headerOptions, title, fileName, columnsStyles = {} }) => {
+
     const { company } = useContext(AuthContext);
 
     const handleClickPDF = () => {

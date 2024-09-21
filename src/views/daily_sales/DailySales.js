@@ -8,7 +8,7 @@ const DailySales = () => {
         <div className='col'>
             <div className="card  mt-4">
                 <div className="card-body">
-                    <Table title="Cierres de caja"/>
+                    <Table/>
                 </div>
             </div>
         </div>

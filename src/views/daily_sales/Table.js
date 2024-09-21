@@ -1,45 +1,60 @@
-import { Fragment, useEffect, useState } from "react"
+import { Fragment, useEffect, useState } from "react";
 
-import config from '../../config/config.json';
+import { DatatableComponent as DataTable } 
+from "src/components/datatable/DatatableComponent";
 
-import DataTable from "react-data-table-component-footer";
-import EclipseComponent from "src/components/loader/EclipseComponent";
+import { 
+    getColums, 
+    headerOptions, 
+    getDataExport, 
+    getFooterSummary } from "./config";
 
-import { useDispatch, useSelector } from "react-redux";
-import { startGettingDailySales } from "src/actions/daily_sales";
-import { parseDailySalesData } from "./dailySalesParser";
-import { getColums } from "./config-table";
+import { FormSearch } from "./FormSearch";
 
-export const Table = ({ title, today = null }) => { 
+import { ButtonExportToPDF } from "src/components/buttons-export/ButtonExportToPDF";
+import { ButtonExportToExcel } from "src/components/buttons-export/ButtonExportToExcel";
 
-    const dispatch = useDispatch();
-    const loading = useSelector((state) => state.loading);
-    const dailySales = useSelector((state) => state.dailySales);
+export const Table = () => { 
 
-    const [items, setItems] = useState([])
-
-    useEffect(() => {
-      dispatch( startGettingDailySales() );
-    }, []);
+    const [ items, setItems ]                 = useState([]);
+    const [ apiUrl, setApiUrl ]               = useState('');
+    const [ footerSummary, setFooterSummary ] = useState({});
 
     useEffect(() => {
 
-        if(dailySales){
-            const parsedData = parseDailySalesData( dailySales );
-            setItems(parsedData);
+        if(items && items.length > 0) {
+            
+            const summary = getFooterSummary(items);
+            setFooterSummary(summary);
+
         }
 
-    }, [dailySales])
+    }, [items]);
 
     return (
         <Fragment>
-        <DataTable 
-            columns={ getColums() }
-            data={items}
-            progressPending={ loading }
-            progressComponent={ <EclipseComponent/> }
-            paginationComponentOptions={ config.paginationComponentOptions }
-            noDataComponent={"No hay datos para mostrar"}/>
+
+            <ButtonExportToPDF 
+                data={ getDataExport(items) } 
+                headerOptions={ headerOptions} 
+                title='Reporte Cierres de Caja'
+                fileName='reporte-cierre-cajas'/>
+
+            <ButtonExportToExcel 
+                data={ getDataExport(items) } 
+                headerOptions={ headerOptions} 
+                fileName='reporte-cierre-cajas'/>
+
+            <FormSearch setApiUrl={ setApiUrl }/>
+
+            <DataTable 
+                url={ apiUrl }
+                setApiUrl={ setApiUrl }
+                columns={ getColums() }
+                items={ items }
+                setItems={ setItems }
+                footer={ footerSummary }
+            />
         </Fragment>
     )
 }

@@ -87,6 +87,10 @@ export const formatNumber = (number) => {
     return number.toLocaleString('es', {minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
+export const getTotalByColum = (rows, column) => {
+    return rows.reduce((acum, row) =>  { return acum += Number(row[column]) }, 0);
+}
+
 export const getTotalDetail = (items) => {
 
     let total = 0;

@@ -1,5 +1,6 @@
 import { fetchData } from "src/helpers/helpers";
 
-export const getAllDailySales = () => {
-    return fetchData(`daily_sales`, 'GET');
+export const getAllDailySales = (data) => {
+    const queryString = new URLSearchParams(data).toString();
+    return fetchData(`daily_sales?${queryString}` , 'GET');
 }

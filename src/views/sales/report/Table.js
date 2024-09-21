@@ -1,10 +1,7 @@
-import React, { Fragment, useState, useEffect, useContext }from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import DataTable from 'react-data-table-component-footer';
-
-import CIcon from '@coreui/icons-react';
-import * as icon from '@coreui/icons';
 
 import config from '../../../config/config.json';
 import { headerOptions, columns } from './config-table';
@@ -12,10 +9,9 @@ import { headerOptions, columns } from './config-table';
 import { FormSearch } from './FormSearch';
 import { BadgesTotal } from './BadgesTotal';
 
+import { formatNumber } from 'src/helpers/helpers';
 import { ButtonsExport } from 'src/components/table/ButtonsExport';
 import EclipseComponent from 'src/components/loader/EclipseComponent';
-
-import { formatNumber } from 'src/helpers/helpers';
 
 import { getBestSeller, 
          getDataExport, 
@@ -32,6 +28,7 @@ export const Table = ({ type, title, fileName }) => {
     const [totalSales, setTotalSales] = useState(0);
     const [totalSalesConverted, setTotalSalesConverted] = useState(0);
     const [aveExchange, setAveExchange] = useState(0);
+
     const [bestSeller, setBestSeller] = useState({
         description: "",
         quantity:0
